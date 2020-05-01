@@ -45,10 +45,10 @@ xhr.addEventListener("load", () => {
       let progress = document.createElement("progress");
       if("value" in obj)
         progress.value = obj.value;
-      if("max" in obj)
+      if("max" in obj){
         progress.max = obj.max;
-      if("barWidth" in obj)
-        progress.style.width = obj.barWidth;
+      }
+      progress.style.width = `${"max" in obj ? obj.max : 1}rem`;
       progress.title = `${obj.value || 0} / ${obj.max || 1}`;
       item.appendChild(document.createElement("br"));
       item.appendChild(progress);
