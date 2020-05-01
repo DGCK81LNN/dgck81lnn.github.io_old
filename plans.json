@@ -2,11 +2,11 @@
  {
   "title": "小站样式表改为像素画风",
   "value": 0.6,
-  "barWidth": "1rem"
+  "max": 1
  },
  {
   "title": "Soul Dancing Line Creator（前舞线练习场）升级",
   "value": 0,
-  "barWidth": "15rem"
+  "max": 15
  }
 ]
