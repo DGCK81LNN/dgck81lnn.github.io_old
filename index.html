@@ -44,7 +44,7 @@ let handler = (xhr, id) => {
     let item = document.createElement("li");
     let anchor = document.createElement("a");
     if(obj.href) anchor.href = obj.href;
-    anchor.innerText = obj.title;
+    anchor.innerHTML = obj.title;
     item.appendChild(anchor);
     list.appendChild(item);
   });
