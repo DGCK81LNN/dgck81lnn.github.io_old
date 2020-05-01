@@ -52,6 +52,8 @@ let handler = (xhr, id) => {
         progress.value = obj.value;
       if("max" in obj)
         progress.max = obj.max;
+      if("barWidth" in obj)
+        progress.style.width = obj.barWidth;
       progress.title = `${obj.value || 0} / ${obj.max || 1}`;
       item.appendChild(document.createElement("br"));
       item.appendChild(progress);
