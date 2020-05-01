@@ -11,17 +11,22 @@
 <div class="soultpl-heading-placeholder"> </div>
 <div class="soultpl-heading-box">灵魂小站临时测试站点</div>
 <p>本测试站点使用GitHub Pages搭建，不能运行PHP。因此一些功能用Javascript（特别是Ajax）代替。</p>
+<h2>测试项目</h2>
 <div class="soulbox">
-<ol id="list">
+<ol id="testList">
+Ajax加载内容……
+</ol>
+</div>
+<h2>计划项目</h2>
+<div class="soulbox">
+<ol id="planList">
 Ajax加载内容……
 </ol>
 </div>
 <script>
-let xhr=new XMLHttpRequest();
-xhr.open("get", "/tests.json");
-xhr.addEventListener("load", () => {
+let handler = (xhr, id) => {
   let result = xhr.responseText;
-  let list = document.getElementById("list");
+  let list = document.getElementById(id);
   let arr;
   try {
     arr = JSON.parse(result);
@@ -31,7 +36,7 @@ xhr.addEventListener("load", () => {
     return;
   }
   if(!(arr instanceof Array && arr.length)){
-    list.innerText = "测试站点没有内容……";
+    list.innerText = "没有内容……";
     return;
   }
   list.innerHTML = "";
@@ -43,8 +48,15 @@ xhr.addEventListener("load", () => {
     item.appendChild(anchor);
     list.appendChild(item);
   });
-});
-xhr.send();
+}
+let xhr1 = new XMLHttpRequest();
+xhr1.open("get", "/tests.json");
+xhr1.addEventListener("load", () => void handler(xhr1, "testList"));
+xhr1.send();
+let xhr2=new XMLHttpRequest();
+xhr2.open("get", "/plans.json");
+xhr2.addEventListener("load", () => void handler(xhr2, "planList"));
+xhr2.send();
 </script>
 </body>
 </html>
