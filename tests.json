@@ -2,6 +2,6 @@
  {
   "title": "小站样式表改为像素画风",
   "value": 0.6,
-  "barWidth": 1rem
+  "barWidth": "1rem"
  }
 ]
