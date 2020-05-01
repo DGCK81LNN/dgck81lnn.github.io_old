@@ -39,8 +39,20 @@ xhr.addEventListener("load", () => {
     let item = document.createElement("li");
     let anchor = document.createElement("a");
     if(obj.href) anchor.href = obj.href;
-    anchor.innerText = obj.title;
+    anchor.innerHTML = obj.title;
     item.appendChild(anchor);
+    if("value" in obj || "max" in obj){
+      let progress = document.createElement("progress");
+      if("value" in obj)
+        progress.value = obj.value;
+      if("max" in obj)
+        progress.max = obj.max;
+      if("barWidth" in obj)
+        progress.style.width = obj.barWidth;
+      progress.title = `${obj.value || 0} / ${obj.max || 1}`;
+      item.appendChild(document.createElement("br"));
+      item.appendChild(progress);
+    }
     list.appendChild(item);
   });
 });
