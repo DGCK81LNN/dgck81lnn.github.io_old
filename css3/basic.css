@@ -1,3 +1,8 @@
+@font-face{
+src:url(https://raw.githubusercontent.com/SolidZORO/zpix-pixel-font/master/dist/Zpix.ttf);
+font-family:Zpix;
+font-weight:normal;
+}
 :root{
 --soultpl-back-color:white;
 --soultpl-fore-color:black;
