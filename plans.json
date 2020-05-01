@@ -1,6 +1,7 @@
 [
  {
   "title": "Soul Dancing Line Creator（前舞线练习场）升级",
-  "value": 0
+  "value": 0,
+  "barWidth": "15rem";
  }
 ]
