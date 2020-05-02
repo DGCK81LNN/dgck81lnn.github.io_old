@@ -12,7 +12,7 @@
 <div class="soultpl-heading-box">灵魂小站临时测试站点</div>
 <p>本测试站点使用GitHub Pages搭建，不能运行PHP。因此一些功能用Javascript（特别是Ajax）代替。</p>
 <div class="soulbox">
-<ol id="list">
+<ul id="list">
 Ajax加载内容……
 </ol>
 </div>
@@ -45,13 +45,28 @@ xhr.addEventListener("load", () => {
       let progress = document.createElement("progress");
       if("value" in obj)
         progress.value = obj.value;
-      if("max" in obj){
+      if("max" in obj)
         progress.max = obj.max;
-      }
       progress.style.width = `${"max" in obj ? obj.max : 1}rem`;
       progress.title = `${obj.value || 0} / ${obj.max || 1}`;
       item.appendChild(document.createElement("br"));
       item.appendChild(progress);
+    }
+    if(obj.info instanceof Array){
+      let info = document.createElement("ul");
+      let latest = document.createElement("li");
+      latest.innerHTML = obj.info[0];
+      info.appendChild(latest);
+      if(obj.info.length > 1){
+        let more = document.createElement("details");
+        for(let i=0; i < obj.info.length; i++){
+          let hist = document.createElement("li");
+          hist.innerHTML = obj.info[i];
+          more.appendChild(hist);
+        }
+        info.appendChild(more);
+      }
+      item.appendChild(info);
     }
     list.appendChild(item);
   });
