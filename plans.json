@@ -17,10 +17,8 @@
   "value": 1,
   "max": 6,
   "info": [
-    "5月5日：初步实现Malody的Catch和Taiko模式转换到osu!。",
-    "目前Catch(CTB)和Taiko模式基本能用了，但有2个bug：<ul><li>时间对不齐，需要在osu!里手动编辑一下</li><li>Catch的随机音符雨和太鼓的气球音符的时长会莫名其妙变成0</li></ul>还有两点不便：<ul><li>Malody的BGM是OGG格式，osu!要MP3格式，目前还是自己手动转换格式</li><li>整个移植谱面的流程太麻烦，，，后期大概会加个自动化罢</li></ul>Keys(mania)模式待添加。",
-    "5月2日：自己研究了一下Malody谱面文件的格式。",
-    "将来要支持osu!和Malody的mania/key和taiko模式谱面相互转换，舞线练习场项目与上述两种音游的太鼓模式相互转换，以及太鼓次郎谱面转换成上述三种。"
+    "5月5日：初步实现Malody的Taiko模式转换到osu!。<ul><li>有2个已知bug：<ul><li>时间对不齐，需要在osu!里手动编辑一下</li><li>气球音符的时长会莫名其妙变成0</li></ul>还有两点不便：<ul><li>Malody的BGM是OGG格式，osu!要MP3格式，目前还是自己手动转换格式</li><li>整个移植谱面的流程太麻烦，，，后期大概会加个自动化罢</li></ul>Keys(mania)模式待添加。</li></ul>",
+    "5月2日：自己研究了一下Malody谱面文件的格式。<ul><li>将来要支持osu!和Malody的mania/key和taiko模式谱面相互转换，舞线练习场项目与上述两种音游的太鼓模式相互转换，以及太鼓次郎谱面转换成上述三种。</li></ul>"
   ]
  }
 ]
