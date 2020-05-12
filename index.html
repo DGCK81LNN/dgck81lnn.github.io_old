@@ -59,7 +59,7 @@ xhr.addEventListener("load", () => {
       info.appendChild(latest);
       if(obj.info.length > 1){
         let more = document.createElement("details");
-        for(let i=0; i < obj.info.length; i++){
+        for(let i = 1; i < obj.info.length; i++){
           let hist = document.createElement("li");
           hist.innerHTML = obj.info[i];
           more.appendChild(hist);
