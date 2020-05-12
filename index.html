@@ -59,11 +59,14 @@ xhr.addEventListener("load", () => {
       info.appendChild(latest);
       if(obj.info.length > 1){
         let more = document.createElement("details");
+        let sum = document.createElement("summary");
         for(let i = 1; i < obj.info.length; i++){
           let hist = document.createElement("li");
           hist.innerHTML = obj.info[i];
           more.appendChild(hist);
         }
+        sum.innerText = "历史信息";
+        more.appendChild(sum);
         info.appendChild(more);
       }
       item.appendChild(info);
