@@ -260,6 +260,11 @@ textarea {
     border-bottom: 1px solid var(--soultpl-fore-color);
     z-index: 999;
     padding: 0 4px;
+    text-align: center;
+    line-height: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    font-family: SANS-SERIF;
 }
 
 @media print {

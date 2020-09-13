@@ -13,57 +13,20 @@
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+  <script src="/js/commons.js"></script>
   <title>首页 - 灵魂小站</title>
 </head>
 
 <body>
   <div id="app">
-    <el-header class="soul-header">
-      <el-container class="soul-header-logo"><a href="/" title="回到首页"><img src="/site_icon.png"/>灵魂小站</a></el-container>
-      <el-container class="soul-header-navi">
-        <!--<el-input
-          class="soul-header-navi-search"
-          type="search"
-          prefix-icon="el-icon-search"
-          placeholder="搜索"
-        ></el-input>-->
-        <el-menu
-          class="soul-header-navi-tabs"
-          mode="horizontal"
-          default-active="home"
-          @select="naviSelect"
-        >
-          <el-menu-item index="home">首页</el-menu-item>
-          <el-menu-item index="apps">应用</el-menu-item>
-          <el-menu-item index="res">资源</el-menu-item>
-          <el-menu-item index="about">关于</el-menu-item>
-        </el-menu>
-      </el-container>
-    </el-header>
+    <soul-header default-active="home"></soul-header>
     <el-main class="soul-main">
 
       <h1>Lorem Ipsum</h1>
       <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc</p>
 
     </el-main>
-    <el-footer class="soul-footer" height="auto">
-      <el-container class="soul-footer-flex">
-        <el-container class="soul-footer-col">
-          <h3>链接</h3>
-          <p>测试测试</p>
-          <p>测试测试</p>
-          <p>测试测试</p>
-          <p>测试测试</p>
-        </el-container>
-        <el-container class="soul-footer-col">
-          <h3>Blahblah</h3>
-          <p>测试测试</p>
-          <p>测试测试</p>
-          <p>测试测试</p>
-          <p>测试测试</p>
-        </el-container>
-      </el-container>
-    </el-footer>
+    <soul-footer></soul-footer>
   </div>
 </body>
 <script src="index.js"></script>
