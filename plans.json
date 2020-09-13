@@ -1,24 +1,19 @@
 [
  {
-  "title": "小站样式表改为像素画风",
-  "value": 0.6,
+  "title": "全新UI测试",
+  "value": 0.9,
   "max": 1,
+  "href": "home",
   "info": [
-    "5月1日：我的像素字体死活加载不出来233……"
+    "9月13日： 采用 Vue.js 和 Element 的全新UI上线！ ）"
   ]
  },
  {
   "title": "舞线练习场(舞线谱面设计器)升级",
   "value": 0,
-  "max": 12
- },
- {
-  "title": "音游人(音游谱面转换器)开发",
-  "value": 1,
-  "max": 6,
+  "max": 10,
   "info": [
-    "5月5日：初步实现Malody的Taiko模式转换到osu!。<ul><li>有2个已知bug：<ul><li>时间对不齐，需要在osu!里手动编辑一下</li><li>气球音符的时长会莫名其妙变成0</li></ul></li><li>还有一点问题：<ul><li>Malody的BGM是OGG格式，osu!要MP3格式，目前还是自己手动转换格式。整个移植谱面的流程太麻烦，，，后期大概会加个自动化罢</li></ul>Keys(mania)模式待添加。</li></ul>",
-    "5月2日：自己研究了一下Malody谱面文件的格式。<ul><li>将来要支持osu!和Malody的mania/key和taiko模式谱面相互转换，舞线练习场项目与上述两种音游的太鼓模式相互转换，以及太鼓次郎谱面转换成上述三种。</li></ul>"
+    "9月13日： 此应用与原“音游人”合并， 目前计划可以用它设计以下几种音游的节奏点：<ul><li>跳舞的线饭制（专业对口<a href=\"https://github.com/DGCK81LNN/improved-iceflame-template\">LNN U3D改良冰焰模板</a>（雾））</li><li>osu!std的节奏点和osu!taiko</li><li>Malody Taiko模式</li></ul>"
   ]
  }
 ]

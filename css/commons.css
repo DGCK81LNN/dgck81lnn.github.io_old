@@ -1,0 +1,102 @@
+:root {
+    --soul-color-theme: #33bfab;
+    --soul-color-text-primary: #303133;
+    --soul-color-text-normal: #606266;
+    --soul-color-text-secondary: #909399;
+    --soul-color-text-placeholder: #C0C4CC;
+    --soul-color-border-1: #DCDFE6;
+    --soul-color-border-2: #E4E7ED;
+    --soul-color-border-3: #EBEEF5;
+    --soul-color-border-4: #F2F6FC;
+    --soul-font-family-sans-serif: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    --soul-font-family-monospace: Consolas, "Deja Vu Sans Mono", monospace;
+}
+
+* {
+    font-family: var(--soul-font-family-sans-serif);
+    color: inherit;
+}
+*:not(h1, h2, h3, h4, h5, h6, small, big, rt, sup, sub) {
+    font-size: inherit;
+}
+h1, h2, h3, h4 {
+    color: var(--soul-color-text-primary);
+}
+h1 {
+    font-size: 20px;
+}
+h2 {
+    font-size: 18px;
+}
+h3 {
+    font-size: 16px;
+}
+h4, h5, h6 {
+    font-size: 16px;
+}
+h5 {
+    color: var(--soul-color-text-normal);
+}
+h6 {
+    color: var(--soul-color-text-secondary);
+}
+p {
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--soul-color-text-normal);
+}
+p.soul-p1 {
+    color: var(--soul-color-text-primary);
+}
+p.soul-p2 {
+    color: var(--soul-color-text-secondary);
+    font-size: 12px;
+}
+
+.soul-header {
+    padding: 0 10%;
+    border-bottom: 1px solid var(--soul-color-border-1);
+}
+.soul-header-logo {
+    float: left;
+}
+.soul-header-logo a {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: var(--soul-color-theme);
+}
+.soul-header-logo img {
+    height: 60px;
+    vertical-align: middle;
+}
+.soul-header-navi {
+    float: right;
+    line-height: 61px;
+}
+.soul-header-navi .soul-header-navi-search {
+    float: left;
+    width: 160px;
+}
+.soul-header-navi .soul-header-navi-tabs {
+    float: left;
+    margin-top: -1px;
+}
+.soul-main {
+    padding: 20px 10%;
+}
+.soul-footer {
+    background-color: rgb(214, 242, 238);
+    margin: 0 -8px;
+    padding: 2rem calc(10% + 8px) 8rem;
+}
+.soul-footer-col {
+    display: inline-block;
+}
+.soul-footer-col p {
+    margin: 0.3em 0;
+}
+
+code, pre, .soul-monospace {
+    font-family: var(--soul-font-family-monospace);
+}
