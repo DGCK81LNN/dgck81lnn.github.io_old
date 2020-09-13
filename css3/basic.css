@@ -1,8 +1,3 @@
-@font-face{
-src:url(https://raw.githubusercontent.com/SolidZORO/zpix-pixel-font/master/dist/Zpix.ttf);
-font-family:Zpix;
-font-weight:normal;
-}
 :root{
 --soultpl-back-color:white;
 --soultpl-fore-color:black;
@@ -10,8 +5,8 @@ font-weight:normal;
 --soultpl-back-color-dim2:white;
 --soultpl-link-color:blue;
 --soultpl-link-visited-color:purple;
-fomt-size:16px;
-font-family:Zpix, sans-serif;
+font-size:16px;
+font-family:Consolas,"Deja Vu Sans Mono",monospace;
 background:var(--soultpl-back-color);
 color:var(--soultpl-fore-color);
 }
@@ -112,10 +107,10 @@ display:inline-block;
 .§d{color:#f5f}
 .§e{color:#ff5}
 .§f{color:#fff}
-.§l{text-weight:bold}
+.§l{font-weight:bold}
 .§m{text-decoration:line-through}
 .§n{text-decoration:underline}
-.§o{text-style:italic}
+.§o{font-style:italic}
 textarea{
 -webkit-overflow-scrolling:touch;
 }
