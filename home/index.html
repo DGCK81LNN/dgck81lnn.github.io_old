@@ -15,6 +15,36 @@
   <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
   <script src="/js/commons.js"></script>
   <title>首页 - 灵魂小站</title>
+  <style>
+    .soul-home-section {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+    }
+    .soul-home-section-head {
+      background: radial-gradient(rgb(219, 243, 188), transparent 70.7107%);
+      padding: 2rem 0;
+    }
+		.soul-home-title {
+      font-size: 30px;
+			vertical-align: middle;
+			text-align: center;
+		}
+		.soul-home-title-myname {
+			font: 80px var(--soul-font-family-monospace);
+			color: #33bfab;
+			text-shadow: 1px 1.732px 3px black;
+    }
+    .soul-home-section-title {
+      font-size: 50px;
+			text-align: center;
+    }
+
+    @media screen and (max-width: 600px) {
+      .soul-home-title-myname {
+        font-size: 55px;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -22,9 +52,28 @@
     <soul-header default-active="home"></soul-header>
     <el-main class="soul-main">
 
-      <h1>Lorem Ipsum</h1>
-      <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc</p>
-
+      <section class="soul-home-section soul-home-section-head">
+        <h1 class="soul-home-title">
+          你好，我是
+          <div class="soul-home-title-myname">DGCK81LNN，</div>
+          一个普通的高中生。
+        </h1>
+      </section>
+      <section class="soul-home-section soul-home-section-hobbies">
+        <h2 class="soul-home-section-title">我爱好：</h2>
+        <el-card class="box-card" header="计算机编程" shadow="hover">
+          <p>从小就在父亲的影响下学习编程，Visual Basic入门，后来学习网页前端开发。</p>
+          <div>
+            <el-tag effect="dark">JavaScript</el-tag>
+            <el-tag effect="dark">HTML</el-tag>
+            <el-tag effect="dark">CSS</el-tag>
+            <el-tag effect="light">Visual Basic</el-tag>
+            <el-tag effect="light">PHP</el-tag>
+            <el-tag effect="plain">Lua</el-tag>
+          </div>
+        </el-card>
+        <p>（未完成）</p>
+      </section>
     </el-main>
     <soul-footer></soul-footer>
   </div>
