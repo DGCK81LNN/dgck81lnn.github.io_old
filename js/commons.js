@@ -46,6 +46,7 @@ Vue.component('soul-footer', {
         <el-container class="soul-footer-col">
             <h3>©2020 DGCK81LNN.</h3>
             <p>本站图文内容除另有声明外，<br>均采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/deed.zh">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可。</p>
+            <p>更多信息见<a href="/about">关于</a>页。</p>
             <p><a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/deed.zh"><img alt="知识共享许可协议" style="border-width:0" src="/cc_by-sa_4.0_88x31.png"/></a></p>
         </el-container>
     </el-container>

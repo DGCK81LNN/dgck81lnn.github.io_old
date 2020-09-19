@@ -29,6 +29,13 @@
     <soul-footer></soul-footer>
   </div>
 </body>
-<script src="/404.js"></script>
+<script>
+  const vm = new Vue({
+    el: "#app",
+    data: {
+        path: location.pathname
+    }
+  });
+</script>
 
 </html>
