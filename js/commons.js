@@ -1,5 +1,3 @@
-const SITENAME = "灵魂小站";
-
 Vue.component('soul-header', {
     props: ['defaultActive'],
     template: `<el-header class="soul-header clearfix">
