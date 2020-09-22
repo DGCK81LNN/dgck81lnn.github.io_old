@@ -50,6 +50,11 @@
       text-align: center;
     }
 
+    .el-carousel .el-image {
+      width: 100%;
+      height: 100%;
+    }
+
     @media screen and (max-width: 600px) {
       .soul-home-title {
         font-size: 20px;
@@ -82,13 +87,13 @@
           <p>从小就在父亲的影响下学习编程，Visual Basic入门，后来学习网页前端开发。</p>
           <el-tabs
             v-model="plDomains.main"
-            :type="pageWidth <= 600 ? 'border-card' : ''"
-            :tab-position="pageWidth <= 600 ? 'top' : 'left'"
+            :type="narrow ? 'border-card' : ''"
+            :tab-position="narrow ? 'top' : 'left'"
           >
             <el-tab-pane name="frontEnd" label="网络前端">
               <el-tabs
                 v-model="plDomains.frontEnd"
-                :tab-position="pageWidth <= 600 ? 'top' : 'right'"
+                :tab-position="narrow ? 'top' : 'right'"
               >
                 <el-tab-pane label="HTML" name="html">
                   <pre><code class="language-html">&lt;section class="soul-home-section soul-home-section-head"&gt;
@@ -129,7 +134,7 @@
             <el-tab-pane name="misc" label="杂项">
               <el-tabs
                 v-model="plDomains.misc"
-                :tab-position="pageWidth <= 600 ? 'top' : 'right'"
+                :tab-position="narrow ? 'top' : 'right'"
               >
                 <el-tab-pane label="PHP" name="php">
                   <pre><code class="language-php">&lt;?php
@@ -203,7 +208,7 @@ end</code></pre>
             <el-tab-pane name="esoteric" label="深奥编程语言">
               <el-tabs
                 v-model="plDomains.esoteric"
-                :tab-position="pageWidth <= 600 ? 'top' : 'right'"
+                :tab-position="narrow ? 'top' : 'right'"
               >
               <p>深奥编程语言不断突破着“编程语言”这一概念的界限。这些编程语言一般没有实际应用的价值。</p>
               <p class="soul-p2">（以下除brainfuck外的3种语言都不大出名，Prism.js没有现成的语法高亮，于是我就手动高亮了一下（建议查看页面源代码</p>
@@ -262,8 +267,15 @@ end</code></pre>
         </section>
         <section class="soul-home-hobby"><h3>音游和亚音游</h3>
           <p>从<em>跳舞的线</em>入圈，后来又接触了<em>Malody</em>、<em>osu!</em>、<em>冰与火之舞</em>。</p>
-          <el-carousel :interval="4000" type="card" trigger="click">
-            <el-carousel-item v-for="(img, i) in mugImages" :key="i">
+          <el-carousel
+            :interval="4000"
+            :type="narrow ? '' : 'card'"
+            trigger="click"
+          >
+            <el-carousel-item
+              v-for="(img, i) in mugImages"
+              :key="i"
+            >
               <el-image
               :src="img.url"
               :title="img.title"
@@ -273,8 +285,15 @@ end</code></pre>
         </section>
         <section class="soul-home-hobby"><h3>友谊是魔法！</h3>
           <p><a href="https://pony.town">Pony Town</a>和<a href="https://fimtale.com/t/2809">《地球上最后一只小马》</a>入坑。<strong style="color:#33BFAB">纯真灵魂</strong>是我的OC，本站就是以他的名字命名的。</p>
-          <el-carousel :interval="4000" type="card" trigger="click">
-            <el-carousel-item v-for="(img, i) in mlpImages" :key="i">
+          <el-carousel
+            :interval="4000"
+            :type="narrow ? '' : 'card'"
+            trigger="click"
+          >
+            <el-carousel-item
+              v-for="(img, i) in mlpImages"
+              :key="i"
+            >
               <el-image
               :src="img.url"
               :title="img.title"
@@ -328,14 +347,14 @@ end</code></pre>
       mlpImages: [
         {url: "images/mlp1.png", title: "一张MLP:FiM剧集截图"},
         {url: "images/mlp2.png", title: "一张MLP:FiM剧集截图"},
-        {url: "images/pt1.png", title: "一张Pony Town游戏截图"},
+        {url: "images/pt1.png", title: "一张Pony Town游戏截图，捏《地球上最后一只小马》主角“孤独终日”"},
         {url: "images/pt2.jpg", title: "一张Pony Town游戏截图"},
       ],
       recentPlans: undefined,
-      pageWidth: document.documentElement.clientWidth
+      narrow: document.documentElement.clientWidth < 800
     }
   });
-  window.addEventListener("resize", () => void(vm.pageWidth = document.documentElement.clientWidth));
+  window.addEventListener("resize", () => void(vm.narrow = document.documentElement.clientWidth <= 800));
   vm.$http.get("contents.json")
     .then(function(res){
       vm.recentPlans = res.body;
