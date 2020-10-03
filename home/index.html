@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
-
+<!--
+  这是灵魂小站 / 首页!
+  ID: home.index // soulhome
+-->
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
@@ -19,32 +22,43 @@
   <script src="/js/commons.js"></script>
   <title>首页 - 灵魂小站</title>
   <style>
-    .soul-home-section {
+    .soulhome-section {
       margin-top: 2rem;
       margin-bottom: 2rem;
     }
-    .soul-home-section-head {
+    .soulhome-section-head {
       background: radial-gradient(rgb(219, 243, 188), transparent 70.7107%);
       padding: 2rem 0;
     }
-		.soul-home-title {
+		.soulhome-title {
       font-size: 30px;
 			vertical-align: middle;
 			text-align: center;
 		}
-		.soul-home-title-myname {
+		.soulhome-title-myname {
 			font: 80px var(--soul-font-family-monospace);
 			color: #33bfab;
 			text-shadow: 1px 1.732px 3px black;
     }
-    .soul-home-section-title {
+    .soulhome-section-title {
       font-size: 50px;
 			text-align: center;
     }
-    .soul-home-contents-card {
+    .soulhome-contents-flex {
+      flex-wrap: wrap;
+    }
+    .soulhome-contents-flex .el-card {
+      flex: 1;
+      margin: 8px;
+    }
+    .soulhome-contents-card {
       margin: 1rem 0;
     }
-    .soul-home-epilogue {
+    .soulhome-contents-card-link {
+      float: right;
+      padding: 3px 0;
+    }
+    .soulhome-epilogue {
       margin-top: 5rem;
       font-size: 50px;
       text-align: center;
@@ -56,14 +70,14 @@
     }
 
     @media screen and (max-width: 600px) {
-      .soul-home-title {
+      .soulhome-title {
         font-size: 20px;
       }
-      .soul-home-title-myname {
+      .soulhome-title-myname {
         font-size: 50px;
       }
-      .soul-home-section-title,
-      .soul-home-epilogue {
+      .soulhome-section-title,
+      .soulhome-epilogue {
         font-size: 30px;
       }
     }
@@ -74,21 +88,21 @@
   <div id="app">
     <soul-header default-active="home"></soul-header>
     <el-main class="soul-main">
-      <section class="soul-home-section soul-home-section-head">
-        <h1 class="soul-home-title">
+      <section class="soulhome-section soulhome-section-head">
+        <h1 class="soulhome-title">
           你好，我是
-          <div class="soul-home-title-myname">DGCK81LNN，</div>
+          <div class="soulhome-title-myname">DGCK81LNN，</div>
           一个普通的高中生。
         </h1>
       </section>
-      <section class="soul-home-section soul-home-section-hobbies">
-        <h2 class="soul-home-section-title">我爱好：</h2>
-        <section class="soul-home-hobby"><h3>计算机编程</h3>
+      <section class="soulhome-section soulhome-section-hobbies">
+        <h2 class="soulhome-section-title">我爱好：</h2>
+        <section class="soulhome-hobby"><h3>计算机编程</h3>
           <p>从小就在父亲的影响下学习编程，Visual Basic入门，后来学习网页前端开发。</p>
           <el-tabs
-            v-model="plDomains.main"
-            :type="narrow ? 'border-card' : ''"
-            :tab-position="narrow ? 'top' : 'left'"
+          v-model="plDomains.main"
+          :type="narrow ? 'border-card' : ''"
+          :tab-position="narrow ? 'top' : 'left'"
           >
             <el-tab-pane name="frontEnd" label="网络前端">
               <el-tabs
@@ -96,10 +110,10 @@
                 :tab-position="narrow ? 'top' : 'right'"
               >
                 <el-tab-pane label="HTML" name="html">
-                  <pre><code class="language-html">&lt;section class="soul-home-section soul-home-section-head"&gt;
-  &lt;h1 class="soul-home-title"&gt;
+                  <pre><code class="language-html">&lt;section class="soulhome-section soulhome-section-head"&gt;
+  &lt;h1 class="soulhome-title"&gt;
   你好，我是
-  &lt;div class="soul-home-title-myname"&gt;DGCK81LNN，&lt;/div&gt;
+  &lt;div class="soulhome-title-myname"&gt;DGCK81LNN，&lt;/div&gt;
   一个普通的高中生。
   &lt;/h1&gt;
 &lt;/section&gt;</code></pre>
@@ -118,12 +132,12 @@
 //这什么阴间代码</code></pre>
                 </el-tab-pane>
                 <el-tab-pane label="CSS" name="css">
-                  <pre><code class="language-css">.soul-home-title {
+                  <pre><code class="language-css">.soulhome-title {
   font-size: 30px;
   vertical-align: middle;
   text-align: center;
 }
-.soul-home-title-myname {
+.soulhome-title-myname {
   font: 80px var(--soul-font-family-monospace);
   color: #33bfab;
   text-shadow: 1px 1.732px 3px black;
@@ -207,8 +221,8 @@ end</code></pre>
             </el-tab-pane>
             <el-tab-pane name="esoteric" label="深奥编程语言">
               <el-tabs
-                v-model="plDomains.esoteric"
-                :tab-position="narrow ? 'top' : 'right'"
+              v-model="plDomains.esoteric"
+              :tab-position="narrow ? 'top' : 'right'"
               >
               <p>深奥编程语言不断突破着“编程语言”这一概念的界限。这些编程语言一般没有实际应用的价值。</p>
               <p class="soul-p2">（以下除brainfuck外的3种语言都不大出名，Prism.js没有现成的语法高亮，于是我就手动高亮了一下（建议查看页面源代码</p>
@@ -265,7 +279,7 @@ end</code></pre>
             </el-tab-pane>
           </el-tabs>
         </section>
-        <section class="soul-home-hobby"><h3>音游和亚音游</h3>
+        <section class="soulhome-hobby"><h3>音游和亚音游</h3>
           <p>从<em>跳舞的线</em>入圈，后来又接触了<em>Malody</em>、<em>osu!</em>、<em>冰与火之舞</em>。</p>
           <el-carousel
             :interval="4000"
@@ -283,7 +297,7 @@ end</code></pre>
             </el-carousel-item>
           </el-carousel>
         </section>
-        <section class="soul-home-hobby"><h3>友谊是魔法！</h3>
+        <section class="soulhome-hobby"><h3>友谊是魔法！</h3>
           <p><a href="https://pony.town">Pony Town</a>和<a href="https://fimtale.com/t/2809">《地球上最后一只小马》</a>入坑。<strong style="color:#33BFAB">纯真灵魂</strong>是我的OC，本站就是以他的名字命名的。</p>
           <el-carousel
             :interval="4000"
@@ -302,21 +316,31 @@ end</code></pre>
           </el-carousel>
         </section>
       </section>
-      <section class="soul-home-section soul-home-section-contents">
-        <h2 class="soul-home-section-title">本站有：</h2>
+      <section class="soulhome-section soulhome-section-contents">
+        <h2 class="soulhome-section-title">本站有：</h2>
         <p v-if="recentPlans === undefined" v-loading="true" style="height:200px">（加载...）</p>
         <p v-else-if="!recentPlans instanceof Array">（加载失败）</p>
         <p v-else-if="!recentPlans.length">（数据空空如也）</p>
-        <div v-else>
+        <el-container v-else class="soulhome-contents-flex">
           <el-card
-            v-for="item in recentPlans"
-            class="soul-home-contents-card"
-            :header="item.title"
-            v-html="item.body"
-          ></el-card>
-        </div>
+          v-for="item in recentPlans"
+          class="soulhome-contents-card"
+          shadow="hover"
+          >
+            <div slot="header" class="clearfix">
+              <span>{{item.title}}</span>
+              <el-link
+              v-if="item.link"
+              type="primary"
+              class="soulhome-contents-card-link"
+              :href="item.link"
+              >进入</el-link>
+            </div>
+            <div v-html="item.body"></div>
+          </el-card>
+        </el-container>
       </section>
-      <h2 class="soul-home-epilogue">Enjoy yourself!</h2>
+      <h2 class="soulhome-epilogue">Enjoy yourself!</h2>
     </el-main>
     <soul-footer></soul-footer>
   </div>

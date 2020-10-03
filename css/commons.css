@@ -92,6 +92,9 @@ p.soul-p2 {
     margin: 8px;
     padding: 20px 10%;
 }
+.soul-main > .el-breadcrumb {
+    margin-bottom: 1rem;
+}
 .soul-footer {
     background-color: rgb(214, 242, 238);
     margin: 0;
@@ -102,6 +105,7 @@ p.soul-p2 {
 }
 .soul-footer-col {
     display: inline-block;
+    flex: auto;
 }
 .soul-footer-col p {
     margin: 0.3em 0;
@@ -118,6 +122,10 @@ code, pre, .soul-monospace {
 }
 .clearfix:after {
   clear: both
+}
+
+:focus {
+    outline: none;
 }
 
 
