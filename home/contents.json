@@ -1,2 +1,11 @@
 [
+    {
+        "title": "brainfuck 在线调试器",
+        "body": "<p><a href=\"https://esolangs.org/brainfuck\" target=\"_blank\">brainfuck - Esolang维基</a></p><p>解释器功能目前还未完成，只实现了代码高亮。</p>",
+        "link": "/apps/lab/brainfuck.html"
+    },
+    {
+        "title": "更多内容即将到来...",
+        "body": ""
+    }
 ]

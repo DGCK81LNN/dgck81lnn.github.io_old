@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<!--
+  这是灵魂小站 / 应用 / 灵魂实验室 / brainfuck 在线调试器!
+  ID: apps.lab.bf // soullbf
+-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href="/css/element.css">
+  <link rel="stylesheet" href="/css/commons.css">
+  <link rel="stylesheet" href="/css/prism.css">
+  <link rel="icon" href="/site_icon.png">
+  <link rel="shortcut icon" href="/site_icon.png">
+  <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
+  <script src="/js/tests.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+  <script src="/js/prism.js"></script>
+  <script src="/js/commons.js"></script>
+  <title>brainfuck 在线调试器 - 灵魂小站</title>
+  <style>
+    .soullbf-toolbar-row {
+      display: inline-block;
+      margin: 5px;
+    }
+    .soullbf-flex {
+      flex-wrap: wrap;
+    }
+    .soullbf-left,
+    .soullbf-right {
+      width: 50%;
+      height: 300px;
+      box-sizing: border-box;
+      padding: 1rem 0.5rem;
+    }
+    .soullbf-left {
+      float: left;
+      flex-direction: column;
+    }
+    .soullbf-right {
+      float: right;
+    }
+    .soullbf-vsection {
+      flex: 1;
+      overflow-y: auto;
+    }
+    .soullbf-maincode {
+      white-space: pre-wrap !important;
+    }
+
+    .el-drawer {
+      min-width: 350px;
+    }
+    .el-drawer__body {
+      padding: 20px;
+    }
+    .soullbf-drawer-config .el-drawer__body {
+      overflow-y: auto;
+    }
+    .soullbf-code-input-box {
+      position: relative;
+      height: 100%;
+    }
+    .soullbf-code-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .soullbf-code-input > textarea {
+      height: 100%;
+      box-sizing: border-box;
+      font-family: var(--soul-font-family-monospace);
+      resize: none !important;
+      color: transparent;
+      caret-color: #606266;
+      background-color: transparent;
+      overflow-y: -moz-scrollbars-none;
+      -ms-overflow-style: none;
+    }
+    .soullbf-code-input > textarea::-webkit-scrollbar {
+      width: 0 !important;
+    }
+    .soullbf-code-input-highlight-wrapper {
+      height: 100%;
+      box-sizing: border-box;
+      padding: 5px 15px;
+      border-radius: 4px;
+      border: 1px solid transparent;
+      overflow-y: hidden;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .soullbf-code-input-highlight {
+      overflow-wrap: break-word;
+      display: block;
+      line-height: 1.5;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      width: 100%;
+      font-size: 14px;
+      font-family: var(--soul-font-family-monospace);
+      white-space: pre-wrap;
+    }
+
+    .token.soullbf-error {
+      background: #E1001A;
+      color: #f5f2f0;
+      text-shadow: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <soul-header default-active="apps"></soul-header>
+    <el-main class="soul-main">
+      <el-breadcrumb separator-class="el-icon-arrow-right">
+        <el-breadcrumb-item><a href="/apps">应用</a></el-breadcrumb-item>
+        <el-breadcrumb-item><a href=".">灵魂实验室</a></el-breadcrumb-item>
+        <el-breadcrumb-item>brainfuck 在线调试器</el-breadcrumb-item>
+      </el-breadcrumb>
+
+      <section
+      v-if="stat === 'run' || stat === 'tick'"
+      class="soullbf-toolbar"
+      >
+        <div class="soullbf-toolbar-row">
+          <el-button
+          v-if="stat && stat !== 'pause'"
+          type="danger" plain round
+          icon="el-icon-video-pause"
+          @click="stat = 'pause'"
+          >暂停</el-button>
+        </div>
+      </section>
+      <section
+      v-else
+      class="soullbf-toolbar"
+      >
+        <div
+        v-if="stat === 'ready'"
+        class="soullbf-toolbar-row"
+        >
+          <el-button-group>
+            <el-button
+            type="primary" round
+            icon="el-icon-edit-outline"
+            @click="codeInputVisible = true"
+            >输入代码</el-button>
+            <el-button
+            type="info" plain round
+            icon="el-icon-setting"
+            @click="configVisible = true"
+            >环境选项</el-button>
+          </el-button-group>
+        </div>
+        <div
+        v-else
+        class="soullbf-toolbar-row"
+        >
+          <el-button
+          v-if
+          type="danger" plain round
+          icon="el-icon-delete"
+          @click="stat = 'ready'"
+          >重置</el-button>
+        </div>
+        <div
+        v-if="stat !== 'end'"
+        class="soullbf-toolbar-row"
+        >
+          <el-button-group>
+            <el-button
+            type="primary" plain round
+            icon="el-icon-caret-right"
+            :disabled="syntaxError"
+            @click="stat = 'run'"
+            >运行</el-button>
+            <el-button
+            plain round
+            icon="el-icon-d-arrow-right"
+            :disabled="syntaxError"
+            @click="stat = 'tick'"
+            >逐步运行</el-button>
+            <el-button
+            plain round
+            icon="el-icon-right"
+            :disabled="syntaxError"
+            @click="stat = 'pause'"
+            >运行一步</el-button>
+          </el-button-group>
+        </div>
+      </section>
+
+      <section class="soullbf-main">
+        <el-container class="soullbf-left">
+          <section class="soullbf-vsection">
+            <p>解释器功能尚未实现，目前只有代码高亮。</p>
+            <p v-if="syntaxError">
+              <el-tag type="danger">代码有语法错误！</el-tag>
+            </p>
+            <pre
+            v-else
+            class="soul-manual-prism"
+            ><code
+            class="soul-manual-prism soullbf-maincode"
+            v-html="codeHighlight"
+            ></code></pre>
+          </section>
+        </el-container>
+
+        <section class="soullbf-right">
+          OUTPUT
+        </section>
+      </section>
+    </el-main>
+    <soul-footer></soul-footer>
+
+
+    <el-drawer
+    class="soullbf-drawer-config"
+    title="环境配置"
+    :visible.sync="configVisible"
+    direction="rtl"
+    >
+      <el-form :model="config">
+        <el-form-item label="静态输入">
+          <el-switch v-model="config.staticInput"></el-switch>
+          <p class="soul-p2">
+            模拟从文本文件中读取输入。
+          </p>
+        </el-form-item>
+        <el-divider></el-divider>
+        <el-form-item v-if="config.staticInput" label="EOF">
+          <el-radio-group v-model="config.eof" size="small">
+            <el-radio-button :label="undefined">保持不变</el-radio-button>
+            <el-radio-button :label="-1">读入-1</el-radio-button>
+            <el-radio-button :label="0">读入0</el-radio-button>
+          </el-radio-group>
+          <p class="soul-p2">
+            设置EOF的表示方式。标准文档说应当保持单元格中原来的值不变，但原版编译器会读入-1，也有很多编译器/解释器会读入0。有些brainfuck程序可以兼容“保持不变”以及“读入-1”和“读入0”的其中一个。
+          </p>
+        </el-form-item>
+        <el-form-item label="数据类型">
+          <el-radio-group v-model="config.dataType" size="small">
+            <el-radio-button :label="1">8位</el-radio-button>
+            <el-radio-button :label="2">16位</el-radio-button>
+            <el-radio-button :label="4">32位</el-radio-button>
+            <el-radio-button :label="8" :disabled="bigIntNotSupported">64位</el-radio-button>
+            <el-radio-button :label="99" :disabled="bigIntNotSupported">无限</el-radio-button>
+          </el-radio-group>
+          <p class="soul-p2" v-if="bigIntNotSupported">
+            您的浏览器不支持BigInt，“64位”和“无限”将无法使用。
+          </p>
+        </el-form-item>
+        <el-form-item label="单元格数量">
+          <el-radio-group v-model="config.cells" size="small">
+            <el-radio-button :label="30000">3万</el-radio-button>
+            <el-radio-button :label="Infinity">无限</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="config.cells < Infinity" label="指针越界">
+          <el-radio-group v-model="config.allowNegativeMP" size="small">
+            <el-radio-button :label="true">跳到另一端</el-radio-button>
+            <el-radio-button :label="false">停止运行</el-radio-button>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+    </el-drawer>
+
+    <el-drawer
+    title="输入代码"
+    :visible.sync="codeInputVisible"
+    direction="rtl"
+    >
+      <div class="soullbf-code-input-box">
+        <div class="soullbf-code-input-highlight-wrapper">
+          <div
+          class="soullbf-code-input-highlight"
+          :style="{ marginTop: -codeInputScrollTop + 'px' }"
+          v-html="codeRawHighlight"
+          ></div>
+        </div>
+        <el-input
+        type="textarea"
+        id="codeInputTextarea"
+        class="soullbf-code-input"
+        v-model="codeRaw"
+        @input="onCodeInput()"
+        @scroll="codeInputScroll()"
+        ></el-input>
+      </div>
+    </el-drawer>
+  </div>
+</body>
+<script>
+
+  if (!"_test" in this) var _test = -Infinity;
+
+  const escapeLNN = str =>
+    str.replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/ /g, "&#32;")
+      .replace(/\n/g, "<br>");
+
+  class SoullbfMemory {
+    constructor(dataType, cells) {
+      this.arr = [], this.negativeArr = [], this.pointer = 0;
+      this.dataType = dataType, this.cells = cells, this.finiteCells = this.cells !== Infinity;
+      this.overflow = dataType === 99 ? Infinity : dataType === 8 ? BigInt(1) << BigInt(63) : 2 ** (dataType * 8 - 1);
+    }
+    getCurr() {
+      let [a, k] = this.pointer < 0 ? [this.negativeArr, ~this.pointer] : [this.arr, this.pointer];
+      if (!(k in a)) a[k] = this.dataType >= 8 ? BigInt(0) : 0;
+      return a[k];
+    }
+    setCurr(v) {
+      let [a, k] = this.pointer < 0 ? [this.negativeArr, ~this.pointer] : [this.arr, this.pointer];
+      a[k] = this.dataType >= 8 ? BigInt(v) : Math.floor(v);
+      while (a[k] >= this.overflow)
+        a[k] -= this.overflow, a[k] -= this.overflow;
+    }
+    increment(i, v) {
+      let [a, k] = this.pointer < 0 ? [this.negativeArr, ~this.pointer] : [this.arr, this.pointer];
+      if (!(k in a))a[k] = this.dataType >= 8 ? BigInt(0) : 0;
+      a[k]++;
+      if (a[k] >= this.overflow)
+        a[k] -= this.overflow, a[k] -= this.overflow;
+    }
+    decrement(i, v) {
+      let [a, k] = this.pointer < 0 ? [this.negativeArr, ~this.pointer] : [this.arr, this.pointer];
+      if (!(k in a))a[k] = this.dataType >= 8 ? BigInt(0) : 0;
+      a[k]--;
+      if (a[k] < -this.overflow)
+        a[k] += this.overflow, a[k] += this.overflow;
+    }
+    right(i) {
+      this.pointer++;
+      if (this.pointer >= this.cells)
+        this.pointer -= this.cells;
+    }
+    left(i) {
+      this.pointer--;
+      if (this.finiteCells && this.pointer < 0)
+        this.pointer += this.cells;
+    }
+    toMap() {
+      let map = new Map();
+      this.arr.forEach((v, i) => {
+        map.set(i, v);
+      })
+      this.negativeArr.forEach((v, i) => {
+        map.set(~i, v);
+      })
+      return map;
+    }
+  }
+
+  var intHandle;
+
+  const vm = new Vue({
+    el: "#app",
+    data: {
+      bigIntNotSupported: _test < 6,
+
+      codeInputScrollTop: 0,
+
+      codeRaw: `>>>+[[-]>>[-]++>+>+++++++[<++++>>++<-]++>>+>+>+++++[>++>++++++<<-]+>>>,<++[[>[->>]<[>>]<<-]<[<]<+>>[>]>[<+>-[[<+>-]>]<[[[-]<]++<-[<+++++++++>[<->-]>>]>>]]<<]<]<[[<]>[[>]>>[>>]+[<<]<[<]<+>>-]>[>]+[->>]<<<<[[<<]<[<]+<<[+>+<<-[>-->+<<-[>+<[>>+<<-]]]>[<+>-]<]++>>-->[>]>>[>>]]<<[>>+<[[<]<]>[[<<]<[<]+[-<+>>-[<<+>++>-[<->[<<+>>-]]]<[>+<-]>]>[>]>]>[>>]>>]<<[>>+>>+>>]<<[->>>>>>>>]<<[>.>>>>>>>]<<[>->>>>>]<<[>,>>>]<<[>+>]<<[+<<]<]
+[这是Oleg Mazonka和Daniel B. Cristofani编写的brainfuck自举。 http://mazonka.com/brainf/10.html ]
+
+[(明显无法到达的代码会变成注释。)]
+
+你看这代码高亮zhuo滴彳亍不彳亍！
+网页文本框加代码高亮是真的麻烦）
+实现方法：把文本框搞成透明，然后在后面叠一个带高亮的div。想尽各种办法把高亮跟文本框里的字对齐就完事了。
+然而这样一来滚动条就是个大问题，因为你不知道它占多少宽度。最后我只好想办法把滚动条给隐藏了。`,
+      codeInputVisible: false,
+      codeRawHighlight: "",
+      
+      config: {
+        staticInput: true, // {true, false}
+        eof: undefined, // {undefined: no_change, -1, 0}
+        dataType: 1, // {1: Int8, 2: Int16, 4: Int32, 8: Int64, 99: BigInt}
+        cells: 30000, // {(int), Infinity}
+        allowNegativeMP: true
+      },
+      configVisible: false,
+
+      code: "",
+      codeHighlight: "",
+      codePointer: 0,
+
+      memory: null,
+
+      stat: "ready", // ready, run, tick, pause, end
+      initialized: false,
+      syntaxError: false,
+    },
+    methods: {
+      onCodeInput() {
+        let value = vm.codeRaw, i = 0, l = value.length, resultCRH = "",
+          depth = 0, loopJustEnded = true, error = false, resultC = "";
+        do {
+          while (i < l) {
+            let char = value[i++];
+            if (char === "+")
+              resultC += char,
+              resultCRH += '<span class="token increment inserted">+</span>',
+              loopJustEnded = false;
+            else if (char === "-")
+              resultC += char,
+              resultCRH += '<span class="token decrement deleted">-</span>',
+              loopJustEnded = false;
+            else if (char === "<" || char === ">")
+              resultC += char,
+              resultCRH += `<span class="token pointer keyword">${char}</span>`,
+              loopJustEnded = false;
+            else if (char === ".")
+              resultC += char,
+              resultCRH += '<span class="token operator">.</span>';
+            else if (char === ",")
+              resultC += char,
+              resultCRH += '<span class="token operator">,</span>',
+              loopJustEnded = false;
+            else if (char === "[") {
+              depth++;
+              if (loopJustEnded) {
+                let initialDepth = depth, comment = "[", errorJustFound = false;
+                do {
+                  let char = value[i++];
+                  if (i > l) {
+                    error = true;
+                    break;
+                  }
+                  if (char === "[")
+                    depth++;
+                  else if (char === "]")
+                    depth--;
+                  comment += char;
+                } while (depth >= initialDepth);
+                resultCRH += `<span class="token comment">${escapeLNN(comment)}</span>`;
+              } else
+                resultC += char,
+                resultCRH += '<span class="token branching important">[</span>',
+                loopJustEnded = false;
+            } else if (char === "]") {
+              depth--;
+              if (depth < 0) 
+                depth = 0, error = true,
+                resultCRH += '<span class="token branching important soullbf-error">]</span>';
+              else
+                resultC += char,
+                resultCRH += '<span class="token branching important">]</span>';
+                loopJustEnded = true;
+            } else {
+              let comment = "";
+              do {
+                comment += char;
+                char = value[i++];
+                if (i > l)
+                  break;
+              } while ("+-<>.,[]".indexOf(char) === -1);
+              i--;
+              resultCRH += `<span class="token comment">${escapeLNN(comment)}</span>`;
+            }
+            //console.log({char, i, depth, loopJustEnded, error, resultCRH});
+          }
+          if (depth > 0)
+            error = true,
+            resultCRH += '<span class="token comment soullbf-error">&#32;</span>';
+        } while (false);
+        vm.codeRawHighlight = resultCRH, vm.syntaxError = error;
+        vm.code = error ? "" : resultC;
+        vm.codeHighlight = error ? '' : [...resultC].map(c => (`<span class="token ${{
+          ">": 'pointer keyword',
+          "<": 'pointer keyword',
+          "+": 'increment inserted',
+          "-": 'decrement deleted',
+          ".": 'operator',
+          ",": 'operator',
+          "[": 'branching important',
+          "]": 'branching important',
+        }[c]}">${c}</span>`)).join("");
+      },
+
+      iStep() {
+        if (!vm.initialized) {
+          vm.initialized = true;
+
+        }
+      },
+      run() {
+        vm.stat = 'run';
+        vm.intHandle = setInterval(() => {
+          let end = Date.now() + 42;
+          try {
+            do {
+              vm.iStep();
+            } while (Date.now() < end);
+          } catch (_) {
+            vm.stat = 'end';
+            clearInterval(vm.intHandle);
+          }
+        }, 0);
+      },
+      tick() {
+        vm.stat = 'tick';
+        vm.intHandle = setInterval(() => {
+          try {
+            vm.iStep();
+          } catch (_) {
+            vm.stat = 'end';
+            clearInterval(vm.intHandle);
+          }
+        }, 300);
+      },
+      step() {
+        vm.stat = 'pause';
+        try {
+          vm.iStep();
+        } catch (_) {
+          vm.stat = 'end';
+        }
+      },
+      pause() {
+        vm.stat = 'pause';
+        clearInterval(vm.intHandle);
+      },
+      reset() {
+        vm.stat = 'ready';
+        vm.codePointer = 0;
+        vm.memory = null;
+        vm.initialized = false;
+      },
+    }
+  });
+
+  setTimeout(() => {
+    let e;
+    setInterval(() => {
+      if (e)
+        vm.codeInputScrollTop = e.scrollTop;
+      else
+        e = document.querySelector("#codeInputTextarea");
+    });
+  });
+
+  vm.onCodeInput();
+</script>
+
+</html>
