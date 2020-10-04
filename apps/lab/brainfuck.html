@@ -310,36 +310,37 @@
       .replace(/ /g, "&#32;")
       .replace(/\n/g, "<br>");
 
-  class SoullbfMemory {
+  class SoullbfMemory extends Map {
     constructor(dataType, cells) {
-      this.arr = [], this.negativeArr = [], this.pointer = 0;
-      this.dataType = dataType, this.cells = cells, this.finiteCells = this.cells !== Infinity;
-      this.overflow = dataType === 99 ? Infinity : dataType === 8 ? BigInt(1) << BigInt(63) : 2 ** (dataType * 8 - 1);
+      super();
+      let finiteCells = this.cells !== Infinity;
+      let isBigInt = dataType >= 8;
+      let overflow = isBigInt ? BigInt(1) << BigInt(63) : 2 ** (dataType * 8 - 1);
+      let m = overflow + overflow;
+      this.fixOverflow = finiteCells ? v => {
+        let v_ = isBigInt ? BigInt(v) : Math.floor(v);
+        if (v_ !== v_) throw new TypeError("数据不能是NaN");
+        if (v_ === Infinity || v_ === -Infinity) throw new RangeError("数据不能是无穷大");
+        v_ = (v_ + overflow) % m;
+        if (v_ < 0) v_ += m;
+        return v_ - overflow;
+      } : v => v;
+      this.pointer = 0;
+      this.dataType = dataType, this.cells = cells, this.finiteCells = finiteCells, this.isBigInt = isBigInt;
     }
     getCurr() {
-      let [a, k] = this.pointer < 0 ? [this.negativeArr, ~this.pointer] : [this.arr, this.pointer];
-      if (!(k in a)) a[k] = this.dataType >= 8 ? BigInt(0) : 0;
-      return a[k];
+      return super.has(this.pointer) ? super.get(this.pointer) : this.isBigInt ? BigInt(0) : 0;
     }
     setCurr(v) {
-      let [a, k] = this.pointer < 0 ? [this.negativeArr, ~this.pointer] : [this.arr, this.pointer];
-      a[k] = this.dataType >= 8 ? BigInt(v) : Math.floor(v);
-      while (a[k] >= this.overflow)
-        a[k] -= this.overflow, a[k] -= this.overflow;
+      super.set(this.pointer, this.fixOverflow(v));
     }
-    increment(i, v) {
-      let [a, k] = this.pointer < 0 ? [this.negativeArr, ~this.pointer] : [this.arr, this.pointer];
-      if (!(k in a))a[k] = this.dataType >= 8 ? BigInt(0) : 0;
-      a[k]++;
-      if (a[k] >= this.overflow)
-        a[k] -= this.overflow, a[k] -= this.overflow;
+    increment(i) {
+      let v = super.has(this.pointer) ? super.get(this.pointer) : this.isBigInt ? BigInt(0) : 0;
+      super.set(this.pointer, this.fixOverflow(++v));
     }
-    decrement(i, v) {
-      let [a, k] = this.pointer < 0 ? [this.negativeArr, ~this.pointer] : [this.arr, this.pointer];
-      if (!(k in a))a[k] = this.dataType >= 8 ? BigInt(0) : 0;
-      a[k]--;
-      if (a[k] < -this.overflow)
-        a[k] += this.overflow, a[k] += this.overflow;
+    decrement(i) {
+      let v = super.has(this.pointer) ? super.get(this.pointer) : this.isBigInt ? BigInt(0) : 0;
+      super.set(this.pointer, this.fixOverflow(--v));
     }
     right(i) {
       this.pointer++;
@@ -350,16 +351,6 @@
       this.pointer--;
       if (this.finiteCells && this.pointer < 0)
         this.pointer += this.cells;
-    }
-    toMap() {
-      let map = new Map();
-      this.arr.forEach((v, i) => {
-        map.set(i, v);
-      })
-      this.negativeArr.forEach((v, i) => {
-        map.set(~i, v);
-      })
-      return map;
     }
   }
 
@@ -372,15 +363,18 @@
 
       codeInputScrollTop: 0,
 
-      codeRaw: `>>>+[[-]>>[-]++>+>+++++++[<++++>>++<-]++>>+>+>+++++[>++>++++++<<-]+>>>,<++[[>[->>]<[>>]<<-]<[<]<+>>[>]>[<+>-[[<+>-]>]<[[[-]<]++<-[<+++++++++>[<->-]>>]>>]]<<]<]<[[<]>[[>]>>[>>]+[<<]<[<]<+>>-]>[>]+[->>]<<<<[[<<]<[<]+<<[+>+<<-[>-->+<<-[>+<[>>+<<-]]]>[<+>-]<]++>>-->[>]>>[>>]]<<[>>+<[[<]<]>[[<<]<[<]+[-<+>>-[<<+>++>-[<->[<<+>>-]]]<[>+<-]>]>[>]>]>[>>]>>]<<[>>+>>+>>]<<[->>>>>>>>]<<[>.>>>>>>>]<<[>->>>>>]<<[>,>>>]<<[>+>]<<[+<<]<]
-[这是Oleg Mazonka和Daniel B. Cristofani编写的brainfuck自举。 http://mazonka.com/brainf/10.html ]
+      codeRaw: `>>>>>++[-<++[-<++[-<++[-<++[-<++>]>]>]>]>]
+<<+++[-<+++[-<+++>]>]
+>>>>++[-<++[-<++[-<++[-<++[-<+++>]>]>]>]>]
+<<<<<<-[-<+.>>+.<]
 
 [(明显无法到达的代码会变成注释。)]
 
 你看这代码高亮zhuo滴彳亍不彳亍！
 网页文本框加代码高亮是真的麻烦）
 实现方法：把文本框搞成透明，然后在后面叠一个带高亮的div。想尽各种办法把高亮跟文本框里的字对齐就完事了。
-然而这样一来滚动条就是个大问题，因为你不知道它占多少宽度。最后我只好想办法把滚动条给隐藏了。`,
+然而这样一来滚动条就是个大问题，因为你不知道它占多少宽度。最后我只好想办法把滚动条给隐藏了。
+然而即使这样，在一些平台（如iOS Safari）上仍然无法正常显示。我会继续解决这个问题。`,
       codeInputVisible: false,
       codeRawHighlight: "",
       
