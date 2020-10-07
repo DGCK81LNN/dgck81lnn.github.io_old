@@ -1,7 +1,7 @@
 [
     {
         "title": "brainfuck 在线调试器",
-        "body": "<p><a href=\"https://esolangs.org/brainfuck\" target=\"_blank\">brainfuck - Esolang维基</a></p><p>解释器功能目前还未完成，只实现了代码高亮。</p>",
+        "body": "<p><a href=\"https://esolangs.org/brainfuck\" target=\"_blank\">brainfuck - Esolang维基</a></p><p>万能(?)brainfuck调试器终于基本完工了！！！<br>建议<a href=\"https://github.com/DGCK81LNN/dgck81lnn.github.io/blob/master/apps/lab/brainfuck.html\">到GitHub看看源代码</a></p>",
         "link": "/apps/lab/brainfuck.html"
     },
     {
