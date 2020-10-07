@@ -71,7 +71,7 @@ try {
         /*
          * 弹框辣！
          */
-        alert(a + b);
+        alert(msg1 + msg2);
     }
 }
 
