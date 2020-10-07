@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="/css/element.css">
   <link rel="stylesheet" href="/css/commons.css">
   <link rel="stylesheet" href="/css/prism.css">
+  <link rel="stylesheet" href="/apps/lab/lab_components.css">
   <link rel="icon" href="/site_icon.png">
   <link rel="shortcut icon" href="/site_icon.png">
   <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
@@ -20,35 +21,52 @@
   <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
   <script src="/js/prism.js"></script>
   <script src="/js/commons.js"></script>
+  <script src="/apps/lab/lab_components.js"></script>
   <title>brainfuck 在线调试器 - 灵魂小站</title>
   <style>
     .soullbf-toolbar-row {
       display: inline-block;
       margin: 5px;
     }
-    .soullbf-flex {
-      flex-wrap: wrap;
-    }
     .soullbf-left,
     .soullbf-right {
       width: 50%;
       height: 300px;
+      overflow-y: auto;
       box-sizing: border-box;
       padding: 1rem 0.5rem;
     }
     .soullbf-left {
       float: left;
-      flex-direction: column;
+    }
+    .soullbf-code-input {
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .soullbf-code-input>code {
+      height: 100%;
+      box-sizing: border-box;
+      color: transparent;
+      caret-color: #606266;
+      background-color: transparent;
+      overflow-y: -moz-scrollbars-none;
+      -ms-overflow-style: none;
     }
     .soullbf-right {
       float: right;
     }
-    .soullbf-vsection {
-      flex: 1;
-      overflow-y: auto;
+    .soullbf-right>.el-textarea,
+    .soullbf-right>.el-textarea>textarea {
+      height: 100%;
     }
-    .soullbf-maincode {
+    .soullbf-wrapcode code {
       white-space: pre-wrap !important;
+      overflow-wrap: break-word;
+    }
+
+    textarea {
+      font-family: var(--soul-font-family-monospace);
+      resize: none !important;
     }
 
     .el-drawer {
@@ -60,58 +78,28 @@
     .soullbf-drawer-config .el-drawer__body {
       overflow-y: auto;
     }
-    .soullbf-code-input-box {
-      position: relative;
-      height: 100%;
-    }
-    .soullbf-code-input {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      box-sizing: border-box;
-    }
-    .soullbf-code-input > textarea {
-      height: 100%;
-      box-sizing: border-box;
-      font-family: var(--soul-font-family-monospace);
-      resize: none !important;
-      color: transparent;
-      caret-color: #606266;
-      background-color: transparent;
-      overflow-y: -moz-scrollbars-none;
-      -ms-overflow-style: none;
-    }
-    .soullbf-code-input > textarea::-webkit-scrollbar {
-      width: 0 !important;
-    }
-    .soullbf-code-input-highlight-wrapper {
-      height: 100%;
-      box-sizing: border-box;
-      padding: 5px 15px;
-      border-radius: 4px;
-      border: 1px solid transparent;
-      overflow-y: hidden;
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-    .soullbf-code-input-highlight {
-      overflow-wrap: break-word;
-      display: block;
-      line-height: 1.5;
-      -webkit-box-sizing: border-box;
-      box-sizing: border-box;
-      width: 100%;
-      font-size: 14px;
-      font-family: var(--soul-font-family-monospace);
-      white-space: pre-wrap;
-    }
 
     .token.soullbf-error {
       background: #E1001A;
       color: #f5f2f0;
       text-shadow: none;
+    }
+    .token.soullbf-pointer {
+      background: #ffbebe;
+    }
+    @keyframes cursor {
+      0% {
+        background: transparent;
+      }
+      50% {
+        background: #ffbebe;
+      }
+      100% {
+        background: transparent;
+      }
+    }
+    .token.soullbf-cursor {
+      animation: cursor 1s infinite;
     }
   </style>
 </head>
@@ -126,102 +114,135 @@
         <el-breadcrumb-item>brainfuck 在线调试器</el-breadcrumb-item>
       </el-breadcrumb>
 
-      <section
-      v-if="stat === 'run' || stat === 'tick'"
-      class="soullbf-toolbar"
-      >
-        <div class="soullbf-toolbar-row">
+      <section class="soullbf-toolbar">
+        <span v-if="stat === 'run' || stat === 'tick'">
           <el-button
           v-if="stat && stat !== 'pause'"
-          type="danger" plain round
+          type="danger" plain
           icon="el-icon-video-pause"
-          @click="stat = 'pause'"
+          @click="pause()"
           >暂停</el-button>
-        </div>
-      </section>
-      <section
-      v-else
-      class="soullbf-toolbar"
-      >
-        <div
-        v-if="stat === 'ready'"
-        class="soullbf-toolbar-row"
-        >
-          <el-button-group>
+        </span>
+        <span v-else>
+          <span
+          v-if="stat !== 'end'"
+          >
             <el-button
-            type="primary" round
-            icon="el-icon-edit-outline"
-            @click="codeInputVisible = true"
-            >输入代码</el-button>
-            <el-button
-            type="info" plain round
-            icon="el-icon-setting"
-            @click="configVisible = true"
-            >环境选项</el-button>
-          </el-button-group>
-        </div>
-        <div
-        v-else
-        class="soullbf-toolbar-row"
-        >
-          <el-button
-          v-if
-          type="danger" plain round
-          icon="el-icon-delete"
-          @click="stat = 'ready'"
-          >重置</el-button>
-        </div>
-        <div
-        v-if="stat !== 'end'"
-        class="soullbf-toolbar-row"
-        >
-          <el-button-group>
-            <el-button
-            type="primary" plain round
+            type="primary"
             icon="el-icon-caret-right"
             :disabled="syntaxError"
-            @click="stat = 'run'"
+            @click="run()"
             >运行</el-button>
-            <el-button
-            plain round
-            icon="el-icon-d-arrow-right"
+            <el-dropdown
+            split-button
             :disabled="syntaxError"
-            @click="stat = 'tick'"
-            >逐步运行</el-button>
+            @click="tick()"
+            @command="tickSpeedVisible = true"
+            >
+              <i class="el-icon-d-arrow-right"></i>
+              逐步运行
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>设置速度...</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             <el-button
-            plain round
+            plain
             icon="el-icon-right"
             :disabled="syntaxError"
-            @click="stat = 'pause'"
+            @click="step()"
             >运行一步</el-button>
-          </el-button-group>
-        </div>
+          </span>
+          <el-button
+          v-if="stat === 'ready'"
+          type="info" plain
+          icon="el-icon-setting"
+          @click="configVisible = true"
+          >环境选项</el-button>
+          <el-button
+          v-else
+          type="danger"
+          icon="el-icon-delete"
+          @click="reset()"
+          >重置</el-button>
+        </span>
       </section>
 
-      <section class="soullbf-main">
-        <el-container class="soullbf-left">
-          <section class="soullbf-vsection">
-            <p>解释器功能尚未实现，目前只有代码高亮。</p>
-            <p v-if="syntaxError">
-              <el-tag type="danger">代码有语法错误！</el-tag>
-            </p>
-            <pre
-            v-else
-            class="soul-manual-prism"
-            ><code
-            class="soul-manual-prism soullbf-maincode"
-            v-html="codeHighlight"
-            ></code></pre>
-          </section>
-        </el-container>
+      <div v-if="stat !== 'ready'">
+        <el-tag
+        v-for="kvPair in renderMemory()"
+        :key="kvPair[0]"
+        :type="kvPair[0] === memory.pointer ? 'danger' : ''"
+        >{{kvPair[1] === undefined ? '...' : kvPair.join(": ")}}</el-tag>
+      </div>
 
-        <section class="soullbf-right">
-          OUTPUT
+      <section class="soullbf-main">
+        <section class="soullbf-left">
+          <soul-fake-textarea
+          v-if="stat === 'ready'"
+          class="soullbf-code-input"
+          :value="code"
+          :handle-input="handleInput"
+          ></soul-fake-textarea>
+          <soul-manual-prism
+          v-else
+          class="soullbf-wrapcode"><span
+          v-for="(instruction, i) in [...code]"
+          :class="[
+            'token',
+            instruction === '>' || instruction === '<' ? 'pointer keyword'
+            : instruction === '+' ? 'increment inserted'
+            : instruction === '-' ? 'decrement deleted'
+            : instruction === '.' || instruction === ',' ? 'operator'
+            : instruction === '[' || instruction === ']' ? 'branching important'
+            : 'comment',
+            i === codePointer ? 'soullbf-pointer' : ''
+          ]"
+          v-text="instruction === '\n' ? ' \n' : instruction"
+          ></span></soul-manual-prism>
+        </section>
+
+        <section v-if="stat === 'ready'" class="soullbf-right">
+          <el-input
+          type="textarea"
+          v-model="input"
+          placeholder="输入流。模拟从文本文件中读取输入。留空则启动命令行模式。"
+          :disabled="stat !== 'ready'"
+          ></el-input>
+        </section>
+        <section v-else-if="staticInput" class="soullbf-right">
+          输入流：
+          <soul-manual-prism class="soullbf-wrapcode">{{input.slice(0, inputPointer)}}<span class="token soullbf-pointer">{{input[inputPointer] === '\n' ? ' \n': input[inputPointer] || ' '}}</span>{{input.slice(inputPointer + 1)}}</soul-manual-prism>
+          输出：
+          <soul-manual-prism class="soullbf-wrapcode">{{output}}<span class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
+        </section>
+        <section v-else class="soullbf-right">
+          <soul-manual-prism class="soullbf-wrapcode">{{output}}<span v-if="waitingForInput" class="token comment">{{inputBuffer}}<span class="token soullbf-cursor">&nbsp;</span></span><span v-else class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
+          <div @keyup.enter="inputBufferKeypress">
+            <el-input
+            v-if="waitingForInput"
+            v-model="inputBuffer"
+            ></el-input>
+          </div>
         </section>
       </section>
     </el-main>
     <soul-footer></soul-footer>
 
+
+    <el-dialog
+    title="设置逐步运行速度"
+    :visible.sync="tickSpeedVisible"
+    width="30%">
+      <el-input-number
+      v-model="tickSpeed"
+      :min="10"
+      :step="50"
+      ></el-input-number>
+      <p>间隔毫秒数，输入10以上的整数。</p>
+      <span slot="footer">
+        <el-button @click="tickSpeedVisible = false">完成</el-button>
+      </span>
+    </el-dialog>
 
     <el-drawer
     class="soullbf-drawer-config"
@@ -230,73 +251,68 @@
     direction="rtl"
     >
       <el-form :model="config">
-        <el-form-item label="静态输入">
-          <el-switch v-model="config.staticInput"></el-switch>
-          <p class="soul-p2">
-            模拟从文本文件中读取输入。
-          </p>
-        </el-form-item>
-        <el-divider></el-divider>
-        <el-form-item v-if="config.staticInput" label="EOF">
+        <el-form-item label="EOF">
           <el-radio-group v-model="config.eof" size="small">
             <el-radio-button :label="undefined">保持不变</el-radio-button>
             <el-radio-button :label="-1">读入-1</el-radio-button>
             <el-radio-button :label="0">读入0</el-radio-button>
           </el-radio-group>
           <p class="soul-p2">
-            设置EOF的表示方式。标准文档说应当保持单元格中原来的值不变，但原版编译器会读入-1，也有很多编译器/解释器会读入0。有些brainfuck程序可以兼容“保持不变”以及“读入-1”和“读入0”的其中一个。
+            设置使用“输入流”时EOF的表示方式。标准文档说应当保持单元格中原来的值不变，但原版编译器会读入-1，也有很多编译器/解释器会读入0。有些brainfuck程序可以兼容“保持不变”以及“读入-1”和“读入0”的其中一个。
           </p>
         </el-form-item>
         <el-form-item label="数据类型">
-          <el-radio-group v-model="config.dataType" size="small">
-            <el-radio-button :label="1">8位</el-radio-button>
-            <el-radio-button :label="2">16位</el-radio-button>
-            <el-radio-button :label="4">32位</el-radio-button>
-            <el-radio-button :label="8" :disabled="bigIntNotSupported">64位</el-radio-button>
-            <el-radio-button :label="99" :disabled="bigIntNotSupported">无限</el-radio-button>
-          </el-radio-group>
-          <p class="soul-p2" v-if="bigIntNotSupported">
-            您的浏览器不支持BigInt，“64位”和“无限”将无法使用。
-          </p>
+          <el-select v-model="config.dataType">
+            <el-option label="8位" :value="1"></el-option>
+            <el-option label="16位" :value="2"></el-option>
+            <el-option label="32位" :value="4"></el-option>
+            <el-option label="64位" :value="8" :disabled="bigIntNotSupported"></el-option>
+            <el-option label="无限" :value="99" :disabled="bigIntNotSupported"></el-option>
+            <el-option v-if="bigIntNotSupported" value disabled>
+              您的浏览器不支持BigInt，“64位”和“无限”无法使用。
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="单元格数量">
-          <el-radio-group v-model="config.cells" size="small">
-            <el-radio-button :label="30000">3万</el-radio-button>
-            <el-radio-button :label="Infinity">无限</el-radio-button>
-          </el-radio-group>
+          <el-select v-model="config._cells" @change="ucellsChange">
+            <el-option-group>
+              <el-option label="30000" :value="30000"></el-option>
+              <el-option label="5000" :value="5000"></el-option>
+              <el-option label="100" :value="100"></el-option>
+              <el-option label="无限" :value="Infinity"></el-option>
+            </el-option-group>
+            <el-option-group>
+              <el-option label="自定义..." :value="undefined"></el-option>
+            </el-option-group>
+          </el-select>
         </el-form-item>
-        <el-form-item v-if="config.cells < Infinity" label="指针越界">
+        <el-form-item :label="config.cells === Infinity ? '负数指针' : '指针越界'">
           <el-radio-group v-model="config.allowNegativeMP" size="small">
-            <el-radio-button :label="true">跳到另一端</el-radio-button>
-            <el-radio-button :label="false">停止运行</el-radio-button>
+            <el-radio-button :label="false">{{config.cells === Infinity ? '不允许' : '停止运行'}}</el-radio-button>
+            <el-radio-button :label="true">{{config.cells === Infinity ? '允许' : '跳到另一端'}}</el-radio-button>
           </el-radio-group>
         </el-form-item>
       </el-form>
     </el-drawer>
 
-    <el-drawer
-    title="输入代码"
-    :visible.sync="codeInputVisible"
-    direction="rtl"
-    >
-      <div class="soullbf-code-input-box">
-        <div class="soullbf-code-input-highlight-wrapper">
-          <div
-          class="soullbf-code-input-highlight"
-          :style="{ marginTop: -codeInputScrollTop + 'px' }"
-          v-html="codeRawHighlight"
-          ></div>
-        </div>
-        <el-input
-        type="textarea"
-        id="codeInputTextarea"
-        class="soullbf-code-input"
-        v-model="codeRaw"
-        @input="onCodeInput()"
-        @scroll="codeInputScroll()"
-        ></el-input>
-      </div>
-    </el-drawer>
+    <el-dialog
+    title="自定义单元格数量"
+    :visible.sync="customCellsVisible"
+    width="30%">
+      <el-input-number
+      v-model="config.cells"
+      @change="cellsChange"
+      :min="3"
+      :max="65535"
+      :step="1"
+      step-strictly
+      :controls="false"
+      ></el-input-number>
+      <p>输入3到65535之间的整数。</p>
+      <span slot="footer">
+        <el-button @click="customCellsVisible = false">完成</el-button>
+      </span>
+    </el-dialog>
   </div>
 </body>
 <script>
@@ -313,44 +329,59 @@
   class SoullbfMemory extends Map {
     constructor(dataType, cells) {
       super();
-      let finiteCells = this.cells !== Infinity;
+      let finiteCells = cells !== Infinity;
       let isBigInt = dataType >= 8;
       let overflow = isBigInt ? BigInt(1) << BigInt(63) : 2 ** (dataType * 8 - 1);
       let m = overflow + overflow;
-      this.fixOverflow = finiteCells ? v => {
+      this.fixOverflow = dataType == 99 ? (v) => v : v => {
         let v_ = isBigInt ? BigInt(v) : Math.floor(v);
         if (v_ !== v_) throw new TypeError("数据不能是NaN");
         if (v_ === Infinity || v_ === -Infinity) throw new RangeError("数据不能是无穷大");
         v_ = (v_ + overflow) % m;
         if (v_ < 0) v_ += m;
         return v_ - overflow;
-      } : v => v;
+      };
       this.pointer = 0;
       this.dataType = dataType, this.cells = cells, this.finiteCells = finiteCells, this.isBigInt = isBigInt;
+      super.set(0, isBigInt ? BigInt(0) : 0);
+      this.haltOnPointerOverflow = false;
     }
     getCurr() {
-      return super.has(this.pointer) ? super.get(this.pointer) : this.isBigInt ? BigInt(0) : 0;
+      return super.get(this.pointer);
     }
     setCurr(v) {
-      super.set(this.pointer, this.fixOverflow(v));
+      if (v !== undefined)
+        super.set(this.pointer, this.fixOverflow(v));
     }
     increment(i) {
-      let v = super.has(this.pointer) ? super.get(this.pointer) : this.isBigInt ? BigInt(0) : 0;
+      let v = super.get(this.pointer);
       super.set(this.pointer, this.fixOverflow(++v));
     }
     decrement(i) {
-      let v = super.has(this.pointer) ? super.get(this.pointer) : this.isBigInt ? BigInt(0) : 0;
+      let v = super.get(this.pointer);
       super.set(this.pointer, this.fixOverflow(--v));
     }
     right(i) {
       this.pointer++;
-      if (this.pointer >= this.cells)
-        this.pointer -= this.cells;
+      if (this.pointer >= this.cells) {
+        if (this.haltOnPointerOverflow)
+          throw new Error("指针越界！");
+        else
+          this.pointer -= this.cells;
+      }
+      if (!super.has(this.pointer))
+        super.set(this.pointer, this.isBigInt ? BigInt(0) : 0);
     }
     left(i) {
       this.pointer--;
-      if (this.finiteCells && this.pointer < 0)
-        this.pointer += this.cells;
+      if (this.pointer < 0) {
+        if (this.haltOnPointerOverflow)
+          throw new Error("指针越界！");
+        else if (this.finiteCells)
+          this.pointer += this.cells;
+      }
+      if (!super.has(this.pointer))
+        super.set(this.pointer, this.isBigInt ? BigInt(0) : 0);
     }
   }
 
@@ -358,121 +389,141 @@
 
   const vm = new Vue({
     el: "#app",
+    
     data: {
       bigIntNotSupported: _test < 6,
 
       codeInputScrollTop: 0,
 
-      codeRaw: `>>>>>++[-<++[-<++[-<++[-<++[-<++>]>]>]>]>]
+      code: `>>>>>++[-<++[-<++[-<++[-<++[-<++>]>]>]>]>]
 <<+++[-<+++[-<+++>]>]
 >>>>++[-<++[-<++[-<++[-<++[-<+++>]>]>]>]>]
-<<<<<<-[-<+.>>+.<]
-
-[(明显无法到达的代码会变成注释。)]
-
-你看这代码高亮zhuo滴彳亍不彳亍！
-网页文本框加代码高亮是真的麻烦）
-实现方法：把文本框搞成透明，然后在后面叠一个带高亮的div。想尽各种办法把高亮跟文本框里的字对齐就完事了。
-然而这样一来滚动条就是个大问题，因为你不知道它占多少宽度。最后我只好想办法把滚动条给隐藏了。
-然而即使这样，在一些平台（如iOS Safari）上仍然无法正常显示。我会继续解决这个问题。`,
-      codeInputVisible: false,
-      codeRawHighlight: "",
+<<<<<<-[-<+.>>+.<]`,
+      codeHighlight: "",
+      syntaxError: false,
       
       config: {
-        staticInput: true, // {true, false}
         eof: undefined, // {undefined: no_change, -1, 0}
         dataType: 1, // {1: Int8, 2: Int16, 4: Int32, 8: Int64, 99: BigInt}
+        _cells: 30000,
         cells: 30000, // {(int), Infinity}
-        allowNegativeMP: true
+        allowNegativeMP: false,
       },
       configVisible: false,
+      customCellsVisible: false,
 
-      code: "",
-      codeHighlight: "",
-      codePointer: 0,
-
-      memory: null,
+      tickSpeed: 300,
+      tickSpeedVisible: false,
 
       stat: "ready", // ready, run, tick, pause, end
       initialized: false,
-      syntaxError: false,
+      codePointer: 0,
+      memory: null,
+      staticInput: true,
+      input: "",
+      inputPointer: 0,
+      inputBuffer: "",
+      waitingForInput: false,
+      output: "",
     },
+
+    computed: { },
+
     methods: {
-      onCodeInput() {
-        let value = vm.codeRaw, i = 0, l = value.length, resultCRH = "",
-          depth = 0, loopJustEnded = true, error = false, resultC = "";
-        do {
-          while (i < l) {
-            let char = value[i++];
-            if (char === "+")
-              resultC += char,
-              resultCRH += '<span class="token increment inserted">+</span>',
-              loopJustEnded = false;
-            else if (char === "-")
-              resultC += char,
-              resultCRH += '<span class="token decrement deleted">-</span>',
-              loopJustEnded = false;
-            else if (char === "<" || char === ">")
-              resultC += char,
-              resultCRH += `<span class="token pointer keyword">${char}</span>`,
-              loopJustEnded = false;
-            else if (char === ".")
-              resultC += char,
-              resultCRH += '<span class="token operator">.</span>';
-            else if (char === ",")
-              resultC += char,
-              resultCRH += '<span class="token operator">,</span>',
-              loopJustEnded = false;
-            else if (char === "[") {
-              depth++;
-              if (loopJustEnded) {
-                let initialDepth = depth, comment = "[", errorJustFound = false;
-                do {
-                  let char = value[i++];
-                  if (i > l) {
-                    error = true;
-                    break;
-                  }
-                  if (char === "[")
-                    depth++;
-                  else if (char === "]")
-                    depth--;
-                  comment += char;
-                } while (depth >= initialDepth);
-                resultCRH += `<span class="token comment">${escapeLNN(comment)}</span>`;
-              } else
-                resultC += char,
-                resultCRH += '<span class="token branching important">[</span>',
-                loopJustEnded = false;
-            } else if (char === "]") {
-              depth--;
-              if (depth < 0) 
-                depth = 0, error = true,
-                resultCRH += '<span class="token branching important soullbf-error">]</span>';
-              else
-                resultC += char,
-                resultCRH += '<span class="token branching important">]</span>';
-                loopJustEnded = true;
-            } else {
-              let comment = "";
-              do {
-                comment += char;
-                char = value[i++];
-                if (i > l)
-                  break;
-              } while ("+-<>.,[]".indexOf(char) === -1);
-              i--;
-              resultCRH += `<span class="token comment">${escapeLNN(comment)}</span>`;
+      handleInput(raw, offset) {
+        vm.code = raw;
+        let frag = document.createDocumentFragment(),
+          line = document.createElement("div"),
+          token = null, text = null;
+        let i = 0, l = raw.length, depth = 0, error = false, newLine = true;
+        let caretNode = null, caretOffset = 1;
+        if (i === 0 && offset === 0)
+          caretNode = line, caretOffset = 0;
+        while (i < l) {
+          let char = raw[i++];
+          if (char === "\n") {
+            if (newLine) {
+              text = document.createElement("br"),
+              line.appendChild(text);
             }
-            //console.log({char, i, depth, loopJustEnded, error, resultCRH});
+            newLine = true;
+            frag.appendChild(line);
+            line = document.createElement("div");
+            if (i === offset)
+              caretNode = line, caretOffset = 0;
+          } else {
+            newLine = false;
+            token = document.createElement("span"), text = document.createTextNode(char);
+            token.classList.add("token");
+            if (char === "+")
+              token.classList.add("increment", "inserted");
+            else if (char === "-")
+              token.classList.add("decrement", "deleted");
+            else if (char === "<" || char === ">")
+              token.classList.add("pointer", "keyword");
+            else if (char === "." || char === ",")
+              token.classList.add("operator", "inserted");
+            else if (char === "[")
+              depth++, token.classList.add("branching", "important");
+            else if (char === "]") {
+              depth--, token.classList.add("branching", "important");
+              if (depth < 0) 
+                depth = 0, error = true, token.classList.add("soullbf-error");
+            } else
+              token.classList.add("comment");
+            token.appendChild(text);
+            line.appendChild(token);
+            if (i === offset)
+                caretNode = text, caretOffset = 1;
           }
-          if (depth > 0)
-            error = true,
-            resultCRH += '<span class="token comment soullbf-error">&#32;</span>';
-        } while (false);
-        vm.codeRawHighlight = resultCRH, vm.syntaxError = error;
-        vm.code = error ? "" : resultC;
-        vm.codeHighlight = error ? '' : [...resultC].map(c => (`<span class="token ${{
+          //console.log({i, depth, newLine, caretNode, caretOffset});
+        }
+        if (depth > 0)
+          error = true,
+          token.classList.add("soullbf-error");
+        vm.syntaxError = error;
+        if (newLine)
+          line.appendChild(document.createElement("br"));
+        frag.appendChild(line);
+        return {
+          renderedNode: frag,
+          caretNode,
+          caretOffset
+        };
+      },
+
+      ucellsChange(v){
+        if (v === undefined) {
+          vm.config._cells = vm.config.cells;
+          vm.customCellsVisible = true;
+        }
+        else
+          vm.config.cells = v;
+      },
+      cellsChange(v){
+        vm.config._cells = v;
+      },
+
+      renderMemory() {
+        let m = [...vm.memory.entries()], r = [], i = vm.config.cells === Infinity && vm.config.allowNegativeMP ? -Infinity : -1;
+        m.sort((l, r) => l[0] - r[0]);
+        m.forEach((v) => {
+          if (v[0] !== i + 1)
+            r.push([i]);
+          i = v[0];
+          r.push(v);
+        });
+        if (vm.config.cells !== i + 1)
+          r.push([i + 1]);
+        return r;
+      },
+
+      inputBufferKeypress($event) {
+        vm.input = vm.inputBuffer + "\n", vm.inputPointer = 0, vm.output += vm.input, vm.inputBuffer = "";
+      },
+
+      iUpdate() {
+        vm.codeHighlight = error ? '' : [...vm.code].map(c => (`<span class="token ${{
           ">": 'pointer keyword',
           "<": 'pointer keyword',
           "+": 'increment inserted',
@@ -486,45 +537,137 @@
 
       iStep() {
         if (!vm.initialized) {
+          vm.codePointer = 0;
+          vm.inputPointer = 0;
+          vm.output = "";
+          vm.inputBuffer = "";
+          vm.memory = new SoullbfMemory(vm.config.dataType, vm.config.cells);
+          vm.memory.haltOnPointerOverflow = !vm.config.allowNegativeMP;
+          vm.staticInput = Boolean(vm.input);
           vm.initialized = true;
-
+        }
+        let instruction = vm.code[vm.codePointer], cond = true;
+        while (cond) { // do ... while (false)
+          cond = false;
+          if (instruction === undefined) 
+            throw "程序退出！";
+          
+          switch (instruction) {
+            case '>':
+              vm.memory.right();
+            break; case '<':
+              vm.memory.left();
+            break; case '+':
+              vm.memory.increment();
+            break; case '-':
+              vm.memory.decrement();
+            break; case '.':
+              vm.output += String.fromCharCode(Number(vm.memory.getCurr()));
+            break; case ',':
+              if (vm.inputPointer < vm.input.length)
+                vm.waitingForInput = false, vm.memory.setCurr(vm.input.charCodeAt(vm.inputPointer++));
+              else if (vm.staticInput)
+                vm.memory.setCurr(vm.config.eof);
+              else {
+                vm.waitingForInput = true;
+                return;
+              }
+            break; case '[':
+              let i3 = vm.code.substr(vm.codePointer), curr = vm.memory.getCurr();
+              if (
+                i3.match(/^\[([^><+-.,[\]]*)\-([^><+-.,[\]]*)\]/) && (vm.config.dataType !== 99 || curr > 0) ||
+                i3.match(/^\[([^><+-.,[\]]*)\+([^><+-.,[\]]*)\]/) && (vm.config.dataType !== 99 || curr < 0)
+              )
+                vm.memory.setCurr(0), vm.codePointer += 2;
+              else if (!curr) {
+                let depth = 1;
+                while (depth) {
+                  instruction = vm.code[++vm.codePointer];
+                  if (instruction === '[')
+                    depth++;
+                  else if (instruction === ']')
+                    depth--;
+                }
+              }
+            break; case ']':
+              if (vm.memory.getCurr()) {
+                let depth = 1;
+                while (depth) {
+                  instruction = vm.code[--vm.codePointer];
+                  if (instruction === ']')
+                    depth++;
+                  else if (instruction === '[')
+                    depth--;
+                }
+              }
+            break; default:
+              cond = true;
+            break;
+          }
+          if (vm.output.length >= 131072)
+            throw new Error("输出过长！");
+          do
+            instruction = vm.code[++vm.codePointer];
+          while (instruction && !"><+-.,[]".includes(instruction));
         }
       },
+
+      iHandleError(e) {
+        vm.stat = 'end';
+        clearInterval(vm.intHandle);
+        if (e instanceof Error) {
+          vm.$message({
+            type: 'error',
+            message: e,
+            duration: 0,
+            showClose: true
+          });
+          throw e;
+        }
+        vm.$message({
+          type: 'success',
+          message: e
+        });
+      },
+
       run() {
         vm.stat = 'run';
-        vm.intHandle = setInterval(() => {
-          let end = Date.now() + 42;
+        let f = () => {
+          let end = Date.now() + 30;
           try {
             do {
               vm.iStep();
             } while (Date.now() < end);
-          } catch (_) {
-            vm.stat = 'end';
-            clearInterval(vm.intHandle);
+            vm.intHandle = setTimeout(f, 10);
+          } catch (e) {
+            this.iHandleError(e);
           }
-        }, 0);
+        };
+        f();
       },
       tick() {
         vm.stat = 'tick';
-        vm.intHandle = setInterval(() => {
+        let f = () => {
           try {
             vm.iStep();
-          } catch (_) {
-            vm.stat = 'end';
-            clearInterval(vm.intHandle);
+            vm.intHandle = setTimeout(f, vm.tickSpeed);
+          } catch (e) {
+            this.iHandleError(e);
           }
-        }, 300);
+        };
+        f();
       },
       step() {
         vm.stat = 'pause';
         try {
           vm.iStep();
-        } catch (_) {
-          vm.stat = 'end';
+        } catch (e) {
+          this.iHandleError(e);
         }
       },
       pause() {
         vm.stat = 'pause';
+        clearTimeout(vm.intHandle);
         clearInterval(vm.intHandle);
       },
       reset() {
@@ -532,21 +675,16 @@
         vm.codePointer = 0;
         vm.memory = null;
         vm.initialized = false;
+        if (!vm.staticInput)
+          vm.input = "";
+        vm.waitingForInput = false;
       },
+    },
+
+    updated() {
+
     }
   });
-
-  setTimeout(() => {
-    let e;
-    setInterval(() => {
-      if (e)
-        vm.codeInputScrollTop = e.scrollTop;
-      else
-        e = document.querySelector("#codeInputTextarea");
-    });
-  });
-
-  vm.onCodeInput();
 </script>
 
 </html>

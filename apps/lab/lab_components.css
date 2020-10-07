@@ -1,0 +1,9 @@
+.soul-fake-textarea {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+.soul-fake-textarea>code {
+    overflow-y: auto;
+    resize: none;
+    caret-color: #606266 !important;
+}
