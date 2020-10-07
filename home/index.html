@@ -227,9 +227,18 @@ end</code></pre>
               <p>深奥编程语言不断突破着“编程语言”这一概念的界限。这些编程语言一般没有实际应用的价值。</p>
               <p class="soul-p2">（以下除brainfuck外的3种语言都不大出名，Prism.js没有现成的语法高亮，于是我就手动高亮了一下（建议查看页面源代码</p>
                 <el-tab-pane label="brainfuck" name="bf">
-                  <!-- 一个好用的brainfuck在线解释器/调试器： http://mazonka.com/brainf/bfdebug.html -->
-                  <pre><code class="language-brainfuck">复读机。此程序要求编译器/解释器在EOF时返回负一或保持原数据不变
-+[->-,+]<[<[<]>[.>]<]</code></pre>
+                  <pre><code class="language-brainfuck">单行复读机。可以在页面下方的brainfuck调试器上运行一下。
+环境要求：数据类型 — 16位或以上， EOF — 保持不变。
+
+读取输入直到换行符或EOF为止。
+----------[++++++++++
+  >++++++++++,
+----------]++++++++++
+反复输出读到的内容，包括换行符。
+<[
+  <[<]
+  >[.>]
+<]</code></pre>
                 </el-tab-pane>
                 <el-tab-pane label="Befunge-93" name="b93">
                   <pre class="soul-manual-prism"><code class="soul-manual-prism"><span class="token important">v>>></span> <span class="token important">></span> <span class="token important">v>>></span> <span class="token important">></span> <span class="token important">v</span>

@@ -1,3 +1,7 @@
+/**
+ * SoulHeader
+ * 页头。
+ */
 Vue.component('soul-header', {
     props: ['defaultActive'],
     template: `<el-header class="soul-header clearfix">
@@ -5,10 +9,10 @@ Vue.component('soul-header', {
     <el-container class="soul-header-navi">
         <slot></slot>
         <el-menu
-            class="soul-header-navi-tabs"
-            mode="horizontal"
-            :default-active="defaultActive"
-            @select="naviSelect"
+        class="soul-header-navi-tabs"
+        mode="horizontal"
+        :default-active="defaultActive"
+        @select="naviSelect"
         >
             <el-menu-item index="home">首页</el-menu-item>
             <el-menu-item index="apps">应用</el-menu-item>
@@ -24,6 +28,9 @@ Vue.component('soul-header', {
     }
 });
 
+/**
+ * 页脚。
+ */
 Vue.component('soul-footer', {
     template: `<el-footer class="soul-footer" height="auto">
     <el-container class="soul-footer-flex">
