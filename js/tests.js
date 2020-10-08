@@ -48,19 +48,18 @@ try {
      * 那就给用户弹一个对话框
      * 只弹一次就够了，所以如果以前弹过那就不弹了
      */
-    if (!localStorage.soulTest) {
+    if (document.cookie.replace(/(?:(?:^|.*;\s*)soulTest\s*\=\s*([^;]*).*$)|^.*$/, "$1") !== "true") {
         /*
          * 现在先看看是不是IE。
-         * 如果是IE就建议用户更换其他浏览器。否则建议用户更新浏览器。
-         * （机智如我
+         * 如果是IE就建议用户更换其他浏览器。否则建议用户更新浏览器。（
          */
-        var msg1 = navigator.userAgent.indexOf("MSIE") !== -1 ? "更换其他浏览器。" : "更新浏览器。";
+        var msg2 = navigator.userAgent.indexOf("MSIE") !== -1 ? "更换其他浏览器。" : "更新浏览器。";
         /*
          * 然后再看看事情有多严重。
          * 如果ES2016都不支持，
          * 那这浏览器基本就没法要了）
          */
-        var msg2 = [
+        var msg1 = [
             "您的浏览器不支持 ECMAScript 2015 ，页面将无法正常显示。如果可以，请您",
             "您的浏览器不支持 ECMAScript 2016 ，网站功能将无法正常使用。如果可以，请您",
             "您的浏览器不支持 ECMAScript 2017 ，网站功能将无法正常使用。如果可以，请您",
@@ -77,8 +76,5 @@ try {
 
 /**
  * 最后的最后，把测试结果记录下来，下次就不弹框了。
- * 听说 iOS Safari 在无痕浏览模式下写入 localStorage 会报错，所以 try 一下
  */
-try{
-    localStorage.soulTest = _test;
-} catch(err) { }
+document.cookie = "soulTest=" + _test + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
