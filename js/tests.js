@@ -46,9 +46,9 @@ try {
     /*
      * 哦豁，中途报错了
      * 那就给用户弹一个对话框
-     * 只弹一次就够了，所以如果以前弹过那就不弹了
+     * (每24小时)只弹一次就够了，所以如果以前弹过那就不弹了
      */
-    if (/(?:(?:^|.*;\s*)soulTest\s*\=\s*([^;]*).*$)|^.*$/.exec(document.cookie)[1]) {
+    if (!/(?:(?:^|.*;\s*)soulTest\s*\=\s*([^;]*).*$)|^.*$/.exec(document.cookie)[1]) {
         /*
          * 现在先看看是不是IE。
          * 如果是IE就建议用户更换其他浏览器。否则建议用户更新浏览器。（
@@ -75,6 +75,6 @@ try {
 }
 
 /**
- * 最后的最后，把测试结果记录下来，下次就不弹框了。
+ * 最后的最后，把测试结果记录下来，24小时内就不再弹框了。
  */
-document.cookie = "soulTest=" + _test + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+document.cookie = "soulTest=" + _test + "; expires="+new Date(Date.now()+86400000)+"; path=/";
