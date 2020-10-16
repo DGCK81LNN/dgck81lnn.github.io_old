@@ -28,6 +28,23 @@
       display: inline-block;
       margin: 5px;
     }
+    .soullbf-memory-table {
+      overflow-x: auto;
+      padding: 0 0.5rem;
+      margin: 1rem 0;
+    }
+    .soullbf-memory-table td,
+    .soullbf-memory-table th {
+      height: 1.5em;
+      min-width: 1.5rem;
+      border-radius: 4px;
+      background: #ebeef5;
+      font-family: var(--soul-font-family-monospace);
+      text-align: center;
+    }
+    .soullbf-memory-table .soullbf-pointer {
+      background: #ffbebe;
+    }
     .soullbf-left,
     .soullbf-right {
       width: 50%;
@@ -69,6 +86,9 @@
       resize: none !important;
     }
 
+    .el-dialog {
+      min-width: 250px;
+    }
     .el-drawer {
       min-width: 350px;
     }
@@ -84,8 +104,16 @@
       color: #f5f2f0;
       text-shadow: none;
     }
+    .token.soullbf-breakpoint {
+      background: #58000a;
+      color: #f5f2f0;
+      text-shadow: none;
+    }
     .token.soullbf-pointer {
       background: #ffbebe;
+    }
+    .token.soullbf-pointer.soullbf-breakpoint {
+      background: #E1001A;
     }
     @keyframes cursor {
       0% {
@@ -100,6 +128,13 @@
     }
     .token.soullbf-cursor {
       animation: cursor 1s infinite;
+    }
+
+    @media screen and (max-width: 700px) {
+      .soullbf-left, .soullbf-right {
+        float: none;
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -167,13 +202,28 @@
         </span>
       </section>
 
-      <div v-if="stat !== 'ready'">
-        <el-tag
-        v-for="kvPair in renderMemory()"
-        :key="kvPair[0]"
-        :type="kvPair[0] === memory.pointer ? 'danger' : ''"
-        >{{kvPair[1] === undefined ? '...' : kvPair.join(": ")}}</el-tag>
-      </div>
+      <section class="soullbf-memory-table" v-if="stat !== 'ready'">
+        <table>
+          <tr>
+            <th
+            v-for="kvPair in renderMemory()"
+            :key="kvPair[0]"
+            :rowspan="kvPair[1] === undefined ? 2 : ''"
+            :class="memory.pointer === kvPair[0] ? 'soullbf-pointer' : ''"
+            v-text="kvPair[1] === undefined ? '...' : kvPair[0]"
+            ></th>
+          </tr>
+          <tr>
+            <td
+            v-for="kvPair in renderMemory()"
+            v-if="kvPair[1] !== undefined"
+            :key="kvPair[0]"
+            :class="memory.pointer === kvPair[0] ? 'soullbf-pointer' : ''"
+            v-text="kvPair[1]"
+            ></td>
+          </tr>
+        </table>
+      </section>
 
       <section class="soullbf-main">
         <section class="soullbf-left">
@@ -185,7 +235,8 @@
           ></soul-fake-textarea>
           <soul-manual-prism
           v-else
-          class="soullbf-wrapcode"><span
+          class="soullbf-wrapcode"
+          @click="codeClick"><span
           v-for="(instruction, i) in [...code]"
           :class="[
             'token',
@@ -195,8 +246,10 @@
             : instruction === '.' || instruction === ',' ? 'operator'
             : instruction === '[' || instruction === ']' ? 'branching important'
             : 'comment',
-            i === codePointer ? 'soullbf-pointer' : ''
+            i === codePointer ? 'soullbf-pointer' : '',
+            breakpoints.has(i) ? 'soullbf-breakpoint' : ''
           ]"
+          :data-i="i"
           v-text="instruction === '\n' ? ' \n' : instruction"
           ></span></soul-manual-prism>
         </section>
@@ -229,8 +282,7 @@
     <soul-footer></soul-footer>
 
 
-    <el-dialog
-    title="设置逐步运行速度"
+    <el-dialog title="设置逐步运行速度"
     :visible.sync="tickSpeedVisible"
     width="30%">
       <el-input-number
@@ -244,9 +296,8 @@
       </span>
     </el-dialog>
 
-    <el-drawer
+    <el-drawer title="环境配置"
     class="soullbf-drawer-config"
-    title="环境配置"
     :visible.sync="configVisible"
     direction="rtl"
     >
@@ -295,8 +346,7 @@
       </el-form>
     </el-drawer>
 
-    <el-dialog
-    title="自定义单元格数量"
+    <el-dialog title="自定义单元格数量"
     :visible.sync="customCellsVisible"
     width="30%">
       <el-input-number
@@ -418,6 +468,7 @@
       stat: "ready", // ready, run, tick, pause, end
       initialized: false,
       codePointer: 0,
+      breakpoints: null,
       memory: null,
       staticInput: true,
       input: "",
@@ -426,8 +477,6 @@
       waitingForInput: false,
       output: "",
     },
-
-    computed: { },
 
     methods: {
       handleInput(raw, offset) {
@@ -522,17 +571,17 @@
         vm.input = vm.inputBuffer + "\n", vm.inputPointer = 0, vm.output += vm.input, vm.inputBuffer = "";
       },
 
-      iUpdate() {
-        vm.codeHighlight = error ? '' : [...vm.code].map(c => (`<span class="token ${{
-          ">": 'pointer keyword',
-          "<": 'pointer keyword',
-          "+": 'increment inserted',
-          "-": 'decrement deleted',
-          ".": 'operator',
-          ",": 'operator',
-          "[": 'branching important',
-          "]": 'branching important',
-        }[c]}">${c}</span>`)).join("");
+      codeClick($event) {
+        let i = $event.target.dataset.i;
+        if (i) {
+          i = Number(i);
+          console.log(i);
+          if (vm.breakpoints.has(i))
+            vm.breakpoints.delete(i);
+          else if("><+-.,[]".includes(vm.code[i]))
+            vm.breakpoints.add(i);
+          vm.$forceUpdate();
+        }
       },
 
       iStep() {
@@ -544,10 +593,11 @@
           vm.memory = new SoullbfMemory(vm.config.dataType, vm.config.cells);
           vm.memory.haltOnPointerOverflow = !vm.config.allowNegativeMP;
           vm.staticInput = Boolean(vm.input);
+          vm.breakpoints = new Set();
           vm.initialized = true;
         }
         let instruction = vm.code[vm.codePointer], cond = true;
-        while (cond) { // do ... while (false)
+        while (cond) {
           cond = false;
           if (instruction === undefined) 
             throw "程序退出！";
@@ -610,24 +660,43 @@
             instruction = vm.code[++vm.codePointer];
           while (instruction && !"><+-.,[]".includes(instruction));
         }
+        if (vm.breakpoints.has(vm.codePointer))
+          throw "break";
+        vm.$nextTick(() => {
+          let mt = vm.$el.querySelector(".soullbf-memory-table"),
+            mp = mt.querySelector(".soullbf-pointer");
+          mt.scrollLeft = mp.offsetLeft - mt.offsetWidth / 2;
+          if (instruction === '.' || instruction === ',')
+            vm.$el.querySelector(".soullbf-right").scrollTop = 2147483647;
+        });
       },
 
       iHandleError(e) {
-        vm.stat = 'end';
-        clearInterval(vm.intHandle);
-        if (e instanceof Error) {
-          vm.$message({
-            type: 'error',
-            message: e,
-            duration: 0,
-            showClose: true
-          });
-          throw e;
-        }
-        vm.$message({
-          type: 'success',
-          message: e
-        });
+        clearTimeout(vm.intHandle);
+          if (e instanceof Error) {
+            vm.stat = 'end';
+            vm.$message({
+              type: 'error',
+              message: e,
+              duration: 0,
+              showClose: true
+            });
+            throw e;
+          }
+          else if(e === "break") {
+            vm.stat = 'pause';
+            vm.$message({
+              type: 'info',
+              message: "触发断点！"
+            });
+          }
+          else {
+            vm.stat = 'end';
+            vm.$message({
+              type: 'success',
+              message: e
+            });
+          }
       },
 
       run() {
@@ -668,7 +737,6 @@
       pause() {
         vm.stat = 'pause';
         clearTimeout(vm.intHandle);
-        clearInterval(vm.intHandle);
       },
       reset() {
         vm.stat = 'ready';
@@ -679,10 +747,6 @@
           vm.input = "";
         vm.waitingForInput = false;
       },
-    },
-
-    updated() {
-
     }
   });
 </script>
