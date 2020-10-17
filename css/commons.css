@@ -99,6 +99,7 @@ p.soul-p2 {
     background-color: rgb(214, 242, 238);
     margin: 0;
     padding: 2rem calc(10% + 8px) 8rem;
+    clear: both;
 }
 .soul-footer-flex {
     flex-wrap: wrap;

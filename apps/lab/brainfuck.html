@@ -16,13 +16,14 @@
   <link rel="shortcut icon" href="/site_icon.png">
   <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
   <script src="/js/tests.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/js/vue.min.js"></script>
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
   <script src="/js/prism.js"></script>
   <script src="/js/commons.js"></script>
   <script src="/apps/lab/lab_components.js"></script>
   <title>brainfuck 在线调试器 - 灵魂小站</title>
+  <base target="_blank">
   <style>
     .soullbf-toolbar-row {
       display: inline-block;
@@ -142,7 +143,7 @@
 <body>
   <div id="app">
     <soul-header default-active="apps"></soul-header>
-    <el-main class="soul-main">
+    <soul-main>
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item><a href="/apps">应用</a></el-breadcrumb-item>
         <el-breadcrumb-item><a href=".">灵魂实验室</a></el-breadcrumb-item>
@@ -278,8 +279,13 @@
           </div>
         </section>
       </section>
-    </el-main>
-    <soul-footer></soul-footer>
+    </soul-main>
+    <soul-footer :links="[
+      { href: 'https://esolangs.org/wiki/brainfuck', text: 'brainfuck - Esolangs 维基' },
+      { href: 'http://mazonka.com/brainf/10.html', text: 'Oleg Mazonka 写的 brainf 自举' },
+      { href: 'https://tio.run/#brainfuck', text: '在 TryItOnline 上运行 brainf' },
+      { href: 'https://www.mywiki.cn/dgck81lnn/分类:深奥编程语言', text: '我的个人博客的“深奥编程语言”分类' }
+    ]"></soul-footer>
 
 
     <el-dialog title="设置逐步运行速度"
@@ -666,7 +672,7 @@
           let mt = vm.$el.querySelector(".soullbf-memory-table"),
             mp = mt.querySelector(".soullbf-pointer");
           mt.scrollLeft = mp.offsetLeft - mt.offsetWidth / 2;
-          if (instruction === '.' || instruction === ',')
+          if (instruction === '.')
             vm.$el.querySelector(".soullbf-right").scrollTop = 2147483647;
         });
       },

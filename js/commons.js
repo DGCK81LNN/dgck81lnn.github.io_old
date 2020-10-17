@@ -3,7 +3,9 @@
  * 页头。
  */
 Vue.component('soul-header', {
-    props: ['defaultActive'],
+    props: {
+        'defaultActive': ""
+    },
     template: `<el-header class="soul-header clearfix">
     <el-container class="soul-header-logo"><a href="/" title="回到首页"><img src="/site_icon.png"/>灵魂小站</a></el-container>
     <el-container class="soul-header-navi">
@@ -29,24 +31,35 @@ Vue.component('soul-header', {
 });
 
 /**
+ * 正文容器。
+ */
+Vue.component('soul-main', {
+    template: `<section class="soul-main"><slot></slot></section>`
+});
+
+/**
  * 页脚。
  */
 Vue.component('soul-footer', {
+    props: {
+        'links': Array
+    },
     template: `<el-footer class="soul-footer" height="auto">
     <el-container class="soul-footer-flex">
+        <section class="soul-footer-col" v-if="links">
+            <h3>相关链接</h3>
+            <slot>
+                <p v-for="(link, i) in links" :key="i">
+                    <el-link :href="link.href">{{link.text}}</el-link>
+                </p>
+            </slot>
+        </section>
         <section class="soul-footer-col">
-            <h3>链接</h3>
+            <h3>关于我</h3>
             <p><el-link href="https://space.bilibili.com/328066747">B站账号</el-link></p>
             <p><el-link href="http://www.mywiki.cn/dgck81lnn">LNN的博客？</el-link></p>
             <p><el-link href="https://github.com/DGCK81LNN">GitHub</el-link></p>
             <p><el-link href="https://zh.moegirl.org.cn/User:DGCK81LNN">萌娘百科用户页</el-link></p>
-        </section>
-        <section class="soul-footer-col">
-            <h3>Blahblah</h3>
-            <p>测试测试</p>
-            <p>测试测试</p>
-            <p>测试测试</p>
-            <p>测试测试</p>
         </section>
         <section class="soul-footer-col">
             <h3>©2020 DGCK81LNN.</h3>

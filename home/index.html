@@ -15,12 +15,13 @@
   <link rel="shortcut icon" href="/site_icon.png">
   <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
   <script src="/js/tests.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="/js/vue.min.js"></script>
   <script src="https://unpkg.com/element-ui/lib/index.js"></script>
   <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
   <script src="/js/prism.js"></script>
   <script src="/js/commons.js"></script>
   <title>首页 - 灵魂小站</title>
+  <base target="_blank">
   <style>
     .soulhome-section {
       margin-top: 2rem;
@@ -50,6 +51,7 @@
     .soulhome-contents-flex .el-card {
       flex: 1;
       margin: 8px;
+      min-width: 300px;
     }
     .soulhome-contents-card {
       margin: 1rem 0;
@@ -87,7 +89,7 @@
 <body>
   <div id="app">
     <soul-header default-active="home"></soul-header>
-    <el-main class="soul-main">
+    <soul-main>
       <section class="soulhome-section soulhome-section-head">
         <h1 class="soulhome-title">
           你好，我是
@@ -333,6 +335,7 @@ end</code></pre>
         <el-container v-else class="soulhome-contents-flex">
           <el-card
           v-for="item in recentPlans"
+          :key="item.title"
           class="soulhome-contents-card"
           shadow="hover"
           >
@@ -350,7 +353,7 @@ end</code></pre>
         </el-container>
       </section>
       <h2 class="soulhome-epilogue">Enjoy yourself!</h2>
-    </el-main>
+    </soul-main>
     <soul-footer></soul-footer>
   </div>
 </body>
