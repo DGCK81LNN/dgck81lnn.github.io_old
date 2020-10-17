@@ -330,7 +330,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="单元格数量">
-          <el-select v-model="config._cells" @change="ucellsChange">
+          <el-select v-model="config.cells" @change="ucellsChange">
             <el-option-group>
               <el-option label="30000" :value="30000"></el-option>
               <el-option label="5000" :value="5000"></el-option>
@@ -355,7 +355,7 @@
     :visible.sync="customCellsVisible"
     width="30%">
       <el-input-number
-      v-model="config.cells"
+      v-model="config._cells"
       @change="cellsChange"
       :min="3"
       :max="65535"
@@ -550,14 +550,14 @@
 
       ucellsChange(v){
         if (v === undefined) {
-          vm.config._cells = vm.config.cells;
+          vm.config.cells = vm.config._cells;
           vm.customCellsVisible = true;
         }
         else
-          vm.config.cells = v;
+          vm.config._cells = v;
       },
       cellsChange(v){
-        vm.config._cells = v;
+        vm.config.cells = v;
       },
 
       renderMemory() {
