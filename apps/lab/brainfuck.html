@@ -49,7 +49,7 @@
     .soullbf-left,
     .soullbf-right {
       width: 50%;
-      height: 300px;
+      height: 350px;
       overflow-y: auto;
       box-sizing: border-box;
       padding: 1rem 0.5rem;
@@ -264,9 +264,7 @@
           ></el-input>
         </section>
         <section v-else-if="staticInput" class="soullbf-right">
-          输入流：
           <soul-manual-prism class="soullbf-wrapcode">{{input.slice(0, inputPointer)}}<span class="token soullbf-pointer">{{input[inputPointer] === '\n' ? ' \n': input[inputPointer] || ' '}}</span>{{input.slice(inputPointer + 1)}}</soul-manual-prism>
-          输出：
           <soul-manual-prism class="soullbf-wrapcode">{{output}}<span class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
         </section>
         <section v-else class="soullbf-right">
@@ -275,7 +273,13 @@
             <el-input
             v-if="waitingForInput"
             v-model="inputBuffer"
-            ></el-input>
+            >
+              <el-button
+              slot="append"
+              icon="el-icon-document-checked"
+              @click="inputBufferEnded"
+              >全文结束</el-button>
+            </el-input>
           </div>
         </section>
       </section>
@@ -284,7 +288,7 @@
       { href: 'https://esolangs.org/wiki/brainfuck', text: 'brainfuck - Esolangs 维基' },
       { href: 'http://mazonka.com/brainf/10.html', text: 'Oleg Mazonka 写的 brainf 自举' },
       { href: 'https://tio.run/#brainfuck', text: '在 TryItOnline 上运行 brainf' },
-      { href: 'https://fatiherikli.github.io/brainfuck-visualizer', text: 'Fatih Erikli 制作的 brainf 在线调试器' }
+      { href: 'https://fatiherikli.github.io/brainfuck-visualizer', text: 'Fatih Erikli 制作的 brainf 可视化' }
     ]"></soul-footer>
 
 
@@ -482,6 +486,7 @@
       input: "",
       inputPointer: 0,
       inputBuffer: "",
+      inputBufferEOF: false,
       waitingForInput: false,
       output: "",
     },
@@ -578,6 +583,10 @@
       inputBufferKeypress($event) {
         vm.input = vm.inputBuffer + "\n", vm.inputPointer = 0, vm.output += vm.input, vm.inputBuffer = "";
       },
+      inputBufferEnded() {
+        vm.inputBufferEOF = true;
+        vm.input = vm.inputBuffer, vm.inputPointer = 0, vm.output += vm.input + "^C" + "\n", vm.inputBuffer = "";
+      },
 
       codeClick($event) {
         let i = $event.target.dataset.i;
@@ -603,6 +612,7 @@
           vm.staticInput = Boolean(vm.input);
           vm.breakpoints = new Set();
           vm.initialized = true;
+          vm.inputBufferEOF = false;
         }
         let instruction = vm.code[vm.codePointer], cond = true;
         while (cond) {
@@ -624,7 +634,7 @@
             break; case ',':
               if (vm.inputPointer < vm.input.length)
                 vm.waitingForInput = false, vm.memory.setCurr(vm.input.charCodeAt(vm.inputPointer++));
-              else if (vm.staticInput)
+              else if (vm.staticInput || vm.inputBufferEOF)
                 vm.memory.setCurr(vm.config.eof);
               else {
                 vm.waitingForInput = true;
