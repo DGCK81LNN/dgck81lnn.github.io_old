@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<!--
+  这是灵魂小站 / 应用!
+  ID: apps.index // soulapps
+-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href="/css/element.css">
+  <link rel="stylesheet" href="/css/commons.css">
+  <link rel="stylesheet" href="/css/prism.css">
+  <link rel="icon" href="/site_icon.png">
+  <link rel="shortcut icon" href="/site_icon.png">
+  <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
+  <script src="/js/tests.js"></script>
+  <script src="/js/vue.min.js"></script>
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+  <script src="/js/commons.js"></script>
+  <title>应用 - 灵魂小站</title>
+  <style>
+    .soulapps-flex {
+      flex-wrap: wrap;
+    }
+    .soulapps-card {
+      flex: 1;
+      min-width: 300px;
+      margin: 1rem 8px;
+    }
+    .soulapps-card-link {
+      float: right;
+      padding: 3px 0;
+    }
+    .soulapps-card img {
+      float: left;
+      height: 60px;
+      margin: 1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <soul-header default-active="apps"></soul-header>
+    <soul-main>
+      <el-container class="soulapps-flex">
+        <el-card
+        v-for="item in a"
+        :key="item.title"
+        class="soulapps-card"
+        shadow="hover"
+        >
+          <div slot="header" class="clearfix">
+            <span>{{item.title}}</span>
+            <el-link
+            v-if="item.link"
+            type="primary"
+            class="soulapps-card-link"
+            :href="item.link"
+            >进入</el-link>
+          </div>
+          <div v-html="item.body"></div>
+        </el-card>
+      </el-container>
+    </soul-main>
+    <soul-footer></soul-footer>
+  </div>
+</body>
+<script>
+  const vm = new Vue({
+    el: "#app",
+    data: {
+        a: [
+            {
+              title: "灵魂实验室",
+              body: `<p>
+                运行JavaScript... 或者一些奇怪的编程语言。
+              </p>`,
+              link: "lab/"
+            },
+            {
+              title: "更多内容即将到来...",
+              body: ""
+            }
+        ]
+    }
+  });
+</script>
+
+</html>
