@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<!--
+  这是灵魂小站 / 应用 / 灵魂实验室 / 命令行!
+  ID: apps.lab.console // soullc
+-->
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href="/css/commons.css">
+  <link rel="icon" href="/site_icon.png">
+  <link rel="shortcut icon" href="/site_icon.png">
+  <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
+  <script src="/js/tests.js"></script>
+  <title>命令行 - 灵魂小站</title>
+  <style>
+    html {
+      background-color: #000;
+    }
+    body {
+      margin: 8px;
+    }
+    .soullc-window {
+      color: #aaa;
+      font-family: var(--soul-font-family-monospace);
+    }
+    #consoleWindow>div:last-child>br {
+      display: none;
+    }
+    @keyframes cursor {
+      0% {
+        background-color: #aaa;
+      }
+      49.9999% {
+        background-color: #aaa;
+      }
+      50% {
+        background-color: transparent;
+      }
+    }
+    .soullc-cursor-line::after {
+      content: "_";
+      display: inline-block;
+      animation: 1s cursor infinite;
+      color: transparent;
+      height: 5px;
+      position: relative;
+      overflow: hidden;
+      vertical-align: bottom;
+    }
+    .soullc-input {
+      min-width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="soullc-window" id="consoleWindow"><div class="soullc-cursor-line"><br/></div></div>
+</body>
+<script>
+  this.SoulLC = function() {
+    const originalTitle = document.title, consoleWindow = document.getElementById("consoleWindow");
+    var currentLine = consoleWindow.firstElementChild;
+    return {
+
+      get [Symbol.toStringTag]() {
+        return "SoulLC";
+      },
+      colors: Object.assign({}, [
+        "#000", "#00a", "#0a0", "#0aa", "#a00", "#a0a", "#aa0", "#aaa",
+        "#555", "#55f", "#5f5", "#5ff", "#f55", "#f5f", "#ff5", "#fff"
+      ]),
+      foreColor: undefined, backColor: undefined,
+      print(text="") {
+        text.split(/\n/g).forEach((v, i, a) => {
+          if (v) {
+            if (currentLine.firstElementChild.tagName === "BR")
+              currentLine.removeChild(currentLine.firstElementChild);
+            let span = document.createElement("SPAN");
+            span.style.color = this.foreColor;
+            span.style.backgroundColor = this.backColor;
+            span.innerText = v;
+            currentLine.appendChild(span);
+          }
+          if (i < a.length - 1) {
+            currentLine.classList.remove("soullc-cursor-line");
+            consoleWindow.appendChild(currentLine = document.createElement("DIV"));
+            currentLine.classList.add("soullc-cursor-line");
+            currentLine.appendChild(document.createElement("BR"));
+          }
+        });
+        document.documentElement.scrollTop = 9007199254740991;
+      },
+      println(text="") {
+        this.print(text + "\n");
+      },
+      clear() {
+        for (line of [...consoleWindow.children])
+          consoleWindow.removeChild(line);
+        consoleWindow.appendChild(currentLine = document.createElement("DIV"));
+        currentLine.classList.add("soullc-cursor-line");
+        currentLine.appendChild(document.createElement("BR"));
+      },
+      title(title) {
+        document.title = title == null ? originalTitle : title;
+      },
+      color(fore, back) {
+        this.foreColor = typeof fore === 'number' ? this.colors[fore] : fore;
+        this.backColor = typeof back === 'number' ? this.colors[back] : back;
+      },
+      input() {
+        return new Promise(resolve => {
+          if (currentLine.firstElementChild.tagName === "BR")
+            currentLine.removeChild(currentLine.firstElementChild);
+          currentLine.classList.remove("soullc-cursor-line");
+          let box = document.createElement("SPAN");
+          box.appendChild(document.createTextNode(""));
+          box.contentEditable = true;
+          box.className = "soullc-input";
+          box.style.color = this.foreColor;
+          box.addEventListener("keydown", event => {
+            if (event.which === 13) {
+              currentLine.removeChild(event.currentTarget);
+              SoulLC.println(event.currentTarget.innerText);
+              resolve(event.currentTarget.innerText);
+            }
+          });
+          box.addEventListener("blur", event => {
+            event.target.focus();
+          });
+          currentLine.appendChild(box);
+          box.focus();
+          document.documentElement.scrollTop = 9007199254740991;
+        });
+      },
+      getch() {
+        return new Promise(resolve => {
+          let f = event => {
+            resolve(event.which);
+            document.removeEventListener("keydown", f);
+          };
+          document.addEventListener("keydown", f);
+        });
+      },
+      sleep(milliseconds) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve();
+          }, milliseconds);
+        });
+      },
+      getLine() {
+        return currentLine;
+      },
+      revertLine(line) {
+        if (line.parentNode === consoleWindow) {
+          let l = line;
+          while (l) {
+            consoleWindow.removeChild(l);
+            l = l.nextSibling;
+          }
+          currentLine = line.previousSibling;
+          consoleWindow.appendChild(currentLine = document.createElement("DIV"));
+          currentLine.classList.add("soullc-cursor-line");
+          currentLine.appendChild(document.createElement("BR"));
+        }
+      },
+    };
+    
+  }();
+
+  import('./console_test.soullc.js')
+    .then(({main}) => main())
+    .then(() => {
+      SoulLC.println(),
+      SoulLC.println(),
+      SoulLC.color(),
+      SoulLC.println("===== 程序退出 =====")
+    })
+    .catch(err => {
+      SoulLC.println(),
+      SoulLC.println(),
+      SoulLC.color(12),
+      SoulLC.println("===== 程序出错 ====="),
+      SoulLC.color(4),
+      SoulLC.println(err);
+      window.err = err;
+      throw err;
+    });
+</script>
+</html>
