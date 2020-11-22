@@ -24,6 +24,8 @@
     .soullc-window {
       color: #aaa;
       font-family: var(--soul-font-family-monospace);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
     }
     #consoleWindow>div:last-child>br {
       display: none;
@@ -151,11 +153,19 @@
           window.getSelection().collapse(inputElement, 0);
         });
       },
-      getch() {
-        return new Promise(resolve => {
-          getchResolve = resolve;
-          hiddenInput.focus();
-        });
+      getch(timeout) {
+        return Promise.race([
+          new Promise(resolve => {
+            getchResolve = resolve;
+            hiddenInput.focus();
+          }),
+          new Promise(resolve => {
+            if (timeout)
+              setTimeout(() => {
+                resolve();
+              }), timeout);
+          })
+        ]);
       },
       sleep(milliseconds) {
         return new Promise(resolve => {
