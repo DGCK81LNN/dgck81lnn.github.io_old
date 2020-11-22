@@ -135,6 +135,7 @@
           inputElement.contentEditable = true;
           inputElement.className = "soullc-input";
           inputElement.style.color = this.foreColor;
+          inputElement.style.backgroundColor = this.backColor;
           inputElement.addEventListener("keydown", event => {
             if (event.which === 13) {
               currentLine.removeChild(inputElement);
@@ -188,7 +189,9 @@
     
   }();
 
-  import('./console_test.soullc.js')
+  let path = /[\?&]path=([^&]*)/.exec(location.search);
+  path = path ? path[1] : "/res/down/SoulLC/helloworld.soullc.js";
+  import(path)
     .then(({main}) => main())
     .then(() => {
       SoulLC.println(),
