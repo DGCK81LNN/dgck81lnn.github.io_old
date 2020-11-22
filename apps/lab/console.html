@@ -141,10 +141,10 @@
           inputElement.addEventListener("keydown", event => {
             if (event.which === 13) {
               currentLine.removeChild(inputElement);
-              SoulLC.println(inputElement.innerText);
-              let value = inputElement.innerText;
-              inputElement = null;
+              let value = inputElement.innerText.replace(/\n/g, ' ');
+              SoulLC.println(value);
               resolve(value);
+              inputElement = null;
             }
           });
           currentLine.appendChild(inputElement);
