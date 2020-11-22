@@ -70,7 +70,7 @@
     var inputElement = null, isWaitingForGetch = false;
     document.body.addEventListener("click", event => {
       if (inputElement)
-        window.getSelection().collapse(inputElement, 1);
+        hiddenInput.focus(), window.getSelection().collapse(inputElement, 1);
       else if (isWaitingForGetch)
         hiddenInput.focus();
     });
