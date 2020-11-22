@@ -162,8 +162,9 @@
           new Promise(resolve => {
             if (timeout)
               setTimeout(() => {
+                getchResolve = null;
                 resolve();
-              }), timeout);
+              }, timeout);
           })
         ]);
       },
