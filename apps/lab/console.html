@@ -73,10 +73,9 @@
         window.getSelection().collapse(inputElement, 1);
     }
     document.body.addEventListener("click", event => {
+      hiddenInput.focus();
       if (inputElement)
-        setTimeout(focus, 10);
-      else if (isWaitingForGetch)
-        hiddenInput.focus();
+        setTimeout(focus, 100);
     });
     return {
 
