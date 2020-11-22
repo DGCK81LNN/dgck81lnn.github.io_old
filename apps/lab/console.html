@@ -70,7 +70,7 @@
     var inputElement = null, isWaitingForGetch = false;
     function focus() {
       if (inputElement)
-        window.getSelection().collapse(inputElement, 1);
+        window.getSelection().collapse(inputElement, inputElement.firstChild ? 1 : 0);
     }
     document.body.addEventListener("click", event => {
       hiddenInput.focus();
