@@ -6,6 +6,8 @@ export async function main() {
     let name = await SoulLC.input();
     SoulLC.revertLine(line);
     SoulLC.println(`Hello, ${name}!`);
+    SoulLC.println(`Your name: ${name}`);
+    SoulLC.println();
     await SoulLC.sleep(1000);
     SoulLC.println("Press any key to quit");
     await SoulLC.getch();
