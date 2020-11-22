@@ -27,7 +27,7 @@ export async function main() {
     SoulLC.color();
     SoulLC.println("!");
     SoulLC.print("输入你的名字：");
-    SoulLC.color(11);
+    SoulLC.color(3);
     SoulLC.println(name);
     SoulLC.color();
     SoulLC.println();
