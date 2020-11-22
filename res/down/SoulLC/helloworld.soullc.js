@@ -6,7 +6,7 @@ export async function main() {
     SoulLC.println();
     SoulLC.println("使用方法：");
     SoulLC.color(9);
-    SoulLC.print("/apps/lab/console.html?file=");
+    SoulLC.print("/apps/lab/console.html?path=");
     SoulLC.color(12);
     SoulLC.println("{path}");
     SoulLC.color();
