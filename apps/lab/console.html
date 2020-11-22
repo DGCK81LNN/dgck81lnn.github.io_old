@@ -67,12 +67,19 @@
   this.SoulLC = function() {
     const originalTitle = document.title, consoleWindow = document.getElementById("consoleWindow");
     var currentLine = consoleWindow.firstElementChild;
-    var inputElement = null, isWaitingForGetch = false;
+    var inputElement = null, getchResolve = null;
     document.addEventListener("click", event => {
       if (inputElement)
         window.getSelection().collapse(inputElement, inputElement.firstChild ? 1 : 0);
-      else if (isWaitingForGetch)
+      else if (getchResolve)
         hiddenInput.focus();
+    });
+    document.addEventListener("keydown", event => {
+      if (getchResolve)
+        getchResolve(), getchResolve = null;
+    });
+    hiddenInput.addEventListener("keydown", event => {
+      event.preventDefault();
     });
     return {
 
@@ -146,14 +153,8 @@
       },
       getch() {
         return new Promise(resolve => {
-          let f = event => {
-            resolve(event.which);
-            document.removeEventListener("keydown", f);
-            isWaitingForGetch = false;
-          };
-          document.addEventListener("keydown", f);
+          getchResolve = resolve;
           hiddenInput.focus();
-          isWaitingForGetch = true;
         });
       },
       sleep(milliseconds) {
