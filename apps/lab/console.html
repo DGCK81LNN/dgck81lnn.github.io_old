@@ -83,116 +83,116 @@
     hiddenInput.addEventListener("keydown", event => {
       event.preventDefault();
     });
-    return {
+        return {
 
-      get [Symbol.toStringTag]() {
-        return "SoulLC";
-      },
-      colors: Object.assign({}, [
-        "#000", "#00a", "#0a0", "#0aa", "#a00", "#a0a", "#aa0", "#aaa",
-        "#555", "#55f", "#5f5", "#5ff", "#f55", "#f5f", "#ff5", "#fff"
-      ]),
-      foreColor: undefined, backColor: undefined,
-      print(text="") {
-        text.split(/\n/g).forEach((v, i, a) => {
-          if (v) {
-            if (currentLine.firstElementChild.tagName === "BR")
-              currentLine.removeChild(currentLine.firstElementChild);
-            let span = document.createElement("SPAN");
-            span.style.color = this.foreColor;
-            span.style.backgroundColor = this.backColor;
-            span.innerText = v;
-            currentLine.appendChild(span);
-          }
-          if (i < a.length - 1) {
-            currentLine.classList.remove("soullc-cursor-line");
-            consoleWindow.appendChild(currentLine = document.createElement("DIV"));
-            currentLine.classList.add("soullc-cursor-line");
-            currentLine.appendChild(document.createElement("BR"));
-          }
-        });
-        document.documentElement.scrollTop = 9007199254740991;
-      },
-      println(text="") {
-        this.print(text + "\n");
-      },
-      clear() {
-        for (line of [...consoleWindow.children])
-          consoleWindow.removeChild(line);
-        consoleWindow.appendChild(currentLine = document.createElement("DIV"));
-        currentLine.classList.add("soullc-cursor-line");
-        currentLine.appendChild(document.createElement("BR"));
-      },
-      title(title) {
-        document.title = title == null ? originalTitle : title;
-      },
-      color(fore, back) {
-        this.foreColor = typeof fore === 'number' ? this.colors[fore] : fore;
-        this.backColor = typeof back === 'number' ? this.colors[back] : back;
-      },
-      input() {
-        return new Promise(resolve => {
-          if (currentLine.firstElementChild.tagName === "BR")
-            currentLine.removeChild(currentLine.firstElementChild);
-          currentLine.classList.remove("soullc-cursor-line");
-          inputElement = document.createElement("SPAN");
-          inputElement.contentEditable = true;
-          inputElement.className = "soullc-input";
-          inputElement.style.color = this.foreColor;
-          inputElement.style.backgroundColor = this.backColor;
-          inputElement.addEventListener("keydown", event => {
-            if (event.which === 13) {
-              currentLine.removeChild(inputElement);
-              let value = inputElement.innerText.replace(/\n/g, ' ');
-              SoulLC.println(value);
-              resolve(value);
-              inputElement = null;
-            }
-          });
-          currentLine.appendChild(inputElement);
-          window.getSelection().collapse(inputElement, 0);
-        });
-      },
-      getch(timeout) {
-        return Promise.race([
-          new Promise(resolve => {
-            getchResolve = resolve;
-            hiddenInput.focus();
-          }),
-          new Promise(resolve => {
-            if (timeout)
-              setTimeout(() => {
-                getchResolve = null;
-                resolve();
-              }, timeout);
-          })
-        ]);
-      },
-      sleep(milliseconds) {
-        return new Promise(resolve => {
-          setTimeout(() => {
-            resolve();
-          }, milliseconds);
-        });
-      },
-      getLine() {
-        return currentLine;
-      },
-      revertLine(line) {
-        if (line.parentNode === consoleWindow) {
-          let l = line;
-          currentLine = line.previousSibling;
-          while (l) {
-            let _l = l.nextSibling;
-            consoleWindow.removeChild(l);
-            l = _l;
-          }
-          consoleWindow.appendChild(currentLine = document.createElement("DIV"));
-          currentLine.classList.add("soullc-cursor-line");
-          currentLine.appendChild(document.createElement("BR"));
-        }
-      },
-    };
+            [Symbol.toStringTag]: "SoulLC",
+            colors: Object.assign({}, [
+                "#000", "#00a", "#0a0", "#0aa", "#a00", "#a0a", "#aa0", "#aaa",
+                "#555", "#55f", "#5f5", "#5ff", "#f55", "#f5f", "#ff5", "#fff"
+            ]),
+            foreColor: undefined, backColor: undefined,
+            print(text = "") {
+                text.split(/\n/g).forEach((v, i, a) => {
+                    if (v) {
+                        if (currentLine.firstElementChild.tagName === "BR")
+                            currentLine.removeChild(currentLine.firstElementChild);
+                        let span = currentLine.lastChild || document.createElement("SPAN");
+                        span.style.color = this.foreColor;
+                        span.style.backgroundColor = this.backColor;
+                        (span.firstChild || span.appendChild(document.createTextNode(""))).nodeValue += v;
+                        currentLine.appendChild(span);
+                    }
+                    if (i < a.length - 1) {
+                        currentLine.removeAttribute("class");
+                        consoleWindow.appendChild(currentLine = document.createElement("DIV"));
+                        currentLine.className = "soullc-cursor-line";
+                        currentLine.appendChild(document.createElement("BR"));
+                    }
+                });
+                document.documentElement.scrollTop = 2147483647;
+            },
+            println(text = "") {
+                this.print(text + "\n");
+            },
+            clear() {
+                for (line of [...consoleWindow.children])
+                    consoleWindow.removeChild(line);
+                consoleWindow.appendChild(currentLine = document.createElement("DIV"));
+                currentLine.className = "soullc-cursor-line";
+                currentLine.appendChild(document.createElement("BR"));
+            },
+            title(title) {
+                document.title = title == null ? originalTitle : title;
+            },
+            color(fore, back) {
+                this.foreColor = typeof fore === 'number' ? this.colors[fore] : fore;
+                this.backColor = typeof back === 'number' ? this.colors[back] : back;
+                if (currentLine.lastChild && currentLine.lastChild.innerText)
+                    currentLine.appendChild(document.createElement('SPAN'));
+            },
+            input() {
+                return new Promise(resolve => {
+                    if (currentLine.firstElementChild.tagName === "BR")
+                        currentLine.removeChild(currentLine.firstElementChild);
+                    currentLine.removeAttribute("class");
+                    inputElement = document.createElement("SPAN");
+                    inputElement.contentEditable = true;
+                    inputElement.className = "soullc-input";
+                    inputElement.style.color = this.foreColor;
+                    inputElement.style.backgroundColor = this.backColor;
+                    inputElement.addEventListener("keydown", event => {
+                        if (event.which === 13) {
+                            currentLine.removeChild(inputElement);
+                            let value = inputElement.innerText.replace(/\n/g, ' ');
+                            SoulLC.println(value);
+                            resolve(value);
+                            inputElement = null;
+                        }
+                    });
+                    currentLine.appendChild(inputElement);
+                    window.getSelection().collapse(inputElement, 0);
+                });
+            },
+            getch(timeout) {
+                return Promise.race([
+                    new Promise(resolve => {
+                        getchResolve = resolve;
+                        hiddenInput.focus();
+                    }),
+                    new Promise(resolve => {
+                        if (timeout)
+                            setTimeout(() => {
+                                getchResolve = null;
+                                resolve(null);
+                            }, timeout);
+                    })
+                ]);
+            },
+            sleep(milliseconds) {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve();
+                    }, milliseconds);
+                });
+            },
+            getLine() {
+                return currentLine;
+            },
+            revertLine(line) {
+                if (line.parentNode === consoleWindow) {
+                    let l = line;
+                    currentLine = line.previousSibling;
+                    while (l) {
+                        let _l = l.nextSibling;
+                        consoleWindow.removeChild(l);
+                        l = _l;
+                    }
+                    consoleWindow.appendChild(currentLine = document.createElement("DIV"));
+                    currentLine.classList.add("soullc-cursor-line");
+                    currentLine.appendChild(document.createElement("BR"));
+                }
+            },
+        };
     
   }();
 
