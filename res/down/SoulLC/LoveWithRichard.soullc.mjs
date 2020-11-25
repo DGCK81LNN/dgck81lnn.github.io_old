@@ -243,7 +243,7 @@ export async function main() {
         else if (["Mgl", "Yns"].includes(name))
           color = 11, allowed = true, msg = "友情客串。", loveBonus = 1;
         else
-          nameType = "", color = 9, allowed = true, msg = "是这个名字吗？", loveBonus = 1;
+          color = 9, allowed = true, msg = "是这个名字吗？", loveBonus = 1;
         SoulLC.revertLine(line), line = SoulLC.getLine();
         l(`> \x11${String.fromCharCode(color)}${name}`, "");
       }
