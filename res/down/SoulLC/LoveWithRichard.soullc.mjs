@@ -137,6 +137,8 @@ async function choices(...arr) {
 
 export async function main() {
 
+  SoulLC.title("Love with Richard under epidemic");
+
   while (true) {
 
     let i; // 用于存储用户所选的选项索引
