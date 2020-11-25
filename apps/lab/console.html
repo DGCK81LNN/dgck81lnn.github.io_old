@@ -78,7 +78,7 @@
     });
     document.addEventListener("keydown", event => {
       if (getchResolve)
-        getchResolve(event.which), getchResolve = null;
+        getchResolve(event.keyCode), getchResolve = null;
     });
     hiddenInput.addEventListener("keydown", event => {
       event.preventDefault();
