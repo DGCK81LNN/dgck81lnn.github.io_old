@@ -186,7 +186,6 @@ export async function main() {
       }
       l(a.map(j => j.join('')).join('\n'));
     }
-    await p("在线游玩请到 https://dgck81lnn.github.io");
     await p("\x11\x08按方向键或直接输入选项字母选择，按回车确定。");
 
     while (true) {
