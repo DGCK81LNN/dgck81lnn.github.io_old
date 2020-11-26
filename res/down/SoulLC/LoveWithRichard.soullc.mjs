@@ -1,5 +1,4 @@
 function l(str, end = "\n") {
-  //SoulLC.print('[l]');
   SoulLC.color();
   let flag = false, temp = "";
   for (let c of str)
@@ -23,21 +22,17 @@ function l(str, end = "\n") {
     SoulLC.print(temp);
   SoulLC.color();
   SoulLC.print(end);
-  //SoulLC.print('[/l]');
 }
 
 var skip; // 是否已按任意键跳过逐字显示。调用getch()会解除这个状态。
 
 async function getch(timeout) {
-  //SoulLC.print('[ge]');
   skip = false;
   let r = await SoulLC.getch(timeout);
-  //SoulLC.print('[/ge]');
   return r;
 }
 
 async function p(str, end = "\n") {
-  //SoulLC.print('[p]');
   SoulLC.color();
   let flag = false, temp = "";
   for (let c of str)
@@ -66,7 +61,6 @@ async function p(str, end = "\n") {
   SoulLC.color();
   SoulLC.print(end);
   await SoulLC.sleep(90);
-  //SoulLC.print('[/p]');
 }
 
 async function g(str, end = "\n") {
@@ -184,7 +178,7 @@ export async function main() {
       for (let i of seq) {
         if (!skip) {
           l(a.map(j => j.join('')).join('\n'));
-          if (await SoulLC.getch(8))
+          if (await SoulLC.getch(10))
             skip = true;
           SoulLC.clear();
         }
@@ -192,12 +186,22 @@ export async function main() {
       }
       l(a.map(j => j.join('')).join('\n'));
     }
+    await p("在线游玩请到 https://dgck81lnn.github.io");
     await p("\x11\x08按方向键或直接输入选项字母选择，按回车确定。");
 
     while (true) {
       i = await choices("开始", "关于", "退出");
       if (i === 1) {
-        await p("\x11\x0fLove With Richard \x11\x07under epidemic\n\n原作（Python 3） by:\n    \x11\x08学了一点Python的\n        \x11\x0fRichard M\x12\n（Bilibili \x11\x09@天府灵山行者\x12, UID: \x11\x09300711293\x12）\n\n网页版 by:\n    \x11\x08JavaScript带师\n          \x11\x2fRoy L\x12\n（Bilibili \x11\x09@DGCK81LNN\x12, UID: \x11\x09328066747\x12）");
+        await p(`\x11\x0fLove With Richard \x11\x07under epidemic
+
+原作（Python 3） by:
+    \x11\x08学了一点Python的
+        \x11\x0fRichard M\x12
+（Bilibili \x11\x09@天府灵山行者\x12, UID: \x11\x09300711293\x12）
+
+网页版 by:
+    \x11\x08JavaScript带师
+          \x11\x2fRoy L\x12\n（Bilibili \x11\x09@DGCK81LNN\x12, UID: \x11\x09328066747\x12）`);
         await choices("返回");
         continue;
       }
@@ -383,14 +387,14 @@ export async function main() {
   我并排地走在他身边，回了班。他回到了自己的座位，开始写起了物理卷子。`);
         }
         else {
-          await g(`“咱们一起回班吧，我想看看你怎么做题。”
+          await gg(`“咱们一起回班吧，我想看看你怎么做题。”
   他又呆呆地看了一会儿，然后转头大步走出小教室。我并排地走在他身边，回了自己班。他回到了自己的座位，开始写起了物理卷子。
   我在他身边看了几分钟。虽然我没有看明白他的思路，但他认真的样子确实让我着迷。`);
         }
       }
     }
     else {
-      await g(`我没有继续尾随他，返回了自己的座位。我看着重逢的同学们欢快如故，仿佛这疫情从未发生过一样。
+      await gg(`我没有继续尾随他，返回了自己的座位。我看着重逢的同学们欢快如故，仿佛这疫情从未发生过一样。
   我等了许久，两分钟铃时，他才回来。`);
     }
     await w(lovePoint);
@@ -615,8 +619,8 @@ export async function main() {
       else if (i === 2) {
         await gg(`我贴着他宽大的身躯，坐在了他的左边。他对我说道：“两年前的今天，春季运动会，我们的座位就在前面的那片空地上。”`);
       }
-      await gg(`他继续讲着他的回忆：“那天早上，我五点多就醒了。我用蜡笔给昨晚的半成品写上‘\x11\x0cSunny\x12加油’，并把它藏在了已做好的‘八cy班加油’之下，拍照发在了微信群里。
-  “到校后，我在校门口买了些零食饮料，然后去班里吃了早点。我准备下楼时，\x11Ryan\x02进班了，我和他聊了一会，然后搬着椅子下楼。”`);
+      await gg(`他继续讲着他的回忆：“那天早上，我五点多就醒了。我用蜡笔给昨晚的半成品写上‘\x11\x0cSunny\x12加油’，并把它藏在了已做好的‘八班加油’之下，拍照发在了微信群里。
+  “到校后，我在校门口买了些零食饮料，然后去班里吃了早点。我准备下楼时，\x11\x02Ryan\x02进班了，我和他聊了一会，然后搬着椅子下楼。”`);
       if (lovePoint >= 90)
         await gg(`“下楼前，我让他猜了一下我的女朋友是谁。我给他了一个提示‘体重不到我的三分之一。’他就猜出来了。我赶紧说：‘不是。’
   “起初，我坐在第一排从左往右数第一个。但很快，写加油稿的把我赶走，我来到了第二排。不知等了多久，\x11\x0cSunny\x12来了，她莫名其妙地坐在了我的右边。
@@ -667,7 +671,7 @@ export async function main() {
   “再见，\x11\x0fRichard\x12!”
   “再见，${nameFormat}!”`);
       await w(lovePoint);
-      await p(`\n\x11\x47Truelove End：第二个\x11\x4cSunny`);
+      await p(`\n\x11\x40Truelove End：第二个\x11\x4cSunny`);
     }
     else if (lovePoint >= 90) { // 好结局
       await gg(`\x11\x0fRichard\x12在报国亭上看着我。我快走到他身前时，他站了起来。我看周围没人，就冲上去，使了很大的力气抱住他。我快把自己挤的窒息了，但他却没什么反应。
@@ -682,7 +686,7 @@ export async function main() {
   “再见，\x11\x0fRichard\x12!”
   “再见，${nameFormat}!”`);
       await w(lovePoint);
-      await p(`\n\x11\x57Good End：知心恋人`);
+      await p(`\n\x11\x50Good End：知心恋人`);
     }
     else if (lovePoint >= 50) { // 普通结局
       await gg(`\x11\x0fRichard\x12坐在报国亭上，双臂放在腿上，低着头，似乎在思考着什么，并没有考试结束后该有的放松。我走上前去，并坐在了他身边。他先问了我一句：“你选择保送还是选择中考，打算好了吗？”
@@ -699,7 +703,7 @@ export async function main() {
   “再见，\x11\x0fRichard\x12!”
   “再见，${nameFormat}!”`);
       await w(lovePoint);
-      await p(`\x11\x37Normal End：新的伴侣`);
+      await p(`\x11\x30Normal End：新的伴侣`);
     }
     else { // 坏结局
       await gg(`远远看去，报国亭上一个人也没有。我的心一下就紧张了起来。我一边往报国亭走，一边向四处张望，可是周围只有一个不认识的老师经过。
@@ -725,19 +729,3 @@ export async function main() {
   }
 
 }
-
-
-/*
-       _____
-      /=====\
-    ,|=======|.
-    *|       |*
-      \_____/
-  ____/     \____
- /               \
-|  '  T F L S  '  |
-|  |__ ^^^^^ __|  |
-|  |""==___==""|  |
-|  |    """    |  |
-|  |___________|  |
-*/
