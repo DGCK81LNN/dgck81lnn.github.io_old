@@ -70,7 +70,10 @@
         </el-card>
       </el-container>
     </soul-main>
-    <soul-footer></soul-footer>
+    <soul-footer :links="[
+      { href: 'https://esolangs.org', text: 'Esolangs 维基' },
+      { href: 'https://www.mywiki.cn/dgck81lnn/index.php/分类:深奥编程语言', text: '我博客上的“深奥编程语言”分类' }
+    ]"></soul-footer>
   </div>
 </body>
 <script>
