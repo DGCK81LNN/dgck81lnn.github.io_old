@@ -1,5 +1,7 @@
 /**
- * SoulHeader
+ * @class
+ * @name SoulHeader
+ * @extends VueComponent
  * 页头。
  */
 Vue.component('soul-header', {
@@ -19,7 +21,7 @@ Vue.component('soul-header', {
             <el-menu-item index="home">首页</el-menu-item>
             <el-menu-item index="apps">应用</el-menu-item>
             <el-menu-item index="res">资源</el-menu-item>
-            <el-menu-item index="about">关于</el-menu-item>
+            <el-menu-item index="blog">博客</el-menu-item>
         </el-menu>
     </el-container>
 </el-header>`,
@@ -31,6 +33,9 @@ Vue.component('soul-header', {
 });
 
 /**
+ * @class
+ * @name SoulHeader
+ * @extends VueComponent
  * 正文容器。
  */
 Vue.component('soul-main', {
@@ -38,6 +43,9 @@ Vue.component('soul-main', {
 });
 
 /**
+ * @class
+ * @name SoulFooter
+ * @extends VueComponent
  * 页脚。
  */
 Vue.component('soul-footer', {

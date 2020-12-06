@@ -1,7 +1,8 @@
 /**
- * @author 小马纯真灵魂
- */
-/*
+ * @author 小马纯真灵魂 (DGCK81LNN)
+ * @overview ECMAScript能力检测。
+ * @copyright 2020 DGCK81LNN.
+ * @license MPL-2.0
  * 在这个科技日新月异的时代
  * ECMAScript版本一定要紧跟潮流！
  * 让我看看这个浏览器的ES版本……
