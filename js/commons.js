@@ -65,7 +65,6 @@ Vue.component('soul-footer', {
         <section class="soul-footer-col">
             <h3>关于我</h3>
             <p><a href="https://space.bilibili.com/328066747" target="_blank">B站账号</a></p>
-            <p><a href="http://www.mywiki.cn/dgck81lnn" target="_blank">LNN的博客？</a></p>
             <p><a href="https://github.com/DGCK81LNN" target="_blank">GitHub</a></p>
             <p><a href="https://zh.moegirl.org.cn/User:DGCK81LNN" target="_blank">萌娘百科用户页</a></p>
         </section>
