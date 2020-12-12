@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <!--
-  这是灵魂小站 / 应用 / 灵魂实验室 / brainfuck 在线调试器!
+  这是灵魂小站 / 应用 / 灵魂实验室 / brainfuck 在线工具!
   ID: apps.lab.bf // soullbf
 -->
 <head>
@@ -65,7 +65,6 @@
       height: 100%;
       box-sizing: border-box;
       color: transparent;
-      caret-color: #606266;
       background-color: transparent;
       overflow-y: -moz-scrollbars-none;
       -ms-overflow-style: none;
@@ -147,142 +146,149 @@
       <el-breadcrumb separator-class="el-icon-arrow-right">
         <el-breadcrumb-item><a href="/apps">应用</a></el-breadcrumb-item>
         <el-breadcrumb-item><a href=".">灵魂实验室</a></el-breadcrumb-item>
-        <el-breadcrumb-item>brainfuck 在线调试器</el-breadcrumb-item>
+        <el-breadcrumb-item>brainfuck 在线工具</el-breadcrumb-item>
       </el-breadcrumb>
 
-      <section class="soullbf-toolbar">
-        <span v-if="stat === 'run' || stat === 'tick'">
+      <div v-if="panel === 'edit'">
+        <section class="soullbf-toolbar">
           <el-button
-          v-if="stat && stat !== 'pause'"
+          type="primary"
+          icon="el-icon-caret-right"
+          @click="init()"
+          :disabled="syntaxError"
+          >准备</el-button>
+          <el-button
+          type="info"
+          icon="el-icon-setting"
+          @click="configVisible = true"
+          >环境选项</el-button>
+          <el-button
+          plain
+          icon="el-icon-cpu"
+          @click="$alert('此功能即将到来...')"
+          :disabled="syntaxError"
+          >编译</el-button>
+        </section>
+        <section class="soullbf-main">
+          <section class="soullbf-left">
+            <soul-fake-textarea
+            class="soullbf-code-input"
+            :value="code"
+            :handle-input="handleInput"
+            ></soul-fake-textarea>
+          </section>
+          <section class="soullbf-right">
+            <el-input
+            type="textarea"
+            v-model="input"
+            placeholder="输入流。模拟从文本文件中读取输入。留空则启动命令行模式。"
+            :disabled="stat !== 'ready'"
+            ></el-input>
+          </section>
+        </section>
+      </div>
+      <div
+      label="运行"
+      name="run"
+      v-if="panel === 'run'">
+        <section class="soullbf-toolbar">
+          <el-button
+          v-if="stat === 'pause'"
+          type="primary"
+          icon="el-icon-caret-right"
+          @click="run()"
+          >运行</el-button>
+          <el-button
+          v-if="stat === 'pause'"
+          plain
+          icon="el-icon-right"
+          @click="step()"
+          >运行一步</el-button>
+          <el-button
+          v-if="stat === 'run'"
           type="danger" plain
           icon="el-icon-video-pause"
           @click="pause()"
           >暂停</el-button>
-        </span>
-        <span v-else>
-          <span
-          v-if="stat !== 'end'"
-          >
-            <el-button
-            type="primary"
-            icon="el-icon-caret-right"
-            :disabled="syntaxError"
-            @click="run()"
-            >运行</el-button>
-            <el-dropdown
-            split-button
-            :disabled="syntaxError"
-            @click="tick()"
-            @command="tickSpeedVisible = true"
-            >
-              <i class="el-icon-d-arrow-right"></i>
-              逐步运行
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>设置速度...</el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-            <el-button
-            plain
-            icon="el-icon-right"
-            :disabled="syntaxError"
-            @click="step()"
-            >运行一步</el-button>
-          </span>
-          <el-button
-          v-if="stat === 'ready'"
-          type="info" plain
-          icon="el-icon-setting"
-          @click="configVisible = true"
-          >环境选项</el-button>
           <el-button
           v-else
           type="danger"
           icon="el-icon-delete"
           @click="reset()"
-          >重置</el-button>
-        </span>
-      </section>
+          >退出</el-button>
+        </section>
+        <section class="soullbf-memory-table" v-if="stat !== 'ready'">
+          <table>
+            <tr>
+              <th
+              v-for="kvPair in renderMemory()"
+              :key="kvPair[0]"
+              :rowspan="kvPair[1] === undefined ? 2 : ''"
+              :class="memory.pointer === kvPair[0] ? 'soullbf-pointer' : ''"
+              v-text="kvPair[1] === undefined ? '...' : kvPair[0]"
+              ></th>
+            </tr>
+            <tr>
+              <td
+              v-for="kvPair in renderMemory()"
+              v-if="kvPair[1] !== undefined"
+              :key="kvPair[0]"
+              :class="memory.pointer === kvPair[0] ? 'soullbf-pointer' : ''"
+              v-text="kvPair[1]"
+              ></td>
+            </tr>
+          </table>
+        </section>
+        <p>点击代码中带高亮的指令来添加断点。</p>
+        <section class="soullbf-main">
+          <section class="soullbf-left">
+            <soul-manual-prism
+            class="soullbf-wrapcode"
+            @click="codeClick"><span
+            v-for="(instruction, i) in [...code]"
+            :class="[
+              'token',
+              instruction === '>' || instruction === '<' ? 'pointer keyword'
+              : instruction === '+' ? 'increment inserted'
+              : instruction === '-' ? 'decrement deleted'
+              : instruction === '.' || instruction === ',' ? 'operator'
+              : instruction === '[' || instruction === ']' ? 'branching important'
+              : 'comment',
+              i === codePointer ? 'soullbf-pointer' : '',
+              breakpoints.has(i) ? 'soullbf-breakpoint' : ''
+            ]"
+            :data-i="i"
+            v-text="instruction === '\n' ? ' \n' : instruction"
+            ></span></soul-manual-prism>
+          </section>
+          <section v-if="staticInput" class="soullbf-right">
+            <soul-manual-prism class="soullbf-wrapcode">{{input.slice(0, inputPointer)}}<span class="token soullbf-pointer">{{input[inputPointer] === '\n' ? ' \n': input[inputPointer] || ' '}}</span>{{input.slice(inputPointer + 1)}}</soul-manual-prism>
+            <soul-manual-prism class="soullbf-wrapcode">{{output}}<span class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
+          </section>
+          <section v-else class="soullbf-right">
+            <soul-manual-prism class="soullbf-wrapcode">{{output}}<span v-if="waitingForInput" class="token comment">{{inputBuffer}}<span class="token soullbf-cursor">&nbsp;</span></span><span v-else class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
+            <div @keyup.enter="inputBufferKeypress">
+              <el-input
+              v-if="waitingForInput"
+              v-model="inputBuffer"
+              >
+                <el-button
+                slot="append"
+                icon="el-icon-document-checked"
+                @click="inputBufferEnded"
+                >全文结束</el-button>
+              </el-input>
+            </div>
+          </section>
+        </section>
+      </div>
+      <div v-if="panel === 'compile'">
+        
+      </div>
+      </el-tabs>
 
-      <section class="soullbf-memory-table" v-if="stat !== 'ready'">
-        <table>
-          <tr>
-            <th
-            v-for="kvPair in renderMemory()"
-            :key="kvPair[0]"
-            :rowspan="kvPair[1] === undefined ? 2 : ''"
-            :class="memory.pointer === kvPair[0] ? 'soullbf-pointer' : ''"
-            v-text="kvPair[1] === undefined ? '...' : kvPair[0]"
-            ></th>
-          </tr>
-          <tr>
-            <td
-            v-for="kvPair in renderMemory()"
-            v-if="kvPair[1] !== undefined"
-            :key="kvPair[0]"
-            :class="memory.pointer === kvPair[0] ? 'soullbf-pointer' : ''"
-            v-text="kvPair[1]"
-            ></td>
-          </tr>
-        </table>
-      </section>
 
-      <section class="soullbf-main">
-        <section class="soullbf-left">
-          <soul-fake-textarea
-          v-if="stat === 'ready'"
-          class="soullbf-code-input"
-          :value="code"
-          :handle-input="handleInput"
-          ></soul-fake-textarea>
-          <soul-manual-prism
-          v-else
-          class="soullbf-wrapcode"
-          @click="codeClick"><span
-          v-for="(instruction, i) in [...code]"
-          :class="[
-            'token',
-            instruction === '>' || instruction === '<' ? 'pointer keyword'
-            : instruction === '+' ? 'increment inserted'
-            : instruction === '-' ? 'decrement deleted'
-            : instruction === '.' || instruction === ',' ? 'operator'
-            : instruction === '[' || instruction === ']' ? 'branching important'
-            : 'comment',
-            i === codePointer ? 'soullbf-pointer' : '',
-            breakpoints.has(i) ? 'soullbf-breakpoint' : ''
-          ]"
-          :data-i="i"
-          v-text="instruction === '\n' ? ' \n' : instruction"
-          ></span></soul-manual-prism>
-        </section>
 
-        <section v-if="stat === 'ready'" class="soullbf-right">
-          <el-input
-          type="textarea"
-          v-model="input"
-          placeholder="输入流。模拟从文本文件中读取输入。留空则启动命令行模式。"
-          :disabled="stat !== 'ready'"
-          ></el-input>
-        </section>
-        <section v-else-if="staticInput" class="soullbf-right">
-          <soul-manual-prism class="soullbf-wrapcode">{{input.slice(0, inputPointer)}}<span class="token soullbf-pointer">{{input[inputPointer] === '\n' ? ' \n': input[inputPointer] || ' '}}</span>{{input.slice(inputPointer + 1)}}</soul-manual-prism>
-          <soul-manual-prism class="soullbf-wrapcode">{{output}}<span class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
-        </section>
-        <section v-else class="soullbf-right">
-          <soul-manual-prism class="soullbf-wrapcode">{{output}}<span v-if="waitingForInput" class="token comment">{{inputBuffer}}<span class="token soullbf-cursor">&nbsp;</span></span><span v-else class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
-          <div @keyup.enter="inputBufferKeypress">
-            <el-input
-            v-if="waitingForInput"
-            v-model="inputBuffer"
-            >
-              <el-button
-              slot="append"
-              icon="el-icon-document-checked"
-              @click="inputBufferEnded"
-              >全文结束</el-button>
-            </el-input>
-          </div>
-        </section>
-      </section>
     </soul-main>
     <soul-footer :links="[
       { href: 'https://esolangs.org/wiki/brainfuck', text: 'brainfuck - Esolangs 维基' },
@@ -477,10 +483,10 @@
       tickSpeed: 300,
       tickSpeedVisible: false,
 
-      stat: "ready", // ready, run, tick, pause, end
-      initialized: false,
+      panel: "edit", //edit, run, compile
+      stat: "ready", // ready, run, pause, end
       codePointer: 0,
-      breakpoints: null,
+      breakpoints: new Set(),
       memory: null,
       staticInput: true,
       input: "",
@@ -489,6 +495,8 @@
       inputBufferEOF: false,
       waitingForInput: false,
       output: "",
+
+      leaveLoopDepth: 0,
     },
 
     methods: {
@@ -601,19 +609,14 @@
         }
       },
 
+      panelChange() {
+        if (vm.panel === "edit")
+          vm.reset();
+        else if (vm.panel === "run")
+          vm.init();
+      },
+
       iStep() {
-        if (!vm.initialized) {
-          vm.codePointer = 0;
-          vm.inputPointer = 0;
-          vm.output = "";
-          vm.inputBuffer = "";
-          vm.memory = new SoullbfMemory(vm.config.dataType, vm.config.cells);
-          vm.memory.haltOnPointerOverflow = !vm.config.allowNegativeMP;
-          vm.staticInput = Boolean(vm.input);
-          vm.breakpoints = new Set();
-          vm.initialized = true;
-          vm.inputBufferEOF = false;
-        }
         let instruction = vm.code[vm.codePointer], cond = true;
         while (cond) {
           cond = false;
@@ -703,10 +706,6 @@
           }
           else if(e === "break") {
             vm.stat = 'pause';
-            vm.$message({
-              type: 'info',
-              message: "触发断点！"
-            });
           }
           else {
             vm.stat = 'end';
@@ -717,29 +716,30 @@
           }
       },
 
+      init() {
+        vm.panel = 'run';
+        vm.stat = 'pause';
+        vm.codePointer = 0;
+        vm.inputPointer = 0;
+        vm.output = "";
+        vm.inputBuffer = "";
+        vm.memory = new SoullbfMemory(vm.config.dataType, vm.config.cells);
+        vm.memory.haltOnPointerOverflow = !vm.config.allowNegativeMP;
+        vm.staticInput = Boolean(vm.input);
+        vm.breakpoints = new Set();
+        vm.inputBufferEOF = false;
+      },
       run() {
         vm.stat = 'run';
         let f = () => {
           let end = Date.now() + 30;
           try {
-            do {
+            do
               vm.iStep();
-            } while (Date.now() < end);
+            while (Date.now() < end);
             vm.intHandle = setTimeout(f, 10);
           } catch (e) {
-            this.iHandleError(e);
-          }
-        };
-        f();
-      },
-      tick() {
-        vm.stat = 'tick';
-        let f = () => {
-          try {
-            vm.iStep();
-            vm.intHandle = setTimeout(f, vm.tickSpeed);
-          } catch (e) {
-            this.iHandleError(e);
+            vm.iHandleError(e);
           }
         };
         f();
@@ -749,7 +749,7 @@
         try {
           vm.iStep();
         } catch (e) {
-          this.iHandleError(e);
+          vm.iHandleError(e);
         }
       },
       pause() {
@@ -758,9 +758,9 @@
       },
       reset() {
         vm.stat = 'ready';
+        vm.panel = 'edit';
         vm.codePointer = 0;
         vm.memory = null;
-        vm.initialized = false;
         if (!vm.staticInput)
           vm.input = "";
         vm.waitingForInput = false;
