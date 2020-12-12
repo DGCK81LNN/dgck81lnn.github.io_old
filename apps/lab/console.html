@@ -197,7 +197,7 @@
   }();
 
   let path = /[\?&]path=([^&]*)/.exec(location.search);
-  path = path ? path[1] : "/res/down/SoulLC/helloworld.soullc.js";
+  path = path ? path[1] : "/res/down/SoulLC/helloworld.soullc.mjs";
   import(path)
     .then(({main}) => main())
     .then(() => {
