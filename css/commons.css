@@ -15,11 +15,12 @@
 * {
     font-family: inherit;
     color: inherit;
+    caret-color: #33bfab;
 }
-/*
-*:not(h1, h2, h3, h4, h5, h6, small, big, rt, sup, sub) {
-    font-size: inherit;
-}*/
+::selection {
+    background: #33bfab;
+    color: white;
+}
 body {
     font-family: var(--soul-font-family-sans-serif);
     margin: 0;
@@ -131,6 +132,11 @@ code, pre, .soul-monospace {
 
 
 @media screen and (max-width: 600px) {
+    .soul-header,
+    .soul-main {
+        padding-left: 0;
+        padding-right: 0;
+    }
     .soul-header {
         height: 120px !important;
     }
