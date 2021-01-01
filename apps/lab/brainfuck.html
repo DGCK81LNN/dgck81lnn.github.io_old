@@ -90,7 +90,7 @@
       min-width: 250px;
     }
     .el-drawer {
-      min-width: 350px;
+      min-width: 300px;
     }
     .el-drawer__body {
       padding: 20px;
@@ -329,7 +329,7 @@
           </p>
         </el-form-item>
         <el-form-item label="数据类型">
-          <el-select v-model="config.dataType">
+          <el-select size="medium" v-model="config.dataType">
             <el-option label="8位" :value="1"></el-option>
             <el-option label="16位" :value="2"></el-option>
             <el-option label="32位" :value="4"></el-option>
@@ -341,7 +341,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="单元格数量">
-          <el-select v-model="config.cells" @change="ucellsChange">
+          <el-select size="medium" v-model="config.cells" @change="ucellsChange">
             <el-option-group>
               <el-option label="30000" :value="30000"></el-option>
               <el-option label="5000" :value="5000"></el-option>
@@ -366,6 +366,7 @@
     :visible.sync="customCellsVisible"
     width="30%">
       <el-input-number
+      size="medium"
       v-model="config._cells"
       @change="cellsChange"
       :min="3"
