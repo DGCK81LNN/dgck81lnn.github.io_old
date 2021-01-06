@@ -26,7 +26,7 @@ function zeroizeLNN(num, len=2, sign) {
     }
     if (sign) str = (num < 0 ? "-" : "+") + str;
     return str;
-};
+}
 {
     let LNN_DATE_FORMAT = {
         'yyyy': t => zeroizeLNN(t.getFullYear(), 4),
@@ -130,23 +130,23 @@ function zeroizeLNN(num, len=2, sign) {
 // GETELEMENTS UTIL
 
 /**
- * 获取文档中所有带id的元素。
+ * 获取文档中所有带id的元素（虽然很多浏览器都会自动做这件事）。
  * 
- * @returns {void}
+ * @returns {HTMLElement[]}
  */
 this.getElementsLNN = () => [...document.querySelectorAll("*[id]")].map(e => window[e.id] = e);
 /**
  * 获取指定id的元素。
  * 
  * @param {string} id 元素的id。
- * @returns {HTMLElement?}
+ * @returns {?HTMLElement}
  */
 this.$$$ = id => window[id] = document.getElementById(id);
 /**
  * 批量获取带id的元素。
  * 
  * @param  {...string} args 每个元素的id。
- * @returns {Array<HTMLElement?>} 每个元素。
+ * @returns {Array.<?HTMLElement>} 每个元素。
  */
 this.$$ = (...args) => args.map($$$);
 
@@ -165,7 +165,7 @@ this.$$ = (...args) => args.map($$$);
     /**
      * 获得数组中的随机元素。
      * 
-     * @this {Array} Array的实例。
+     * @this {Array.} Array的实例。
      * @returns {*} 随机选取的元素。
      */
     var randItemLNN = () =>this[randBetweenLNN(0, this.length)];
@@ -201,9 +201,9 @@ this.XHRUtilLNN = {
      * 发起GET请求。
      * 
      * @param {string} url 请求的URL。
-     * @param {string} [query=] 要追加到URL的查询字符串。
+     * @param {string} [query] 要追加到URL的查询字符串。
      * @param {boolean} [noCache=false] 是否追加一个时间戳到查询字符串来避免浏览器缓存。
-     * @param {Function} [callback=] 回调函数。如果省略，则发起同步请求。
+     * @param {Function} [callback] 回调函数。如果省略，则发起同步请求。
      * @returns {XMLHttpRequest} 已经发起的请求。
      */
     get(url, query, noCache, callback) {
@@ -223,7 +223,7 @@ this.XHRUtilLNN = {
      * 发起POST请求。
      * 
      * @param {string} url 请求的URL。
-     * @param {(FormData|Object)} [data=] 表单数据。如果不是一个FormData实例，则会被当做一个包含键值对的对象处理。
+     * @param {(FormData|Object)} [data] 表单数据。如果不是一个FormData实例，则会被当做一个包含键值对的对象处理。
      * @param {Function} [callback=] 回调函数。如果省略，则发起同步请求。
      * @returns {XMLHttpRequest} 已经发起的请求。
      */
