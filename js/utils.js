@@ -193,9 +193,7 @@ this.$$ = (...args) => args.map($$$);
 
 // XHR UTIL
 
-/**
- * @namespace
- */
+/** @namespace */
 this.XHRUtilLNN = {
     /**
      * 发起GET请求。
@@ -246,3 +244,73 @@ this.XHRUtilLNN = {
         return xhr;
     }
 };
+
+// BASE64 UTIL
+
+/** @namespace */
+this.Base64LNN = function() {
+    var utf8Encoder = new TextEncoder(),
+        utf8Decoder = new TextDecoder();
+    return {
+        [Symbol.toStringTag]: "Base64LNN",
+ 
+        table: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/",
+ 
+        /** @param {Uint8Array} bytes */
+        /** @returns {string} */
+        encode(bytes) {
+            let i = 0, l = bytes.length;
+            let str = "";
+            while (i < l) {
+                let byte1 = bytes[i++],
+                    byte2 = bytes[i++],
+                    byte3 = bytes[i++];
+                str += this.table[                       byte1 >> 2 ];
+                str += this.table[((byte1 &  3) << 4) | (byte2 >> 4)];
+                str += byte2 === undefined ? "="
+                     : this.table[((byte2 & 15) << 2) | (byte3 >> 6)];
+                str += byte3 === undefined ? "="
+                     : this.table[  byte3 & 63                      ];
+            }
+            return str;
+        },
+ 
+        /** @param {string} str */
+        /** @returns {Uint8Array} */
+        decode(str) {
+            let chars = [], bytes = [], fill = 0;
+            for (let char of str) {
+                if (char === "=")
+                    chars.push(0), ++fill;
+                else {
+                    let i = this.table.indexOf(char);
+                    if (i !== -1)
+                        chars.push(i), fill = 0;
+                }
+            }
+            let i = 0, l = chars.length;
+            while (i < l) {
+                bytes.push(
+                    ( chars[i++]       << 2) | (chars[i] >> 4),
+                    ((chars[i++] & 15) << 4) | (chars[i] >> 2),
+                    ((chars[i++] &  3) << 6) |  chars[i++]
+                );
+            }
+            while (fill-- > 0)
+                bytes.pop();
+            return new Uint8Array(bytes);
+        },
+ 
+        /** @param {string} str */
+        /** @returns {string} */
+        encodeUTF8(str) {
+            return this.encode(utf8Encoder.encode(str));  
+        },
+ 
+        /** @param {string} str */
+        /** @returns {string} */
+        decodeUTF8(str) {
+            return utf8Decoder.decode(this.decode(str));
+        },
+    };
+} ();
