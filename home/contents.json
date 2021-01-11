@@ -1,9 +1,5 @@
 [
     {
-        "title": "“应用”页面",
-        "body": "<p>现在页面顶部的“应用”不是404了！快去看看吧！）</p>"
-    },
-    {
         "title": "brainfuck 在线调试器",
         "body": "<p><a href=\"https://esolangs.org/brainfuck\" target=\"_blank\">brainfuck - Esolang维基</a></p><p>万能(?)brainfuck调试器终于基本完工了！！！<br>建议<a href=\"https://github.com/DGCK81LNN/dgck81lnn.github.io/blob/master/apps/lab/brainfuck.html\">到GitHub看看源代码</a></p>",
         "link": "/apps/lab/brainfuck.html"
@@ -12,6 +8,21 @@
         "title": "Love with Richard under epidemic (V3网页版)",
         "body": "<p>灵魂实验室命令行实验性作品，<a href=\"https://space.bilibili.com/300711293\">天府灵山行者</a>（Richard M）创作的互动式小说。<s>快去帮助女主攻略Richard！</s></p>",
         "link": "https://dgck81lnn.github.io/apps/lab/console.html?path=/res/down/SoulLC/LoveWithRichard.soullc.mjs"
+    },
+    {
+        "title": "博客区",
+        "body": "<p>我的个人博客！（不会真有人看吧，不会吧不会吧）</p>",
+        "link": "/blog"
+    },
+    {
+        "title": "沙盒区",
+        "body": "<p>本站应用的临时测试会放在这里。</p>",
+        "link": "/sandbox"
+    },
+    {
+        "title": "遗留区",
+        "body": "<p>灵魂小站旧站的一些实用工具（目前有<b>舞线练习场</b>）会上传到这里。</p>",
+        "link": "/legacy"
     },
     {
         "title": "更多内容即将到来...",
