@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 :root {
     --soul-color-theme: #33bfab;
     --soul-color-text-primary: #303133;
@@ -8,7 +10,7 @@
     --soul-color-border-2: #E4E7ED;
     --soul-color-border-3: #EBEEF5;
     --soul-color-border-4: #F2F6FC;
-    --soul-font-family-sans-serif: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+    --soul-font-family-sans-serif: "Source Han CN", "思源黑体 CN", "PingFang SC", "苹方-简", "Microsoft YaHei", "微软雅黑", sans-serif;
     --soul-font-family-monospace: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
 }
 
