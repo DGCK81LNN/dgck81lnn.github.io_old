@@ -16,20 +16,14 @@ Vue.component('soul-header', {
         class="soul-header-navi-tabs"
         mode="horizontal"
         :default-active="defaultActive"
-        @select="naviSelect"
         >
-            <el-menu-item index="home">首页</el-menu-item>
-            <el-menu-item index="apps">应用</el-menu-item>
-            <el-menu-item index="res">资源</el-menu-item>
-            <el-menu-item index="blog">博客</el-menu-item>
+            <el-menu-item index="home"><a href="/home">首页</a></el-menu-item>
+            <el-menu-item index="apps"><a href="/apps">应用</a></el-menu-item>
+            <el-menu-item index="res"><a href="/res">资源</a></el-menu-item>
+            <el-menu-item index="blog"><a href="/blog">博客</a></el-menu-item>
         </el-menu>
     </el-container>
-</el-header>`,
-    methods: {
-        naviSelect(index) {
-            location.href = `/${index}`;
-        }
-    }
+</el-header>`
 });
 
 /**

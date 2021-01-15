@@ -91,6 +91,14 @@ p.soul-p2 {
     float: left;
     margin-top: -1px;
 }
+.soul-header-navi .el-menu-item {
+    padding: 0;
+    text-decoration: none;
+}
+.soul-header-navi .el-menu-item a {
+    padding: 20px;
+    text-decoration: none;
+}
 .soul-main {
     margin: 8px;
     padding: 20px 10%;
