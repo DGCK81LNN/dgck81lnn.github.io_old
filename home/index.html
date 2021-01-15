@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="cmn">
 <!--
   这是灵魂小站 / 首页!
   ID: home.index // soulhome
@@ -358,48 +358,48 @@ end</code></pre>
     </soul-main>
     <soul-footer></soul-footer>
   </div>
-</body>
-<script>
-  const vm = new Vue({
-    el: "#app",
-    data: {
-      plDomains: {
-        main: "frontEnd",
-        "frontEnd": "html",
-        "misc": "php",
-        "esoteric": "bf"
-      },
-      mugImages: [
-        {url: "images/osu.png", title: "一张osu!游戏截图"},
-        {url: "images/ma1.jpg", title: "一张Malody游戏截图"},
-        {url: "images/ma3.jpg", title: "虽然写着osu!，但这是一张Malody游戏截图"},
-        {url: "images/ma4.jpg", title: "虽然写着osu!，但这是一张Malody游戏截图"},
-        {url: "images/ma5.jpg", title: "一张Malody游戏截图，大课间跑步音乐"},
-        {url: "images/ma6.jpg", title: "一张Malody游戏截图（在电脑上播放手机上打的Pad模式的回放"},
-        {url: "images/adofai1.png", title: "一张冰与火之舞游戏截图"},
-        {url: "images/adofai2.png", title: "截自BV1up4y1v7k9的一张冰与火之舞游戏截图"},
-        {url: "images/dl1.png", title: "一张跳舞的线游戏截图"},
-        {url: "images/dl2.png", title: "一张跳舞的线游戏截图"},
-        {url: "images/dl3.png", title: "一张跳舞的线游戏截图"},
-      ],
-      mlpImages: [
-        {url: "images/mlp1.png", title: "一张MLP:FiM剧集截图"},
-        {url: "images/mlp2.png", title: "一张MLP:FiM剧集截图"},
-        {url: "images/pt1.png", title: "一张Pony Town游戏截图，捏《地球上最后一只小马》主角“孤独终日”"},
-        {url: "images/pt2.png", title: "一张Pony Town游戏截图"},
-      ],
-      recentPlans: undefined,
-      narrow: document.documentElement.clientWidth < 800
-    }
-  });
-  window.addEventListener("resize", () => void(vm.narrow = document.documentElement.clientWidth <= 800));
-  vm.$http.get("contents.json")
-    .then(function(res){
-      vm.recentPlans = res.body;
-    })
-    .catch(function(){
-      vm.recentPlans = null;
+  <script>
+    const vm = new Vue({
+      el: "#app",
+      data: {
+        plDomains: {
+          main: "frontEnd",
+          "frontEnd": "html",
+          "misc": "php",
+          "esoteric": "bf"
+        },
+        mugImages: [
+          {url: "images/osu.png", title: "一张osu!游戏截图"},
+          {url: "images/ma1.jpg", title: "一张Malody游戏截图"},
+          {url: "images/ma3.jpg", title: "虽然写着osu!，但这是一张Malody游戏截图"},
+          {url: "images/ma4.jpg", title: "虽然写着osu!，但这是一张Malody游戏截图"},
+          {url: "images/ma5.jpg", title: "一张Malody游戏截图，大课间跑步音乐"},
+          {url: "images/ma6.jpg", title: "一张Malody游戏截图（在电脑上播放手机上打的Pad模式的回放"},
+          {url: "images/adofai1.png", title: "一张冰与火之舞游戏截图"},
+          {url: "images/adofai2.png", title: "截自BV1up4y1v7k9的一张冰与火之舞游戏截图"},
+          {url: "images/dl1.png", title: "一张跳舞的线游戏截图"},
+          {url: "images/dl2.png", title: "一张跳舞的线游戏截图"},
+          {url: "images/dl3.png", title: "一张跳舞的线游戏截图"},
+        ],
+        mlpImages: [
+          {url: "images/mlp1.png", title: "一张MLP:FiM剧集截图"},
+          {url: "images/mlp2.png", title: "一张MLP:FiM剧集截图"},
+          {url: "images/pt1.png", title: "一张Pony Town游戏截图，捏《地球上最后一只小马》主角“孤独终日”"},
+          {url: "images/pt2.png", title: "一张Pony Town游戏截图"},
+        ],
+        recentPlans: undefined,
+        narrow: document.documentElement.clientWidth < 800
+      }
     });
-</script>
+    window.addEventListener("resize", () => void(vm.narrow = document.documentElement.clientWidth <= 800));
+    vm.$http.get("contents.json")
+      .then(function(res){
+        vm.recentPlans = res.body;
+      })
+      .catch(function(){
+        vm.recentPlans = null;
+      });
+  </script>
+</body>
 
 </html>

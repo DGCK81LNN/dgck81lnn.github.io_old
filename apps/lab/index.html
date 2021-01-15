@@ -75,30 +75,30 @@
       { href: 'https://www.mywiki.cn/dgck81lnn/index.php/分类:深奥编程语言', text: '我博客上的“深奥编程语言”分类' }
     ]"></soul-footer>
   </div>
+  <script>
+    const vm = new Vue({
+      el: "#app",
+      data: {
+          a: [
+              {
+                  title: "brainfuck 在线工具",
+                  body: `<img src="brainfuck.jpg">
+                  <p>
+                      <a href="https://baike.baidu.com/item/Brainfuck/1152785" target="_blank">Brainfuck - 百度百科</a><br>
+                      <a href="https://esolangs.org/brainfuck" target="_blank">brainfuck - Esolang维基</a>
+                  </p><p>
+                      万能（确信）脑操（雾）调试器，可以随意调整环境配置！
+                  </p>`,
+                  link: "brainfuck.html"
+              },
+              {
+                title: "更多内容即将到来...",
+                body: ""
+              }
+          ]
+      }
+    });
+  </script>
 </body>
-<script>
-  const vm = new Vue({
-    el: "#app",
-    data: {
-        a: [
-            {
-                title: "brainfuck 在线工具",
-                body: `<img src="brainfuck.jpg">
-                <p>
-                    <a href="https://baike.baidu.com/item/Brainfuck/1152785" target="_blank">Brainfuck - 百度百科</a><br>
-                    <a href="https://esolangs.org/brainfuck" target="_blank">brainfuck - Esolang维基</a>
-                </p><p>
-                    万能（确信）脑操（雾）调试器，可以随意调整环境配置！
-                </p>`,
-                link: "brainfuck.html"
-            },
-            {
-              title: "更多内容即将到来...",
-              body: ""
-            }
-        ]
-    }
-  });
-</script>
 
 </html>

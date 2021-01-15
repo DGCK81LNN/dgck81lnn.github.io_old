@@ -66,26 +66,26 @@
     </soul-main>
     <soul-footer></soul-footer>
   </div>
+  <script>
+    const vm = new Vue({
+      el: "#app",
+      data: {
+          a: [
+              {
+                title: "灵魂实验室",
+                body: `<p>
+                  运行JavaScript... 或者一些奇怪的编程语言。
+                </p>`,
+                link: "lab/"
+              },
+              {
+                title: "更多内容即将到来...",
+                body: ""
+              }
+          ]
+      }
+    });
+  </script>
 </body>
-<script>
-  const vm = new Vue({
-    el: "#app",
-    data: {
-        a: [
-            {
-              title: "灵魂实验室",
-              body: `<p>
-                运行JavaScript... 或者一些奇怪的编程语言。
-              </p>`,
-              link: "lab/"
-            },
-            {
-              title: "更多内容即将到来...",
-              body: ""
-            }
-        ]
-    }
-  });
-</script>
 
 </html>
