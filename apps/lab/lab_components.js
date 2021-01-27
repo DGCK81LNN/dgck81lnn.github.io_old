@@ -43,8 +43,7 @@ Vue.component('soul-fake-textarea', {
     data: () => ({
     }),
     template: `<pre
-        class="el-textarea soul-fake-textarea soullbf-wrapcode"><code
-        class="el-textarea__inner"
+        class="form-control soul-fake-textarea soullbf-wrapcode"><code
         contenteditable="true"
         :id="id"
         @input="oninput"

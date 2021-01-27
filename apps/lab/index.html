@@ -6,34 +6,32 @@
 -->
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="format-detection" content="telephone=no">
-  <link rel="stylesheet" href="/lib/element.css">
   <link rel="stylesheet" href="/css/commons.css">
-  <link rel="stylesheet" href="/css/prism.css">
   <link rel="icon" href="/site_icon.png">
   <link rel="shortcut icon" href="/site_icon.png">
   <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
-  <script src="/js/tests.js"></script>
-  <script src="/lib/vue.min.js"></script>
-  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-  <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.js"></script>
   <script src="/js/commons.js"></script>
   <title>灵魂实验室 - 灵魂小站</title>
   <style>
-    .soullabindex-flex {
+    .flex {
       flex-wrap: wrap;
     }
-    .soullabindex-card {
+    .card {
       flex: 1;
       min-width: 300px;
       margin: 1rem 8px;
     }
-    .soullabindex-card-link {
+    .card-link {
       float: right;
       padding: 3px 0;
     }
-    .soullabindex-card img {
+    .card img {
       float: left;
       height: 60px;
       margin: 1rem;
@@ -45,30 +43,29 @@
   <div id="app">
     <soul-header default-active="apps"></soul-header>
     <soul-main>
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item><a href="/apps">应用</a></el-breadcrumb-item>
-        <el-breadcrumb-item>灵魂实验室</el-breadcrumb-item>
-      </el-breadcrumb>
+      <b-breadcrumb>
+        <b-breadcrumb-item href="/home">主站</b-breadcrumb-item>
+        <b-breadcrumb-item href="/apps">应用</b-breadcrumb-item>
+        <b-breadcrumb-item active>灵魂实验室</b-breadcrumb-item>
+      </b-breadcrumb>
 
-      <el-container class="soullabindex-flex">
-        <el-card
+      <b-card-group deck class="flex">
+        <b-card
         v-for="item in a"
         :key="item.title"
-        class="soullabindex-card"
-        shadow="hover"
+        class="card"
         >
           <div slot="header" class="clearfix">
             <span>{{item.title}}</span>
-            <el-link
+            <b-link
             v-if="item.link"
-            type="primary"
-            class="soullabindex-card-link"
+            class="card-link"
             :href="item.link"
-            >进入</el-link>
+            >进入</b-link>
           </div>
           <div v-html="item.body"></div>
-        </el-card>
-      </el-container>
+        </b-card>
+      </b-container>
     </soul-main>
     <soul-footer :links="[
       { href: 'https://esolangs.org', text: 'Esolangs 维基' },

@@ -6,57 +6,66 @@
 -->
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="format-detection" content="telephone=no">
-  <link rel="stylesheet" href="/lib/element.css">
   <link rel="stylesheet" href="/css/commons.css">
   <link rel="stylesheet" href="/lib/prism.css">
   <link rel="icon" href="/site_icon.png">
   <link rel="shortcut icon" href="/site_icon.png">
   <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
-  <script src="/js/tests.js"></script>
-  <script src="/lib/vue.min.js"></script>
-  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-  <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue-resource/1.5.1/vue-resource.min.js"></script>
   <script src="/lib/prism.js"></script>
   <script src="/js/commons.js"></script>
   <title>首页 - 灵魂小站</title>
   <style>
-    .soulhome-section {
+    .section {
       margin-top: 2rem;
       margin-bottom: 2rem;
     }
-    .soulhome-section-head {
-      background: radial-gradient(rgb(219, 243, 188), transparent 70.7107%);
+    .section-head {
+      /*background: radial-gradient(rgb(219, 243, 188), transparent 70.7107%);*/
       padding: 2rem 0;
     }
-    .soulhome-title {
+    .section-head .title {
       font-size: 30px;
       vertical-align: middle;
       text-align: center;
     }
-    .soulhome-title-myname {
+    .section-head .title .title-myname {
       font: 80px var(--soul-font-family-monospace);
       color: #33bfab;
       text-shadow: 1px 1.732px 3px black;
     }
-    .soulhome-section-title {
+    .section-title {
       font-size: 50px;
       text-align: center;
     }
-    .soulhome-contents-flex {
+    .hobby {
+      margin-bottom: 4rem;
+    }
+    .contents-flex {
       flex-wrap: wrap;
     }
-    .soulhome-contents-card {
+    .carousel-caption {
+      text-shadow: 0 0 5px black;
+    }
+    .contents-card {
       flex: 1;
       min-width: 267px;
       margin: 1rem 8px;
     }
-    .soulhome-contents-card-link {
+    .contents-card .card-header h6 {
+      display: inline;
+    }
+    .contents-card-link {
       float: right;
       padding: 3px 0;
     }
-    .soulhome-epilogue {
+    .epilogue {
       margin-top: 5rem;
       font-size: 50px;
       text-align: center;
@@ -68,20 +77,20 @@
     }
 
     @media screen and (max-width: 600px) {
-      .soulhome-title {
+      .section-head .title {
         font-size: 20px;
       }
-      .soulhome-title-myname {
+      .section-head .title .title-myname {
         font-size: 50px;
       }
-      .soulhome-section-title,
-      .soulhome-epilogue {
+      .section-title,
+      .epilogue {
         font-size: 30px;
       }
     }
     @media screen and (max-width: 350px) {
       /* 针对十分阴间的屏幕宽度不足350px的情况的优化 */
-      .soulhome-title-myname {
+      .section-head .title .title-myname {
         font-size: 40px;
       }
     }
@@ -92,37 +101,30 @@
   <div id="app">
     <soul-header default-active="home"></soul-header>
     <soul-main>
-      <section class="soulhome-section soulhome-section-head">
-        <h1 class="soulhome-title">
+      <b-card class="section section-head">
+        <h1 class="title">
           你好，我是
-          <div class="soulhome-title-myname">DGCK81LNN，</div>
+          <div class="title-myname">DGCK81LNN，</div>
           一个普通的高中生。
         </h1>
-      </section>
-      <section class="soulhome-section soulhome-section-hobbies">
-        <h2 class="soulhome-section-title">我爱好：</h2>
-        <section class="soulhome-hobby"><h3>计算机编程</h3>
+      </b-card>
+      <section class="section section-hobbies">
+        <h2 class="section-title">我爱好：</h2>
+        <section class="hobby"><h3>计算机编程</h3>
           <p>从小就在父亲的影响下学习编程，Visual Basic入门，后来学习网页前端开发。</p>
-          <el-tabs
-          v-model="plDomains.main"
-          :type="narrow ? 'border-card' : ''"
-          :tab-position="narrow ? 'top' : 'left'"
-          >
-            <el-tab-pane name="frontEnd" label="网络前端">
-              <el-tabs
-                v-model="plDomains.frontEnd"
-                :tab-position="narrow ? 'top' : 'right'"
-              >
-                <el-tab-pane label="HTML" name="html">
-                  <pre><code class="language-html">&lt;section class="soulhome-section soulhome-section-head"&gt;
-  &lt;h1 class="soulhome-title"&gt;
+          <b-card no-body><b-tabs card>
+            <b-tab title="网络前端">
+              <b-tabs>
+                <b-tab title="HTML">
+                  <pre><code class="language-html">&lt;section class="section section-head"&gt;
+  &lt;h1 class="title"&gt;
   你好，我是
-  &lt;div class="soulhome-title-myname"&gt;DGCK81LNN，&lt;/div&gt;
+  &lt;div class="title-myname"&gt;DGCK81LNN，&lt;/div&gt;
   一个普通的高中生。
   &lt;/h1&gt;
 &lt;/section&gt;</code></pre>
-                </el-tab-pane>
-                <el-tab-pane label="JavaScript" name="js">
+                  </b-tab>
+                <b-tab title="JavaScript">
                   <pre><code class="language-js">const enu=(a,c)=>
   pc>1?
     enu(a,c-1)
@@ -134,27 +136,24 @@
       ,[])
   :a
 //这什么阴间代码</code></pre>
-                </el-tab-pane>
-                <el-tab-pane label="CSS" name="css">
-                  <pre><code class="language-css">.soulhome-title {
+                  </b-tab>
+                <b-tab title="CSS">
+                  <pre><code class="language-css">.title {
   font-size: 30px;
   vertical-align: middle;
   text-align: center;
 }
-.soulhome-title-myname {
+.title-myname {
   font: 80px var(--soul-font-family-monospace);
   color: #33bfab;
   text-shadow: 1px 1.732px 3px black;
 }</code></pre>
-                </el-tab-pane>
-              </el-tabs>
-            </el-tab-pane>
-            <el-tab-pane name="misc" label="杂项">
-              <el-tabs
-                v-model="plDomains.misc"
-                :tab-position="narrow ? 'top' : 'right'"
-              >
-                <el-tab-pane label="PHP" name="php">
+                </b-tab>
+              </b-tabs>
+            </b-tab>
+            <b-tab title="杂项">
+              <b-tabs>
+                <b-tab title="PHP">
                   <pre><code class="language-php">&lt;?php
   $url=$_GET['url'];
   $curl = curl_init($url);
@@ -173,8 +172,8 @@
           header($headerLine);
   echo substr($response, $headerSize);
 ?&gt;</code></pre>
-                </el-tab-pane>
-                <el-tab-pane label="Python" name="python">
+                </b-tab>
+                <b-tab title="Python">
                   <pre><code class="language-python"># 节选自 https://github.com/DGCK81LNN/hug/blob/master/allversions/hug3/v3.3.3/hug3.py
 try:
   data=json.loads(open("hug.json", 'rb').read())
@@ -186,30 +185,19 @@ except json.decoder.JSONDecodeError as error:
   jsonDecodeFailedScreen(error)
 else:
   titleScreen()</code></pre>
-                </el-tab-pane>
-                <el-tab-pane label="Visual Basic" name="vb">
-                  <pre><code class="language-vb">' 这代码是我三四年级左右的时候写的
-' 节选自“模拟升旗软件”的“frmSimulationFlagRaising.frm”
-Private Sub cmdPlaySong_Click()
-    PlaySound App.Path & "/国歌.wav", 0, SND_FILENAME Or SND_ASYNC
-End Sub
-
-Private Sub cmdUp_Click()
-    Call cmdPlaySong_Click
-    tmrUp.Enabled = True
-    tmrDown.Enabled = False
-End Sub
-
-Private Sub Command1_Click()
-    frmAbout.Show
-End Sub
-
-Private Sub cmdJustRaisingFlag_Click()
-    tmrUp = True
-    tmrDown = False
-End Sub</code></pre>
-                </el-tab-pane>
-                <el-tab-pane label="Lua" name="lua">
+                </b-tab>
+                <b-tab title="Ruby">
+                  <pre><code class="language-ruby">s0 = 0.0002908882045634
+c0 = (1 - s0 ** 2) ** 0.5
+s, c, n = s0, c0, 1
+while n &lt;= 5400
+    puts format "sin %2ddeg %2d' = %.9f", n / 60, n % 60, s
+    n += 1
+    s = s * c0 + c * s0
+    c = (1 - s ** 2) ** 0.5
+end</code></pre>
+                </b-tab>
+                <b-tab title="Lua">
                   <pre><code class="language-lua">-- 节选自 https://zh.moegirl.org.cn/Module:Sandbox/DGCK81LNN/颜色描述
 local commonColors = {
   {0.4, 0.8, 1, "天依蓝"},
@@ -220,17 +208,14 @@ for _, color in ipairs(commonColors) do
     return color[4]
   end
 end</code></pre>
-                </el-tab-pane>
-              </el-tabs>
-            </el-tab-pane>
-            <el-tab-pane name="esoteric" label="深奥编程语言">
-              <el-tabs
-              v-model="plDomains.esoteric"
-              :tab-position="narrow ? 'top' : 'right'"
-              >
+                </b-tab>
+              </b-tabs>
+            </b-tab>
+            <b-tab title="深奥编程语言">
               <p>深奥编程语言不断突破着“编程语言”这一概念的界限。这些编程语言一般没有实际应用的价值。</p>
               <p class="soul-p2">（以下除brainfuck外的3种语言都不大出名，Prism.js没有现成的语法高亮，于是我就手动高亮了一下（建议查看页面源代码</p>
-                <el-tab-pane label="brainfuck" name="bf">
+              <b-tabs>
+                <b-tab title="brainfuck">
                   <pre><code class="language-brainfuck">单行复读机。可以在页面下方的brainfuck调试器上运行一下。
 环境要求：数据类型 — 16位或以上， EOF — 保持不变。
 
@@ -243,9 +228,9 @@ end</code></pre>
   <[<]
   >[.>]
 <]</code></pre>
-                </el-tab-pane>
-                <el-tab-pane label="Befunge-93" name="b93">
-                  <pre class="soul-manual-prism"><code class="soul-manual-prism"><span class="token important">v>>></span> <span class="token important">></span> <span class="token important">v>>></span> <span class="token important">></span> <span class="token important">v</span>
+                </b-tab>
+                <b-tab title="Befunge-93">
+                  <pre class="soul-manual-prism"><code><span class="token important">v>>></span> <span class="token important">></span> <span class="token important">v>>></span> <span class="token important">></span> <span class="token important">v</span>
  <span class="token constant">012</span> <span class="token constant">3</span>  <span class="token constant">012</span> <span class="token constant">3</span>
  <span class="token important">^?^</span>    <span class="token important">^?^</span>
 <span class="token important">>>?#v?</span><span class="token constant">4</span><span class="token important">>>?#v?</span><span class="token constant">4</span><span class="token important">v</span>
@@ -261,9 +246,9 @@ end</code></pre>
  <span class="token important">v</span><span class="token string">"small"</span><span class="token important">_</span><span class="token string">"gib"</span>
 <span class="token important">^></span><span class="token string">" ooT"</span><span class="token important">></span><span class="token operator">:</span><span class="token important">#</span><span class="token function">,</span><span class="token important">_</span><span class="token operator">$</span><span class="token constant">5</span>
 <span class="token comment">猜数游戏。</span></code></pre>
-                </el-tab-pane>
-                <el-tab-pane label="文言" name="wenyan-lang">
-                  <pre class="soul-manual-prism"><code class="soul-manual-prism"><span class="token comment">注曰。「「节选自 https://www.mywiki.cn/dgck81lnn/index.php/奇怪的AV号-BV号转换程序增加了！ 」」。</span>
+                </b-tab>
+                <b-tab title="文言">
+                  <pre class="soul-manual-prism"><code><span class="token comment">注曰。「「节选自 https://www.mywiki.cn/dgck81lnn/index.php/奇怪的AV号-BV号转换程序增加了！ 」」。</span>
 <span class="token keyword">施</span><span class="token variable">「異或」</span><span class="token keyword">於</span><span class="token variable">「甲號」</span><span class="token keyword">於</span><span class="token variable">「異或數」</span><span class="token punctuation">。</span><span class="token keyword">名之曰</span><span class="token variable">「子」</span><span class="token punctuation">。</span>
 <span class="token keyword">吾有</span><span class="token constant">一</span><span class="token class-name">列</span><span class="token punctuation">。</span><span class="token keyword">名之曰</span><span class="token variable">「丑」</span><span class="token punctuation">。</span>
 <span class="token keyword">吾有</span><span class="token constant">一</span><span class="token class-name">言</span><span class="token punctuation">。</span><span class="token keyword">名之曰</span><span class="token variable">「乙號」</span><span class="token punctuation">。</span>
@@ -273,9 +258,9 @@ end</code></pre>
   <span class="token keyword">夫</span><span class="token variable">「子」</span><span class="token punctuation">。</span><span class="token operator">除</span><span class="token constant">其</span><span class="token operator">以</span><span class="token constant">五十八</span><span class="token punctuation">。</span><span class="token operator">所餘幾何</span><span class="token punctuation">。</span><span class="token operator">充</span><span class="token variable">「丑」</span><span class="token operator">以</span><span class="token constant">其</span><span class="token punctuation">。</span>
   <span class="token keyword">夫</span><span class="token variable">「子」</span><span class="token punctuation">。</span><span class="token operator">除</span><span class="token constant">其</span><span class="token operator">以</span><span class="token constant">五十八</span><span class="token punctuation">。</span></span><span class="token keyword">取</span><span class="token constant">一</span><span class="token keyword">以施</span><span class="token variable">「取底」</span><span class="token punctuation">。</span><span class="token keyword">昔之</span><span class="token variable">「子」</span><span class="token keyword">者</span><span class="token punctuation">。</span><span class="token keyword">今</span><span class="token constant">其</span><span class="token keyword">是矣</span><span class="token punctuation">。</span>
 <span class="token operator">加</span><span class="token constant">一</span><span class="token operator">於</span><span class="token variable">「戌」</span><span class="token punctuation">。</span><span class="token keyword">昔之</span><span class="token variable">「戌」</span><span class="token keyword">者</span><span class="token punctuation">。</span><span class="token keyword">今</span><span class="token constant">其</span><span class="token keyword">是矣</span><span class="token punctuation">。</span><span class="token keyword">云云</span><span class="token punctuation">。</span></code></pre>
-                </el-tab-pane>
-                <el-tab-pane label="Dongbei" name="dongbei">
-                  <pre class="soul-manual-prism"><code class="soul-manual-prism"><span class="token comment"># 节选自 https://www.mywiki.cn/dgck81lnn/index.php/奇怪的AV号-BV号转换程序增加了！</span>
+                </b-tab>
+                <b-tab title="Dongbei">
+                  <pre class="soul-manual-prism"><code><span class="token comment"># 节选自 https://www.mywiki.cn/dgck81lnn/index.php/奇怪的AV号-BV号转换程序增加了！</span>
 <span class="token variable">老王</span><span class="token keyword">装</span><span class="token keyword">整</span><span class="token function">异或</span><span class="token punctuation">（</span><span class="token variable">AV号</span><span class="token punctuation">，</span><span class="token variable">异或数</span><span class="token punctuation">）</span><span class="token punctuation">。</span>
 <span class="token variable">张家庄</span><span class="token keyword">都是活雷锋</span><span class="token punctuation">。</span>
 <span class="token variable">BV号</span><span class="token keyword">装</span><span class="token string">“”</span><span class="token punctuation">。</span>
@@ -287,74 +272,76 @@ end</code></pre>
 <span class="token variable">几</span><span class="token keyword">在</span><span class="token variable">乱序表</span><span class="token keyword">磨叽：</span>
   <span class="token variable">BV号</span><span class="token keyword">装</span><span class="token variable">BV号</span><span class="token operator">、</span><span class="token variable">字母表</span><span class="token keyword">的老</span><span class="token punctuation">（</span><span class="token variable">张家庄</span><span class="token keyword">的老</span><span class="token variable">几</span><span class="token operator">加</span><span class="token constant">一</span><span class="token punctuation">）</span><span class="token punctuation">。</span>
 <span class="token keyword">磨叽完了</span><span class="token punctuation">。</span></code></pre>
-                </el-tab-pane>
-              </el-tabs>
-            </el-tab-pane>
-          </el-tabs>
+                </b-tab>
+              </b-tabs>
+            </b-tab>
+          </b-tabs></b-card>
         </section>
-        <section class="soulhome-hobby"><h3>音游和亚音游</h3>
+        <section class="hobby"><h3>音游和亚音游</h3>
           <p>从<em>跳舞的线</em>入圈，后来又接触了<em>Malody</em>、<em>osu!</em>、<em>冰与火之舞</em>。</p>
-          <el-carousel
-            :interval="4000"
-            :type="narrow ? '' : 'card'"
-            trigger="click"
+          <b-carousel
+          v-model="carousel1"
+          controls
+          indicators
+          label-goto-slide="转到该幻灯片"
+          label-indicators="选择要显示的幻灯片"
+          label-next="下一张"
+          label-prev="上一张"
           >
-            <el-carousel-item
-              v-for="(img, i) in mugImages"
-              :key="i"
-            >
-              <el-image
-              :src="img.url"
-              :title="img.title"
-              fit="cover"></el-image>
-            </el-carousel-item>
-          </el-carousel>
+            <b-carousel-slide
+            v-for="(img, i) in mugImages"
+            :key="i"
+            :text="img.title"
+            :img-src="img.url"
+            ></b-carousel-slide>
+          </b-carousel>
         </section>
-        <section class="soulhome-hobby"><h3>友谊是魔法！</h3>
+        <section class="hobby"><h3>友谊是魔法！</h3>
           <p><a href="https://pony.town">Pony Town</a>和<a href="https://fimtale.com/t/2809">《地球上最后一只小马》</a>入坑。<strong style="color:#33BFAB">纯真灵魂</strong>是我的OC，本站就是以ta的名字命名的。</p>
-          <el-carousel
-            :interval="4000"
-            :type="narrow ? '' : 'card'"
-            trigger="click"
+          <b-carousel
+          v-model="carousel1"
+          controls
+          indicators
+          label-goto-slide="转到该幻灯片"
+          label-indicators="选择要显示的幻灯片"
+          label-next="下一张"
+          label-prev="上一张"
           >
-            <el-carousel-item
-              v-for="(img, i) in mlpImages"
-              :key="i"
-            >
-              <el-image
-              :src="img.url"
-              :title="img.title"
-              fit="cover"></el-image>
-            </el-carousel-item>
-          </el-carousel>
+            <b-carousel-slide
+            v-for="(img, i) in mlpImages"
+            :key="i"
+            :text="img.title"
+            :img-src="img.url"
+            ></b-carousel-slide>
+          </b-carousel>
         </section>
       </section>
-      <section class="soulhome-section soulhome-section-contents">
-        <h2 class="soulhome-section-title">本站有：</h2>
-        <p v-if="recentPlans === undefined" v-loading="true" style="height:200px">（加载...）</p>
-        <p v-else-if="!recentPlans instanceof Array">（加载失败）</p>
-        <p v-else-if="!recentPlans.length">（数据空空如也）</p>
-        <el-container v-else class="soulhome-contents-flex">
-          <el-card
-          v-for="item in recentPlans"
-          :key="item.title"
-          class="soulhome-contents-card"
-          shadow="hover"
-          >
-            <div slot="header" class="clearfix">
-              <span>{{item.title}}</span>
-              <el-link
-              v-if="item.link"
-              type="primary"
-              class="soulhome-contents-card-link"
-              :href="item.link"
-              >进入</el-link>
-            </div>
-            <div v-html="item.body"></div>
-          </el-card>
-        </el-container>
+      <section class="section section-contents">
+        <h2 class="section-title">本站有：</h2>
+        <b-overlay :show="recentPlans === undefined" rounded="sm">
+          <p v-if="recentPlans === undefined" style="height:200px">（加载...）</p>
+          <p v-else-if="!recentPlans instanceof Array">（加载失败）</p>
+          <p v-else-if="!recentPlans.length">（数据空空如也）</p>
+          <b-card-group v-else deck class="contents-flex">
+            <b-card
+            v-for="item in recentPlans"
+            :key="item.title"
+            class="contents-card"
+            >
+              <template #header>
+                <h6>{{item.title}}</h6>
+                <b-link
+                v-if="item.link"
+                class="contents-card-link"
+                :href="item.link"
+                >进入</b-link>
+              </template>
+              <b-card-body v-html="item.body"></b-card-body>
+            </b-card>
+          </b-card-group deck>
+        </b-overlay>
       </section>
-      <h2 class="soulhome-epilogue">Enjoy yourself!</h2>
+      <h2 class="epilogue">Enjoy yourself!</h2>
     </soul-main>
     <soul-footer></soul-footer>
   </div>
@@ -362,13 +349,9 @@ end</code></pre>
     const vm = new Vue({
       el: "#app",
       data: {
-        plDomains: {
-          main: "frontEnd",
-          "frontEnd": "html",
-          "misc": "php",
-          "esoteric": "bf"
-        },
-        mugImages: [
+        carousel1: 0,
+        carousel2: 0,
+        mugImages: [ // TODO: Unify image aspect ratios
           {url: "images/osu.png", title: "一张osu!游戏截图"},
           {url: "images/ma1.jpg", title: "一张Malody游戏截图"},
           {url: "images/ma3.jpg", title: "虽然写着osu!，但这是一张Malody游戏截图"},
@@ -384,14 +367,13 @@ end</code></pre>
         mlpImages: [
           {url: "images/mlp1.png", title: "一张MLP:FiM剧集截图"},
           {url: "images/mlp2.png", title: "一张MLP:FiM剧集截图"},
+          {url: "images/mlp3.png", title: "我参加Derpibooru 2021大合照的投稿"},
           {url: "images/pt1.png", title: "一张Pony Town游戏截图，捏《地球上最后一只小马》主角“孤独终日”"},
           {url: "images/pt2.png", title: "一张Pony Town游戏截图"},
         ],
-        recentPlans: undefined,
-        narrow: document.documentElement.clientWidth < 800
+        recentPlans: undefined
       }
     });
-    window.addEventListener("resize", () => void(vm.narrow = document.documentElement.clientWidth <= 800));
     vm.$http.get("contents.json")
       .then(function(res){
         vm.recentPlans = res.body;

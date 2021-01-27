@@ -1,25 +1,24 @@
-<!doctype html>
-<html lang="cmn">
+<!docvariant html>
+<html lang=cmn>
 <!--
   这是灵魂小站 / 应用 / 灵魂实验室 / brainfuck 在线工具!
   ID: apps.lab.bf // soullbf
 -->
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="format-detection" content="telephone=no">
-  <link rel="stylesheet" href="/lib/element.css">
   <link rel="stylesheet" href="/css/commons.css">
   <link rel="stylesheet" href="/lib/prism.css">
-  <link rel="stylesheet" href="/apps/lab/lab_components.css">
+  <link rel="stylesheet" href="/apps/lab/lab_components.css"></script>
   <link rel="icon" href="/site_icon.png">
   <link rel="shortcut icon" href="/site_icon.png">
   <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
-  <script src="/js/tests.js"></script>
-  <!--<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>-->
-  <script src="/lib/vue.min.js"></script>
-  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-  <script src="https://cdn.staticfile.org/vue-resource/1.5.1/vue-resource.min.js"></script>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue-resource/1.5.1/vue-resource.min.js"></script>
   <script src="/lib/prism.js"></script>
   <script src="/js/commons.js"></script>
   <script src="/apps/lab/lab_components.js"></script>
@@ -72,8 +71,7 @@
     .soullbf-right {
       float: right;
     }
-    .soullbf-right>.el-textarea,
-    .soullbf-right>.el-textarea>textarea {
+    .soullbf-right>textarea {
       height: 100%;
     }
     .soullbf-wrapcode code {
@@ -86,16 +84,16 @@
       resize: none !important;
     }
 
-    .el-dialog {
+    .b-sidebar {
       min-width: 250px;
     }
-    .el-drawer {
+    .b-sidebar {
       min-width: 300px;
     }
-    .el-drawer__body {
+    .b-sidebar__body {
       padding: 20px;
     }
-    .soullbf-drawer-config .el-drawer__body {
+    .soullbf-drawer-config .b-sidebar__body {
       overflow-y: auto;
     }
 
@@ -141,33 +139,31 @@
 
 <body>
   <div id="app">
-    <soul-header default-active="apps"></soul-header>
+    <soul-header></soul-header>
     <soul-main>
-      <el-breadcrumb separator-class="el-icon-arrow-right">
-        <el-breadcrumb-item><a href="/apps">应用</a></el-breadcrumb-item>
-        <el-breadcrumb-item><a href=".">灵魂实验室</a></el-breadcrumb-item>
-        <el-breadcrumb-item>brainfuck 在线工具</el-breadcrumb-item>
-      </el-breadcrumb>
+      <b-breadcrumb>
+        <b-breadcrumb-item href="/home">主站</b-breadcrumb-item>
+        <b-breadcrumb-item href="/apps">应用</b-breadcrumb-item>
+        <b-breadcrumb-item href="/apps/lab">灵魂实验室</b-breadcrumb-item>
+        <b-breadcrumb-item active>brainfuck 在线工具</b-breadcrumb-item>
+      </b-breadcrumb>
 
       <div v-if="panel === 'edit'">
         <section class="soullbf-toolbar">
-          <el-button
-          type="primary"
-          icon="el-icon-caret-right"
+          <b-button
+          variant=primary
           @click="init()"
           :disabled="syntaxError"
-          >准备</el-button>
-          <el-button
-          type="info"
-          icon="el-icon-setting"
-          @click="configVisible = true"
-          >环境选项</el-button>
-          <el-button
-          plain
-          icon="el-icon-cpu"
-          @click="$alert('此功能即将到来...')"
+          ><b-icon icon=caret-right aria-hidden=true></b-icon> 准备</b-button>
+          <b-button
+          variant=info
+          v-b-toggle.config-drawer
+          ><b-icon icon=gear aria-hidden=true></b-icon> 环境选项</b-button>
+          <b-button
           :disabled="syntaxError"
-          >编译</el-button>
+          v-b-popover.hover="'此功能即将到来...'"
+          variant="outline-secondary"
+          ><b-icon icon=cpu aria-hidden=true></b-icon> 编译</b-button>
         </section>
         <section class="soullbf-main">
           <section class="soullbf-left">
@@ -178,44 +174,35 @@
             ></soul-fake-textarea>
           </section>
           <section class="soullbf-right">
-            <el-input
-            type="textarea"
+            <b-form-textarea
             v-model="input"
             placeholder="输入流。模拟从文本文件中读取输入。留空则启动命令行模式。"
             :disabled="stat !== 'ready'"
-            ></el-input>
+            ></b-form-input>
           </section>
         </section>
       </div>
-      <div
-      label="运行"
-      name="run"
-      v-if="panel === 'run'">
+      <div v-if="panel === 'run'">
         <section class="soullbf-toolbar">
-          <el-button
+          <b-button
           v-if="stat === 'pause'"
-          type="primary"
-          icon="el-icon-caret-right"
+          variant=primary
           @click="run()"
-          >运行</el-button>
-          <el-button
+          ><b-icon icon=caret-right aria-hidden=true></b-icon> 运行</b-button>
+          <b-button
           v-if="stat === 'pause'"
-          plain
-          icon="el-icon-right"
           @click="step()"
-          >运行一步</el-button>
-          <el-button
+          ><b-icon icon=arrow-right-short aria-hidden=true></b-icon> 运行一步</b-button>
+          <b-button
           v-if="stat === 'run'"
-          type="danger" plain
-          icon="el-icon-video-pause"
+          variant=danger
           @click="pause()"
-          >暂停</el-button>
-          <el-button
+          ><b-icon icon=pause aria-hidden=true></b-icon> 暂停</b-button>
+          <b-button
           v-else
-          type="danger"
-          icon="el-icon-delete"
+          variant=danger
           @click="reset()"
-          >退出</el-button>
+          ><b-icon icon=trash aria-hidden=true></b-icon> 退出</b-button>
         </section>
         <section class="soullbf-memory-table" v-if="stat !== 'ready'">
           <table>
@@ -268,28 +255,24 @@
           <section v-else class="soullbf-right">
             <soul-manual-prism class="soullbf-wrapcode">{{output}}<span v-if="waitingForInput" class="token comment">{{inputBuffer}}<span class="token soullbf-cursor">&nbsp;</span></span><span v-else class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
             <div @keyup.enter="inputBufferKeypress">
-              <el-input
-              v-if="waitingForInput"
-              v-model="inputBuffer"
-              >
-                <el-button
-                slot="append"
-                icon="el-icon-document-checked"
-                @click="inputBufferEnded"
-                >全文结束</el-button>
-              </el-input>
+              <b-input-group v-if="waitingForInput">
+                <template #append>
+                  <b-button
+                  slot="append"
+                  @click="inputBufferEnded"
+                  ><b-icon icon=file-earmark-check aria-hidden=true></b-icon> 全文结束</b-button>
+                </template>
+                <b-form-input v-model="inputBuffer"></b-form-input>
+              </b-input-group>
             </div>
           </section>
         </section>
       </div>
       <div v-if="panel === 'compile'">
-        
+        <!-- TODO: Add compiler (?) -->
       </div>
-      </el-tabs>
-
-
-
     </soul-main>
+
     <soul-footer :links="[
       { href: 'https://esolangs.org/wiki/brainfuck', text: 'brainfuck - Esolangs 维基' },
       { href: 'http://mazonka.com/brainf/10.html', text: 'Oleg Mazonka 写的 brainf 自举' },
@@ -298,88 +281,91 @@
     ]"></soul-footer>
 
 
-    <el-dialog title="设置逐步运行速度"
-    :visible.sync="tickSpeedVisible"
-    width="30%">
-      <el-input-number
+    <b-modal
+    title="设置逐步运行速度"
+    id="tick-speed-dialog"
+    header-close-label="关闭"
+    >
+      <b-form-input type=number
       v-model="tickSpeed"
       :min="10"
       :step="50"
-      ></el-input-number>
+      ></b-form-input type=number>
       <p>间隔毫秒数，输入10以上的整数。</p>
-      <span slot="footer">
-        <el-button @click="tickSpeedVisible = false">完成</el-button>
-      </span>
-    </el-dialog>
+    </b-modal>
 
-    <el-drawer title="环境配置"
+    <b-sidebar
+    title="环境配置"
     class="soullbf-drawer-config"
-    :visible.sync="configVisible"
-    direction="rtl"
+    id="config-drawer"
+    right
+    backdrop shadow
+    close-label="关闭"
     >
-      <el-form :model="config">
-        <el-form-item label="EOF">
-          <el-radio-group v-model="config.eof" size="small">
-            <el-radio-button :label="undefined">保持不变</el-radio-button>
-            <el-radio-button :label="-1">读入-1</el-radio-button>
-            <el-radio-button :label="0">读入0</el-radio-button>
-          </el-radio-group>
+      <div class="px-3 py-2">
+        <b-form-group label="EOF">
+          <b-form-radio-group
+          v-model="config.eof"
+          size=small
+          buttons button-variant=outline-secondary>
+            <b-form-radio :value=undefined>保持不变</b-form-radio>
+            <b-form-radio :value=-1>读入-1</b-form-radio>
+            <b-form-radio :value=0>读入0</b-form-radio>
+          </b-form-radio-group>
           <p class="soul-p2">
             设置使用“输入流”时EOF的表示方式。标准文档说应当保持单元格中原来的值不变，但原版编译器会读入-1，也有很多编译器/解释器会读入0。有些brainfuck程序可以兼容“保持不变”以及“读入-1”和“读入0”的其中一个。
           </p>
-        </el-form-item>
-        <el-form-item label="数据类型">
-          <el-select size="medium" v-model="config.dataType">
-            <el-option label="8位" :value="1"></el-option>
-            <el-option label="16位" :value="2"></el-option>
-            <el-option label="32位" :value="4"></el-option>
-            <el-option label="64位" :value="8" :disabled="bigIntNotSupported"></el-option>
-            <el-option label="无限" :value="99" :disabled="bigIntNotSupported"></el-option>
-            <el-option v-if="bigIntNotSupported" value disabled>
+        </b-form-group>
+        <b-form-group label="数据类型">
+          <b-form-select size=md v-model="config.dataType">
+            <b-form-select-option :value=1>8位</b-form-select-option>
+            <b-form-select-option :value=2>16位</b-form-select-option>
+            <b-form-select-option :value=4>32位</b-form-select-option>
+            <b-form-select-option :value=8 :disabled="bigIntNotSupported">64位</b-form-select-option>
+            <b-form-select-option :value=99 :disabled="bigIntNotSupported">无限</b-form-select-option>
+            <b-form-select-option v-if="bigIntNotSupported" value disabled>
               您的浏览器不支持BigInt，“64位”和“无限”无法使用。
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="单元格数量">
-          <el-select size="medium" v-model="config.cells" @change="ucellsChange">
-            <el-option-group>
-              <el-option label="30000" :value="30000"></el-option>
-              <el-option label="5000" :value="5000"></el-option>
-              <el-option label="100" :value="100"></el-option>
-              <el-option label="无限" :value="Infinity"></el-option>
-            </el-option-group>
-            <el-option-group>
-              <el-option label="自定义..." :value="undefined"></el-option>
-            </el-option-group>
-          </el-select>
-        </el-form-item>
-        <el-form-item :label="config.cells === Infinity ? '负数指针' : '指针越界'">
-          <el-radio-group v-model="config.allowNegativeMP" size="small">
-            <el-radio-button :label="false">{{config.cells === Infinity ? '不允许' : '停止运行'}}</el-radio-button>
-            <el-radio-button :label="true">{{config.cells === Infinity ? '允许' : '跳到另一端'}}</el-radio-button>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-    </el-drawer>
+            </b-form-select-option>
+          </b-form-select>
+        </b-form-group>
+        <b-form-group label="单元格数量">
+          <b-form-select size=md v-model="config.cells" @change="ucellsChange">
+            <b-form-select-option :value="30000">30000</b-form-select-option>
+            <b-form-select-option :value="5000">5000</b-form-select-option>
+            <b-form-select-option :value="100">100</b-form-select-option>
+            <b-form-select-option :value="Infinity">无限</b-form-select-option>
+            <b-form-select-option :value="undefined">自定义...</b-form-select-option>
+          </b-form-select>
+        </b-form-group>
+        <b-form-group :label="config.cells === Infinity ? '负数指针' : '指针越界'">
+          <b-form-radio-group
+          v-model="config.allowNegativeMP"
+          size=small
+          buttons button-variant=outline-secondary
+          >
+            <b-form-radio :value="false">{{config.cells === Infinity ? '不允许' : '停止运行'}}</b-form-radio>
+            <b-form-radio :value="true">{{config.cells === Infinity ? '允许' : '跳到另一端'}}</b-form-radio>
+          </b-form-radio-group>
+        </b-form-group>
+      </div>
+    </b-sidebar>
 
-    <el-dialog title="自定义单元格数量"
-    :visible.sync="customCellsVisible"
-    width="30%">
-      <el-input-number
-      size="medium"
+    <b-modal
+    title="自定义单元格数量"
+    id="custom-cells-dialog"
+    ok-only
+    header-close-label="关闭"
+    >
+      <b-form-input
+      type=number
+      size=md
       v-model="config._cells"
       @change="cellsChange"
-      :min="3"
-      :max="65535"
-      :step="1"
-      step-strictly
-      :controls="false"
-      ></el-input-number>
+      :min=3
+      :max=65535
+      ></b-form-input>
       <p>输入3到65535之间的整数。</p>
-      <span slot="footer">
-        <el-button @click="customCellsVisible = false">完成</el-button>
-      </span>
-    </el-dialog>
+    </b-modal>
   </div>
   <script>
 
@@ -477,11 +463,8 @@
           cells: 30000, // {(int), Infinity}
           allowNegativeMP: false,
         },
-        configVisible: false,
-        customCellsVisible: false,
 
         tickSpeed: 300,
-        tickSpeedVisible: false,
 
         panel: "edit", //edit, run, compile
         stat: "ready", // ready, run, pause, end
@@ -565,7 +548,7 @@
         ucellsChange(v){
           if (v === undefined) {
             vm.config.cells = vm.config._cells;
-            vm.customCellsVisible = true;
+            vm.$bvModal.show('custom-cells-dialog');
           }
           else
             vm.config._cells = v;
