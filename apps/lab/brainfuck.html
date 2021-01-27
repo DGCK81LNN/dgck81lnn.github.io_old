@@ -183,6 +183,7 @@
         </section>
       </div>
       <div v-if="panel === 'run'">
+        <b-alert v-if="message" show :variant="message.variant" fade v-text="message.text"></b-alert>
         <section class="soullbf-toolbar">
           <b-button
           v-if="stat === 'pause'"
@@ -480,6 +481,8 @@
         output: "",
 
         leaveLoopDepth: 0,
+
+        message: null
       },
 
       methods: {
@@ -583,7 +586,6 @@
           let i = $event.target.dataset.i;
           if (i) {
             i = Number(i);
-            console.log(i);
             if (vm.breakpoints.has(i))
               vm.breakpoints.delete(i);
             else if("><+-.,[]".includes(vm.code[i]))
@@ -669,7 +671,8 @@
           vm.$nextTick(() => {
             let mt = vm.$el.querySelector(".soullbf-memory-table"),
               mp = mt.querySelector(".soullbf-pointer");
-            mt.scrollLeft = mp.offsetLeft - mt.offsetWidth / 2;
+            if (mt && mp)
+              mt.scrollLeft = mp.offsetLeft - mt.offsetWidth / 2;
             if (instruction === '.')
               vm.$el.querySelector(".soullbf-right").scrollTop = 2147483647;
           });
@@ -679,24 +682,20 @@
           clearTimeout(vm.intHandle);
             if (e instanceof Error) {
               vm.stat = 'end';
-              vm.$message({
-                type: 'error',
-                message: e,
-                duration: 0,
-                showClose: true
-              });
-              throw e;
+              vm.iShowMessage('danger', e);
+              console.error(e);
             }
             else if(e === "break") {
               vm.stat = 'pause';
             }
             else {
               vm.stat = 'end';
-              vm.$message({
-                type: 'success',
-                message: e
-              });
+              vm.iShowMessage('success', e);
             }
+        },
+
+        iShowMessage(variant, text) {
+          vm.message = { variant, text };
         },
 
         init() {
@@ -711,6 +710,7 @@
           vm.staticInput = Boolean(vm.input);
           vm.breakpoints = new Set();
           vm.inputBufferEOF = false;
+          vm.message = null;
         },
         run() {
           vm.stat = 'run';

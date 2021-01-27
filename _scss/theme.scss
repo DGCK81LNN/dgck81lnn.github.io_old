@@ -10,22 +10,3 @@ $danger: #f15;
 $font-family-sans-serif: 'Source Han CN', '思源黑体 CN', 'PingFang SC', '苹方-简', 'Microsoft YaHei', '微软雅黑', sans-serif;
 
 @import '../node_modules/bootstrap/scss/bootstrap';
-
-table {
-    margin-bottom: $spacer;
-    color: $table-color;
-    background-color: $table-bg;
-    th,
-    td {
-      padding: $table-cell-padding;
-      vertical-align: top;
-      border-top: $table-border-width solid $table-border-color;
-    }
-    thead th {
-      vertical-align: bottom;
-      border-bottom: (2 * $table-border-width) solid $table-border-color;
-    }
-    tbody + tbody {
-      border-top: (2 * $table-border-width) solid $table-border-color;
-    }
-}

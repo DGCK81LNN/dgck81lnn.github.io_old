@@ -51,7 +51,7 @@ p,
     border-bottom: 1px solid var(--soul-color-border-1);
 }
 .soul-main {
-    margin: 8px;
+    margin: 1rem;
     padding: 20px 10%;
 }
 .soul-main > .el-breadcrumb {
@@ -104,7 +104,7 @@ code, pre, .soul-monospace {
 }
 
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 575px) {
     .soul-header {
         padding: 8px;
     }
@@ -125,5 +125,11 @@ select.custom-select {
 }
 
 .card {
-    min-width: 267px;
+    min-width: 250px;
+}
+
+.b-sidebar-backdrop,
+.modal-backdrop {
+    backdrop-filter: blur(1.5px);
+    -webkit-backdrop-filter: blur(1.5px);
 }
