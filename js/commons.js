@@ -86,8 +86,8 @@ Vue.component('soul-footer', {
         <section class="soul-footer-col">
             <h5>©2020 DGCK81LNN.</h5>
             <p>
-                <a href="https://github.com/DGCK81LNN/dgck81lnn.github.io">本站源代码（GitHub）</a>
-                <img src="https://img.shields.io/github/license/DGCK81LNN/dgck81lnn.github.io">
+                <a href="https://github.com/DGCK81LNN/dgck81lnn.github.io"><img src="https://img.shields.io/badge/-在GitHub上查看-222222?logo=github" alt="在GitHub上查看源代码"></a>
+                <img src="https://img.shields.io/badge/许可证-MPL--2.0-orange" alt="许可证：MPL-2.0">
             </p>
         </section>
     </soul-shit-flex>
