@@ -7,6 +7,15 @@ $success: #98f01b;
 $info: #30bbc9;
 $warning: #ecf73a;
 $danger: #f15;
-$font-family-sans-serif: 'Source Han CN', '思源黑体 CN', 'PingFang SC', '苹方-简', 'Microsoft YaHei', '微软雅黑', sans-serif;
+$font-family-sans-serif:
+    '思源黑体 CN',
+    'Source Han CN',
+    '苹方-简',
+    'PingFang SC',
+    '微软雅黑',
+    'Microsoft YaHei',
+    sans-serif;
+$link-color: $info;
+$code-color: #fd7e14;
 
 @import '../node_modules/bootstrap/scss/bootstrap';

@@ -4,6 +4,23 @@
 @import "https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.css";
 @import "https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.css";
 
+@font-face {
+    font-family: FZFSJW;
+    src: url(/fonts/FZFSJW.TTF);
+}
+
+@font-face {
+    font-family: 'Source Han CN';
+    font-weight: normal;
+    src: url(/fonts/source-han-sans-cn/sourcehansanscn-regular.otf);
+}
+
+@font-face {
+    font-family: 'Source Han CN';
+    font-weight: bold;
+    src: url(/fonts/source-han-sans-cn/sourcehansanscn-bold.otf);
+}
+
 :root {
     --soul-color-theme: #33bfab;
     --soul-color-text-primary: #303133;
@@ -19,28 +36,24 @@
 }
 
 * {
-    font-family: inherit;
-    color: inherit;
-    caret-color: #33bfab;
+    caret-color: var(--soul-color-theme);
 }
+
 ::selection {
-    background: #33bfab;
-    color: white;
+    background-color: #33bfab80;
 }
-body {
-    font-family: var(--soul-font-family-sans-serif);
-    color: var(--soul-color-text-normal);
-    margin: 0;
-}
+
 p,
 .soul-p,
 .soul-p1,
 .soul-p2 {
     line-height: 1.5;
 }
+
 .soul-p1 {
     color: var(--soul-color-text-primary);
 }
+
 .soul-p2 {
     color: var(--soul-color-text-secondary);
     font-size: 0.85em;
@@ -50,30 +63,37 @@ p,
     padding: 8px 10%;
     border-bottom: 1px solid var(--soul-color-border-1);
 }
+
 .soul-main {
     margin: 1rem;
     padding: 20px 10%;
 }
-.soul-main > .el-breadcrumb {
+
+.soul-main>.el-breadcrumb {
     margin-bottom: 1rem;
 }
+
 .soul-footer {
     background-color: rgb(214, 242, 238);
     margin: 0;
     padding: 2rem calc(10% + 8px) 8rem;
     clear: both;
 }
+
 .soul-footer-flex {
     flex-wrap: wrap;
 }
+
 .soul-footer-col {
     display: inline-block;
     flex: auto;
 }
+
 .soul-footer-col-list {
     padding: 0;
     list-style: none;
 }
+
 .soul-footer-col-list li {
     margin: 0.3em 0;
 }
@@ -82,21 +102,30 @@ p,
     display: flex;
     flex-wrap: wrap;
 }
+
 .soul-shit-flex>* {
     flex: auto;
 }
 
-code, pre, .soul-monospace {
+em:lang(cmn) {
+    font-style: normal;
+    font-family: FZFSJW, '方正仿宋', '华文仿宋', '仿宋', '仿宋 GB2312';
+}
+
+code,
+pre,
+.soul-monospace {
     font-family: var(--soul-font-family-monospace);
 }
 
 .clearfix:before,
 .clearfix:after {
-  display: table;
-  content: "";
+    display: table;
+    content: "";
 }
+
 .clearfix:after {
-  clear: both
+    clear: both
 }
 
 :focus {
@@ -108,6 +137,7 @@ code, pre, .soul-monospace {
     .soul-header {
         padding: 8px;
     }
+
     .soul-main {
         padding-left: 0;
         padding-right: 0;
