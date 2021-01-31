@@ -22,23 +22,20 @@
   <script src="/js/commons.js"></script>
   <title>首页 - 灵魂小站</title>
   <style>
-    .section {
-      margin-top: 2rem;
-      margin-bottom: 2rem;
-    }
-    .section-head {
-      /*background: radial-gradient(rgb(219, 243, 188), transparent 70.7107%);*/
-      padding: 2rem 0;
-    }
-    .section-head .title {
+    .title {
+      margin: 2rem 0;
       font-size: 30px;
       vertical-align: middle;
       text-align: center;
     }
-    .section-head .title .title-myname {
+    .title-myname {
       font: 80px var(--soul-font-family-monospace);
       color: #33bfab;
       text-shadow: 1px 1.732px 3px black;
+    }
+    .section {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
     }
     .section-title {
       font-size: 50px;
@@ -71,11 +68,6 @@
       text-align: center;
     }
 
-    .el-carousel .el-image {
-      width: 100%;
-      height: 100%;
-    }
-
     @media screen and (max-width: 575px) {
       .section-head .title {
         font-size: 20px;
@@ -101,13 +93,11 @@
   <div id="app">
     <soul-header default-active="home"></soul-header>
     <soul-main>
-      <b-card class="section section-head">
-        <h1 class="title">
-          你好，我是
-          <div class="title-myname">DGCK81LNN，</div>
-          一个普通的高中生。
-        </h1>
-      </b-card>
+      <h1 class="title">
+        你好，我是
+        <div class="title-myname">DGCK81LNN，</div>
+        一个普通的高中生。
+      </h1>
       <section class="section section-hobbies">
         <h2 class="section-title">我爱好：</h2>
         <section class="hobby"><h3>计算机编程</h3>
