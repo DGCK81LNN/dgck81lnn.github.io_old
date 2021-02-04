@@ -5,11 +5,6 @@
 @import "https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.css";
 
 @font-face {
-    font-family: 'FZFSJW';
-    src: url(/fonts/FZFSJW.TTF);
-}
-
-@font-face {
     font-family: 'Source Han CN';
     font-weight: normal;
     src: url(/fonts/source-han-sans-cn/sourcehansanscn-regular.otf);
@@ -105,11 +100,6 @@ p,
 
 .soul-shit-flex>* {
     flex: auto;
-}
-
-em:lang(cmn) {
-    font-style: normal;
-    font-family: 'FZFSJW', '方正仿宋简体', '华文仿宋', '仿宋', 'FangSong', '仿宋_GB2312', 'FangSong_GB2312', fangsong, serif;
 }
 
 code,
