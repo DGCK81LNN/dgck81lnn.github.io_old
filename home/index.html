@@ -19,7 +19,7 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/vue-resource/1.5.1/vue-resource.min.js"></script>
-  <!--<script src="/lib/prism.js"></script>-->
+  <script src="/lib/prism.js"></script>
   <script src="/js/commons.js"></script>
   <title>首页 - 灵魂小站</title>
   <style>
@@ -29,7 +29,6 @@
       vertical-align: middle;
       text-align: center;
     }
-
     .title-myname {
       font: 80px var(--soul-font-family-monospace);
       color: #33bfab;
@@ -40,9 +39,7 @@
       margin-top: 2rem;
       margin-bottom: 2rem;
     }
-
     .section-title {
-      font-size: 50px;
       text-align: center;
     }
 
@@ -54,20 +51,19 @@
       flex-wrap: wrap;
     }
 
+    .carousel {
+      margin-top: 1rem;
+    }
     .carousel-caption {
       text-shadow: 0 0 5px black;
     }
 
-    .contents-card {
-      flex: 1;
-      min-width: 267px;
-      margin: 1rem 8px;
+    .card {
+      margin-top: 1rem;
     }
-
     .contents-card .card-header h6 {
       display: inline;
     }
-
     .contents-card-link {
       float: right;
       padding: 3px 0;
@@ -131,45 +127,44 @@
           <b-card-group deck>
             <b-card>
               <template #header>网页前端</template>
-              <b-card-body>
+              <b-card-text>
                 <p>
                   我习惯使用Vue.js或原生JS进行开发，喜欢制作一些实用工具之类的玩意儿。在开
                   发时，我注重移动端和屏幕阅读器的适配（因为我经常在移动设备上<s>以及闭着眼</s>
                   使用自己开发的工具）。
                 </p>
-              </b-card-body>
+              </b-card-text>
             </b-card>
             <b-card>
               <template #header>Python、Ruby、Node.js——便捷的编程生态环境</template>
-              <b-card-body>
+              <b-card-text>
                 <p>
                   我喜欢瞎写一些奇奇怪怪的程序用程序来解决在其他爱好（音乐、音游）中遇到的
                   一些小问题，而包管理（PyPi、RubyGems、npm）正为开发提供了便捷。
                 </p>
-              </b-card-body>
+              </b-card-text>
             </b-card>
             <b-card>
-              <template #header><a
-                  href="https://zh.m.wikipedia.iwiki.eu.org/wiki/深奥的编程语言">深奥编程语言</a>（Esolangs）</template>
-              <b-card-body>
+              <template #header><a target=_blank href="https://zh.m.wikipedia.iwiki.eu.org/wiki/深奥的编程语言">深奥编程语言</a>（Esolangs）</template>
+              <b-card-text>
                 <p>
                   深奥编程语言刷新了人们对“编程语言”的认知。我最喜欢的Esolangs是
-                  <a href="https://zh.m.wikipedia.iwiki.eu.org/wiki/Brainfuck">brainfuck</a>、
-                  <a href="https://zh.m.wikipedia.iwiki.eu.org/wiki/深奥的编程语言#Befunge">Befunge-93</a>
-                  和<a href="https://github.com/wenyan-lang/wenyan">文言</a>。
+                  <a target=_blank href="https://zh.m.wikipedia.iwiki.eu.org/wiki/Brainfuck">brainfuck</a>、
+                  <a target=_blank href="https://zh.m.wikipedia.iwiki.eu.org/wiki/深奥的编程语言#Befunge">Befunge-93</a>
+                  和<a target=_blank href="https://github.com/wenyan-lang/wenyan">文言</a>。
                 </p>
-              </b-card-body>
+              </b-card-text>
             </b-card>
             <b-card>
               <template #header>Unity</template>
-              <b-card-body>
+              <b-card-text>
                 <p>
-                  从<a href="https://zh.moegirl.org.cn/跳舞的线">跳舞的线</a>饭制圈接
+                  从<a target=_blank href="https://zh.moegirl.org.cn/跳舞的线">跳舞的线</a>饭制圈接
                   触到Unity，一直以来也只专注于跳舞的线饭制开发，<s>至今没有用Unity制作
                   过跳舞的线饭制（FanMade）以外的内容</s>。我希望能制作出一个好用的饭制
                   开发环境，在舞线饭制圈出头。
                 </p>
-              </b-card-body>
+              </b-card-text>
             </b-card>
           </b-card-group>
           <b-carousel
@@ -193,7 +188,7 @@
         <section class="hobby">
           <h3>音游和亚音游</h3>
           <p>
-            由[跳舞的线](https://zh.moegirl.org.cn/跳舞的线)入圈，后来又接触了Malody、
+            由<a target=_blank href="https://zh.moegirl.org.cn/跳舞的线"></a>入圈，后来又接触了Malody、
             osu!、Phigros、冰与火之舞。
           </p>
           <b-carousel
@@ -215,11 +210,11 @@
           </b-carousel>
         </section>
         <section class="hobby">
-          <h3><a href="https://zh.moegirl.org.cn/彩虹小马">小马</a>（小马宝莉）</h3>
+          <h3><a target=_blank href="https://zh.moegirl.org.cn/彩虹小马">小马</a>（小马宝莉）</h3>
           <p>
-            <a href="https://pony.town/">Pony Town</a>和
-            <a href="https://fimtale.com/t/2809">《地球上最后一只小马》</a>入坑。
-            <a href="https://derpibooru.org/tags/oc-colon-innocent+souls">纯真灵魂</a>
+            <a target=_blank href="https://pony.town/">Pony Town</a>和
+            <a target=_blank href="https://fimtale.com/t/2809">《地球上最后一只小马》</a>入坑。
+            <a target=_blank href="https://derpibooru.org/tags/oc-colon-innocent+souls">纯真灵魂</a>
             是我的OC，本站就是以ta的名字命名的。偶尔会画一些小马同人图（画渣确认）。
           </p>
           <b-carousel
@@ -243,6 +238,10 @@
       </section>
       <section class="section section-know-more">
         <h2 class="section-title">了解更多（✗）</h2>
+        <p>
+          可以在哔哩哔哩上<a href="https://space.bilibili.com/328066747">关注我</a>，我会不定期发布各种类型的视频
+          （Minecraft、跳舞的线饭制、小马）。也可以加我QQ（3470524928），希望能和你成为朋友！
+        </p>
       </section>
       <section class="section section-contents">
         <h2 class="section-title">本站有：</h2>
