@@ -19,7 +19,9 @@
       background-color: #000;
     }
     body {
+      background-color: transparent;
       margin: 8px;
+      line-height: initial;
     }
     .soullc-window {
       color: #aaa;
@@ -84,7 +86,6 @@
       event.preventDefault();
     });
         return {
-
             [Symbol.toStringTag]: "SoulLC",
             colors: Object.assign({}, [
                 "#000", "#00a", "#0a0", "#0aa", "#a00", "#a0a", "#aa0", "#aaa",
@@ -193,7 +194,6 @@
                 }
             },
         };
-    
   }();
 
   let path = /[\?&]path=([^&]*)/.exec(location.search);
