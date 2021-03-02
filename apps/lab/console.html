@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh">
 <!--
   这是灵魂小站 / 应用 / 灵魂实验室 / 命令行!
   ID: apps.lab.console // soullc
@@ -62,29 +62,29 @@
       opacity: 0;
     }
   </style>
-  <script>// dynamic import polyfill
+  <script>// dynamic import polyfill https://github.com/GoogleChromeLabs/dynamic-import-polyfill
 /*
   Copyright (c) 2018 uupaa and 2019 Google LLC
   Use of this source code is governed by an MIT-style
   license that can be found in the LICENSE file or at
   https://opensource.org/licenses/MIT.
-  
-  Modified by DGCK81LNN
 */
+// Modified by DGCK81LNN
+
 {
   const modulePath = '.',
     importFunctionName = '__import__';
   try {
     self[importFunctionName] = new Function('u', `return import(u)`);
   } catch (error) {
-    const baseURL = new URL(modulePath, location);
+    const baseURL = new window.URL(modulePath, location);
     const cleanup = (script) => {
       URL.revokeObjectURL(script.src);
       script.remove();
     };
 
     self[importFunctionName] = (url) => new Promise((resolve, reject) => {
-      const absURL = new URL(url, baseURL);
+      const absURL = new window.URL(url, baseURL);
 
       // If the module has already been imported, resolve immediately.
       if (self[importFunctionName].moduleMap[absURL]) {
@@ -114,6 +114,7 @@
 
     self[importFunctionName].moduleMap = {};
   }
+}
   </script>
 </head>
 <body>
