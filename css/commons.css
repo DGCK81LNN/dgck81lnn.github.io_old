@@ -102,12 +102,6 @@ p,
     flex: auto;
 }
 
-code,
-pre,
-.soul-monospace {
-    font-family: var(--soul-font-family-monospace);
-}
-
 .clearfix:before,
 .clearfix:after {
     display: table;
