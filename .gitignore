@@ -1,1 +1,7 @@
-*.code-workspace
+.vscode/
+blog/
+legacy/
+sandbox/
+newtest/
+.htaccess
+node_modules/

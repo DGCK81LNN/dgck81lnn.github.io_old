@@ -4,21 +4,21 @@
   这是灵魂小站 / 404页面!
   ID: 404 // 404
 -->
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href="/css/soul_bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.css">
   <link rel="stylesheet" href="/css/commons.css">
   <link rel="icon" href="/site_icon.png">
   <link rel="shortcut icon" href="/site_icon.png">
   <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.js"></script>
-  <script src="https://cdn.bootcdn.net/ajax/libs/vue-resource/1.5.1/vue-resource.min.js"></script>
-  <script src="/js/commons.js"></script>
+  <script src="/js/components.min.js"></script>
   <title>404 - 灵魂小站</title>
 </head>
 
@@ -26,15 +26,13 @@
   <div id="app">
     <soul-header></soul-header>
     <soul-main>
-
       <h1>404 Not Found</h1>
       <p>找不到页面...</p>
-
     </soul-main>
     <soul-footer></soul-footer>
   </div>
   <script>
-    const vm = new Vue({
+    var vm = new Vue({
       el: "#app",
       data: {
           path: location.pathname

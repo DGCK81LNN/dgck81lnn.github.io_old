@@ -1,19 +1,13 @@
-@charset "UTF-8";
-
-@import "/lib/soul_bootstrap.min.css";
-@import "https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.css";
-@import "https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.css";
-
 @font-face {
     font-family: 'Source Han CN';
     font-weight: normal;
-    src: url(/fonts/source-han-sans-cn/sourcehansanscn-regular.otf);
+    src: url(../fonts/source-han-sans-cn/sourcehansanscn-regular.otf);
 }
 
 @font-face {
     font-family: 'Source Han CN';
     font-weight: bold;
-    src: url(/fonts/source-han-sans-cn/sourcehansanscn-bold.otf);
+    src: url(../fonts/source-han-sans-cn/sourcehansanscn-bold.otf);
 }
 
 :root {
@@ -54,54 +48,6 @@ p,
     font-size: 0.85em;
 }
 
-.soul-header {
-    padding: 8px 10%;
-    border-bottom: 1px solid var(--soul-color-border-1);
-}
-
-.soul-main {
-    margin: 1rem;
-    padding: 20px 10%;
-}
-
-.soul-main>.el-breadcrumb {
-    margin-bottom: 1rem;
-}
-
-.soul-footer {
-    background-color: rgb(214, 242, 238);
-    margin: 0;
-    padding: 2rem calc(10% + 8px) 8rem;
-    clear: both;
-}
-
-.soul-footer-flex {
-    flex-wrap: wrap;
-}
-
-.soul-footer-col {
-    display: inline-block;
-    flex: auto;
-}
-
-.soul-footer-col-list {
-    padding: 0;
-    list-style: none;
-}
-
-.soul-footer-col-list li {
-    margin: 0.3em 0;
-}
-
-.soul-shit-flex {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.soul-shit-flex>* {
-    flex: auto;
-}
-
 .clearfix:before,
 .clearfix:after {
     display: table;
@@ -116,6 +62,14 @@ p,
     outline: none;
 }
 
+.soul-shit-flex {
+    display: flex;
+    flex-wrap: wrap;
+}
+  
+.soul-shit-flex > * {
+    flex: auto;
+}
 
 @media screen and (max-width: 575px) {
     .soul-header {

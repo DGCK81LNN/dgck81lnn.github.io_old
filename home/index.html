@@ -1,26 +1,25 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="cmn">
 <!--
   这是灵魂小站 / 首页!
   ID: home.index // soulhome
 -->
-
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="format-detection" content="telephone=no">
+  <link rel="stylesheet" href="/css/soul_bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.css">
   <link rel="stylesheet" href="/css/commons.css">
-  <link rel="stylesheet" href="/lib/prism.css">
   <link rel="icon" href="/site_icon.png">
   <link rel="shortcut icon" href="/site_icon.png">
   <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/vue-resource/1.5.1/vue-resource.min.js"></script>
-  <script src="/lib/prism.js"></script>
-  <script src="/js/commons.js"></script>
+  <script src="/js/components.min.js"></script>
   <title>首页 - 灵魂小站</title>
   <style>
     .title {
@@ -91,7 +90,6 @@
     }
 
     @media screen and (max-width: 350px) {
-
       /* 针对十分阴间的屏幕宽度不足350px的情况的优化 */
       .title-myname {
         font-size: 40px;
@@ -102,178 +100,157 @@
 
 <body>
   <div id="app">
+    <p v-if="false">如果这条消息一直显示，说明脚本加载失败或运行出错，可能是因为您的浏览器不支持ECMAScript 2015。</p>
     <soul-header></soul-header>
     <soul-main>
-      <h1 class="title">
-        你好，我是
-        <div class="title-myname">DGCK81LNN，</div>
-        一个普通的高中生。
-      </h1>
-      <section class="section section-nickname">
-        <h2 class="section-title">“DGCK81LNN”是什么意思？</h2>
-        <p>
-          “DGCK”是一个团队（大干草块）的缩写。这是一个由四个核心成员（很久很久以前还有一些
-          其他成员）组成的小队，我们四人曾在一个Minecraft服务器中度过一段欢乐的时光。“81”
-          和“LNN”是我的两种成员代号（十六进制编码和字母代号）。
-        </p>
-      </section>
-      <section class="section section-hobbies">
-        <h2 class="section-title">我的兴趣有……</h2>
-        <section class="hobby">
-          <h3>计算机编程</h3>
-          <p>
-            父亲是一名软件工程师，因此我在很小的时候就接触到了计算机编程这一领域。
-          </p>
-          <b-card-group deck>
-            <b-card>
-              <template #header>网页前端</template>
-              <b-card-text>
-                <p>
-                  我习惯使用Vue.js或原生JS进行开发，喜欢制作一些实用工具之类的玩意儿。在开
-                  发时，我注重移动端和屏幕阅读器的适配（因为我经常在移动设备上<s>以及闭着眼</s>
-                  使用自己开发的工具）。
-                </p>
-              </b-card-text>
-            </b-card>
-            <b-card>
-              <template #header>Python、Ruby、Node.js——便捷的编程生态环境</template>
-              <b-card-text>
-                <p>
-                  我喜欢<s>瞎写一些奇奇怪怪的程序</s>用程序来解决在其他爱好（音乐、音游）中遇到的
-                  一些小问题，而包管理（PyPi、RubyGems、npm）正为开发提供了便捷。
-                </p>
-              </b-card-text>
-            </b-card>
-            <b-card>
-              <template #header><a target=_blank href="https://zh.m.wikipedia.iwiki.eu.org/wiki/深奥的编程语言">深奥编程语言</a>（Esolangs）</template>
-              <b-card-text>
-                <p>
-                  深奥编程语言刷新了人们对“编程语言”的认知。我最喜欢的Esolangs是
-                  <a target=_blank href="https://zh.m.wikipedia.iwiki.eu.org/wiki/Brainfuck">brainfuck</a>、
-                  <a target=_blank href="https://zh.m.wikipedia.iwiki.eu.org/wiki/深奥的编程语言#Befunge">Befunge-93</a>
-                  和<a target=_blank href="https://github.com/wenyan-lang/wenyan">文言</a>。
-                </p>
-              </b-card-text>
-            </b-card>
-            <b-card>
-              <template #header>Unity</template>
-              <b-card-text>
-                <p>
-                  从<a target=_blank href="https://zh.moegirl.org.cn/跳舞的线">跳舞的线</a>饭制圈接
-                  触到Unity，一直以来也只专注于跳舞的线饭制开发，<s>至今没有用Unity制作
-                  过跳舞的线饭制（FanMade）以外的内容</s>。我希望能制作出一个好用的饭制
-                  开发环境，在舞线饭制圈出头。
-                </p>
-              </b-card-text>
-            </b-card>
-          </b-card-group>
-          <b-carousel
-          v-model="carousel1"
-          controls
-          indicators
-          label-goto-slide="转到该幻灯片"
-          label-indicators="选择要显示的幻灯片"
-          label-next="下一张"
-          label-prev="上一张"
-          >
-            <b-carousel-slide
-            v-for="(img, i) in images.cod"
-            :key="i"
-            :text="img.title"
-            :img-alt="img.alt"
-            :img-src="img.url"
-            ></b-carousel-slide>
-          </b-carousel>    
+      <p class="soul-p2">See <a href="https://github.com/DGCK81LNN">my GitHub profile</a> for an English translation for this page.
+      <article>
+        <h1 class="title">你好，我是<div class="title-myname">DGCK81LNN，</div>一个普通的高中生。</h1>
+        <section class="section section-nickname">
+          <h2 class="section-title">“DGCK81LNN”是什么意思？</h2>
+          <p>“DGCK”是一个团队（大干草块）的缩写。这是一个由四个核心成员（很久很久以前还有一些其他成员）组成的小队，我们四人曾在一个Minecraft<!--
+          -->服务器中度过一段欢乐的时光。“81”和“LNN”是我的两种成员代号（十六进制编码和字母代号）。
         </section>
-        <section class="hobby">
-          <h3>音游和亚音游</h3>
-          <p>
-            由<a target=_blank href="https://zh.moegirl.org.cn/跳舞的线"></a>入圈，后来又接触了Malody、
-            osu!、Phigros、冰与火之舞。
-          </p>
-          <b-carousel
-          v-model="carousel2"
-          controls
-          indicators
-          label-goto-slide="转到该幻灯片"
-          label-indicators="选择要显示的幻灯片"
-          label-next="下一张"
-          label-prev="上一张"
-          >
-            <b-carousel-slide
-            v-for="(img, i) in images.mug"
-            :key="i"
-            :text="img.title"
-            :img-alt="img.alt"
-            :img-src="img.url"
-            ></b-carousel-slide>
-          </b-carousel>
-        </section>
-        <section class="hobby">
-          <h3><a target=_blank href="https://zh.moegirl.org.cn/彩虹小马">小马</a>（小马宝莉）</h3>
-          <p>
-            <a target=_blank href="https://pony.town/">Pony Town</a>和
-            <a target=_blank href="https://fimtale.com/t/2809">《地球上最后一只小马》</a>入坑。
-            <a target=_blank href="https://derpibooru.org/tags/oc-colon-innocent+souls">纯真灵魂</a>
-            是我的OC，本站就是以ta的名字命名的。偶尔会画一些小马同人图（画渣确认）。
-          </p>
-          <b-carousel
-          v-model="carousel3"
-          controls
-          indicators
-          label-goto-slide="转到该幻灯片"
-          label-indicators="选择要显示的幻灯片"
-          label-next="下一张"
-          label-prev="上一张"
-          >
-            <b-carousel-slide
-            v-for="(img, i) in images.mlp"
-            :key="i"
-            :text="img.title"
-            :img-alt="img.alt"
-            :img-src="img.url"
-            ></b-carousel-slide>
-          </b-carousel>
-        </section>
-      </section>
-      <section class="section section-know-more">
-        <h2 class="section-title">了解更多（✗）</h2>
-        <p>
-          可以在哔哩哔哩上<a href="https://space.bilibili.com/328066747">关注我</a>，我会不定期发布各种类型的视频
-          （Minecraft、跳舞的线饭制、小马）。也可以加我QQ（3470524928），希望能和你成为朋友！
-        </p>
-      </section>
-      <section class="section section-contents">
-        <h2 class="section-title">本站有：</h2>
-        <b-overlay :show="recentPlans === undefined" rounded="sm">
-          <p v-if="recentPlans === undefined" style="height:200px">（加载...）</p>
-          <p v-else-if="!recentPlans instanceof Array">（加载失败）</p>
-          <p v-else-if="!recentPlans.length">（数据空空如也）</p>
-          <b-card-group v-else deck class="contents-flex">
-            <b-card
-              v-for="item in recentPlans"
-              :key="item.title"
-              class="contents-card"
+        <section class="section section-hobbies">
+          <h2 class="section-title">我的兴趣有……</h2>
+          <section class="hobby">
+            <h3>计算机编程</h3>
+            <p>父亲是一名软件工程师，因此我在很小的时候就接触到了计算机编程这一领域。</p>
+            <b-card-group deck>
+              <b-card>
+                <template #header>网页前端</template>
+                <b-card-text>
+                  <p>我习惯使用Vue.js或原生JS进行开发，喜欢制作一些实用工具之类的玩意儿。在开发时，我注重移动端和屏幕阅读器的适配（因为我经常<!--
+                  -->在移动设备上<s>以及闭着眼</s>使用自己开发的工具）。</p>
+                </b-card-text>
+              </b-card>
+              <b-card>
+                <template #header>Python、Ruby、Node.js——便捷的编程生态环境</template>
+                <b-card-text>
+                  <p>我喜欢<s>瞎写一些奇奇怪怪的程序</s>用程序来解决在其他爱好（音乐、音游）中遇到的一些小问题，而包管理（PyPi、RubyGems、<!--
+                  -->npm）正为开发提供了便捷。</p>
+                </b-card-text>
+              </b-card>
+              <b-card>
+                <template #header>
+                  <a target="_blank" href="https://zh.m.wikipedia.iwiki.eu.org/wiki/深奥的编程语言">深奥编程语言</a>（Esolangs）
+                </template>
+                <b-card-text>
+                  <p>深奥编程语言刷新了人们对“编程语言”的认知。我最喜欢的Esolangs是<a target="_blank" href="https://zh.m.wikipedia.iwiki.eu.org/wiki/Brainfuck"
+                    >brainfuck</a>、<a target="_blank" href="https://zh.m.wikipedia.iwiki.eu.org/wiki/深奥的编程语言#Befunge"
+                    >Befunge-93</a>和<a target="_blank" href="https://github.com/wenyan-lang/wenyan">文言</a>。</p>
+                </b-card-text>
+              </b-card>
+              <b-card>
+                <template #header>Unity</template>
+                <b-card-text>
+                  <p>从<a target="_blank" href="https://zh.moegirl.org.cn/跳舞的线">跳舞的线</a>饭制圈接触到Unity，一直以来也只专注于<!--
+                  -->跳舞的线饭制开发，<del>至今没有用Unity制作过跳舞的线饭制（FanMade）以外的内容</del>。我希望能制作出一个好用的饭制开发<!--
+                  -->环境，在舞线饭制圈出头。</p>
+                </b-card-text>
+              </b-card>
+            </b-card-group>
+            <b-carousel
+              v-model="carousel1"
+              controls
+              indicators
+              label-goto-slide="转到该幻灯片"
+              label-indicators="选择要显示的幻灯片"
+              label-next="下一张"
+              label-prev="上一张"
             >
-              <template #header>
-                <h6>{{item.title}}</h6>
-                <b-link
-                  v-if="item.link"
-                  class="contents-card-link"
-                  :href="item.link"
-                >进入</b-link>
-              </template>
-              <b-card-body v-html="item.body"></b-card-body>
-            </b-card>
-          </b-card-group deck>
-        </b-overlay>
-      </section>
-      <h2 class="epilogue">Enjoy yourself!</h2>
+              <b-carousel-slide
+                v-for="(img, i) in images.cod"
+                :key="i"
+                :text="img.title"
+                :img-alt="img.alt"
+                :img-src="img.url"
+              ></b-carousel-slide>
+            </b-carousel>
+          </section>
+          <section class="hobby">
+            <h3>音游和亚音游</h3>
+            <p>由<a target="_blank" href="https://zh.moegirl.org.cn/跳舞的线">跳舞的线</a>入圈，后来又接触了Malody、 osu!、Phigros、冰与火之舞。</p>
+            <b-carousel
+              v-model="carousel2"
+              controls
+              indicators
+              label-goto-slide="转到该幻灯片"
+              label-indicators="选择要显示的幻灯片"
+              label-next="下一张"
+              label-prev="上一张"
+            >
+              <b-carousel-slide
+                v-for="(img, i) in images.mug"
+                :key="i"
+                :text="img.title"
+                :img-alt="img.alt"
+                :img-src="img.url"
+              ></b-carousel-slide>
+            </b-carousel>
+          </section>
+          <section class="hobby">
+            <h3><a target="_blank" href="https://zh.moegirl.org.cn/彩虹小马">小马</a>（小马宝莉）</h3>
+            <p><a target="_blank" href="https://pony.town/">Pony Town</a>和<a target="_blank" href="https://fimtale.com/t/2809"
+              >《地球上最后一只小马》</a>入坑。<a target="_blank" href="https://derpibooru.org/tags/oc-colon-innocent+souls">纯真灵魂</a
+              >是我的OC，本站就是以ta的名字命名的。偶尔会画一些小马同人图（画渣确认）。</p>
+            <b-carousel
+              v-model="carousel3"
+              controls
+              indicators
+              label-goto-slide="转到该幻灯片"
+              label-indicators="选择要显示的幻灯片"
+              label-next="下一张"
+              label-prev="上一张"
+            >
+              <b-carousel-slide
+                v-for="(img, i) in images.mlp"
+                :key="i"
+                :text="img.title"
+                :img-alt="img.alt"
+                :img-src="img.url"
+              ></b-carousel-slide>
+            </b-carousel>
+          </section>
+        </section>
+        <section class="section section-know-more">
+          <h2 class="section-title">了解更多（✗）</h2>
+          <p>可以在哔哩哔哩上<a href="https://space.bilibili.com/328066747">关注我</a>，我会不定期发布各种类型的视频（Minecraft、跳舞的线饭制、<!--
+          -->小马）。也可以加我QQ（3470524928），希望能和你成为朋友！
+        </section>
+        <section class="section section-contents">
+          <h2 class="section-title">本站有：</h2>
+          <b-overlay :show="recentPlans === undefined" rounded="sm">
+            <p v-if="recentPlans === undefined" style="height: 200px">（加载...）</p>
+            <p v-else-if="!(recentPlans instanceof Array)">（加载失败）</p>
+            <p v-else-if="!recentPlans.length">（数据空空如也）</p>
+            <b-card-group v-else deck class="contents-flex">
+              <b-card
+                v-for="item in recentPlans"
+                :key="item.title"
+                class="contents-card"
+              >
+                <template #header>
+                  <h6>{{ item.title }}</h6>
+                  <b-link
+                    v-if="item.link"
+                    class="contents-card-link"
+                    :href="item.link"
+                    >进入</b-link
+                  >
+                </template>
+                <b-card-body v-html="item.body"></b-card-body>
+              </b-card>
+            </b-card-group>
+          </b-overlay>
+        </section>
+        <h2 class="epilogue">Enjoy yourself!</h2>
+      </article>
     </soul-main>
     <soul-footer></soul-footer>
   </div>
   <script>
-    const vm = new Vue({
+    var vm = new Vue({
       el: "#app",
       data: {
         carousel1: 0,
@@ -283,96 +260,102 @@
           cod: [
             {
               url: "images/cod1.jpg",
-              alt: "Python turtle画面的截图，上面有各种不同的图形重叠在一起，还有用折线写的“My name is Roy”字样",
-              title: "我的第一个Python turtle程序的运行结果"
+              alt:
+                "Python turtle画面的截图，上面有各种不同的图形重叠在一起，还有用折线写的“My name is Roy”字样",
+              title: "我的第一个Python turtle程序的运行结果",
             },
             {
               url: "images/cod2.jpg",
-              alt: "一段Ruby语言代码的截图，显示文本“你好，世界！”经过一系列转化变成了一串乱码",
-              title: "用Ruby还原“锟斤拷”乱码的产生原理"
+              alt:
+                "一段Ruby语言代码的截图，显示文本“你好，世界！”经过一系列转化变成了一串乱码",
+              title: "用Ruby还原“锟斤拷”乱码的产生原理",
             },
             {
               url: "images/cod3.jpg",
-              alt: "一个网页的截图，上面有一串带注释的brainfuck代码以及它的输出：1、2、Fizz、4、Buzz、Fizz、7、8、Fizz、Buzz、11、Fizz等等",
-              title: "本站的“brainfuck在线工具”"
+              alt:
+                "一个网页的截图，上面有一串带注释的brainfuck代码以及它的输出：1、2、Fizz、4、Buzz、Fizz、7、8、Fizz、Buzz、11、Fizz等等",
+              title: "本站的“brainfuck在线工具”",
             },
             {
               url: "images/cod4.jpg",
               alt: "很多乱糟糟的程序代码和一些看起来像歌词的英文句子",
-              title: "一个Befunge-93程序的源代码、原理和输出"
+              title: "一个Befunge-93程序的源代码、原理和输出",
             },
             {
               url: "images/cod5.jpg",
               alt: "一张屏幕截图，显示一个游戏场景设计器和一个代码编辑器",
-              title: "跳舞的线饭制模板的一小段代码和一个测试场景"
-            }
+              title: "跳舞的线饭制模板的一小段代码和一个测试场景",
+            },
           ],
           mug: [
             {
               url: "images/mug1.jpg",
               alt: "一张跳舞的线游戏失败界面的截图",
-              title: "qwq"
+              title: "qwq",
             },
             {
               url: "images/mug2.jpg",
               alt: "我在教室用大触摸屏打osu!的照片",
-              title: "用大触摸屏打osu!（打完胳膊都酸了"
+              title: "用大触摸屏打osu!（打完胳膊都酸了",
             },
             {
               url: "images/mug3.jpg",
               alt: "冰与火之舞XO-X关卡通关的截图",
-              title: "OHHHHHHHH"
+              title: "OHHHHHHHH",
             },
             {
               url: "images/mug4.jpg",
               alt: "一张Malody中slide游戏模式的截图",
-              title: "一张Malody自制烂谱"
+              title: "一张Malody自制烂谱",
             },
             {
               url: "images/mug5.jpg",
               alt: "一张Phigros曲目满分的截图",
-              title: "我菜死了，收了《光》还要截图"
-            }
+              title: "我菜死了，收了《光》还要截图",
+            },
           ],
           mlp: [
             {
               url: "images/mlp1.jpg",
               alt: "一张像素风的游戏截图，显示几个房间的内饰",
-              title: "我的Pony Town派对房屋"
+              title: "我的Pony Town派对房屋",
             },
             {
               url: "images/mlp2.jpg",
-              alt: "一张像素风的游戏截图，显示一座小房子门外有许多蜡烛排列成“2021”字样",
-              title: "我的Pony Town派对小岛"
+              alt:
+                "一张像素风的游戏截图，显示一座小房子门外有许多蜡烛排列成“2021”字样",
+              title: "我的Pony Town派对小岛",
             },
             {
               url: "images/mlp3.jpg",
               alt: "一只小马的像素风图画，在我的署名旁边带有一幅粗略绘制的中国国旗",
-              title: "我画的同人图（像素风）"
+              title: "我画的同人图（像素风）",
             },
             {
               url: "images/mlp4.jpg",
               alt: "一只小马的卡通图画，背景是一张真实的房间照片",
-              title: "我画的同人图（矢量）"
+              title: "我画的同人图（矢量）",
             },
             {
               url: "images/mlp5.jpg",
               alt: "两只小马的数码绘画，其中一只小马拿着一个小马玩具",
-              title: "我画的同人图（指绘）"
-            }
-          ]
+              title: "我画的同人图（指绘）",
+            },
+          ],
         },
-        recentPlans: undefined
+        recentPlans: undefined,
+      },
+      mounted: function () {
+        this.$nextTick(function () {
+          vm.$http.get("contents.json")
+            .then(function (res) {
+              vm.recentPlans = res.body;
+            }, function () {
+              vm.recentPlans = null;
+            });
+        });
       }
     });
-    vm.$http.get("contents.json")
-      .then(function (res) {
-        vm.recentPlans = res.body;
-      })
-      .catch(function () {
-        vm.recentPlans = null;
-      });
   </script>
 </body>
-
 </html>

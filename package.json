@@ -1,0 +1,11 @@
+{
+    "devDependencies": {
+        "@codemirror/basic-setup": "^0.18.0",
+        "@codemirror/legacy-modes": "^0.18.0",
+        "@codemirror/stream-parser": "^0.18.1",
+        "esbuild": "^0.11.4",
+        "esbuild-vue": "^0.3.0",
+        "vue": "2.6.12",
+        "vue-resource": "^1.5.2"
+    }
+}
