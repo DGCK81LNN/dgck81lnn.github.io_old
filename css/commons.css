@@ -20,8 +20,22 @@
     --soul-color-border-2: #E4E7ED;
     --soul-color-border-3: #EBEEF5;
     --soul-color-border-4: #F2F6FC;
-    --soul-font-family-sans-serif: var(--font-family-sans-serif);
-    --soul-font-family-monospace: var(--font-family-monospace);
+    --soul-font-family-sans-serif:
+        '思源黑体 CN',
+        'Source Han CN',
+        '苹方-简',
+        'PingFang SC',
+        '微软雅黑',
+        'Microsoft YaHei',
+        sans-serif;
+    --soul-font-family-monospace:
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        Consolas,
+        "Liberation Mono",
+        "Courier New",
+        monospace;
 }
 
 * {
