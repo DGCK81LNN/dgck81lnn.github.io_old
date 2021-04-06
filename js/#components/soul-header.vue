@@ -33,4 +33,9 @@
   padding: 8px 10%;
   border-bottom: 1px solid var(--soul-color-border-1);
 }
+@media screen and (max-width: 575px) {
+  .soul-header {
+    padding: 8px;
+  }
+}
 </style>

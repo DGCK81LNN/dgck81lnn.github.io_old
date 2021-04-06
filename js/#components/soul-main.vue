@@ -8,7 +8,10 @@
   padding: 20px 10%;
 }
 
-.soul-main > .el-breadcrumb {
-  margin-bottom: 1rem;
+@media screen and (max-width: 575px) {
+  .soul-main {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 </style>
