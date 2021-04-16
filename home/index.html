@@ -163,9 +163,13 @@
                 v-for="(img, i) in images.cod"
                 :key="i"
                 :text="img.title"
-                :img-alt="img.alt"
-                :img-src="img.url"
-              ></b-carousel-slide>
+              >
+                <template #img>
+                  <b-aspect aspect="4:3" class="bg-light">
+                    <b-img :alt="img.alt" :src="img.url" fluid-grow></b-img>
+                  </b-aspect>
+                </template>
+              </b-carousel-slide>
             </b-carousel>
           </section>
           <section class="hobby">
@@ -184,9 +188,13 @@
                 v-for="(img, i) in images.mug"
                 :key="i"
                 :text="img.title"
-                :img-alt="img.alt"
-                :img-src="img.url"
-              ></b-carousel-slide>
+              >
+                <template #img>
+                  <b-aspect aspect="4:3" class="bg-light">
+                    <b-img :alt="img.alt" :src="img.url" fluid-grow></b-img>
+                  </b-aspect>
+                </template>
+              </b-carousel-slide>
             </b-carousel>
           </section>
           <section class="hobby">
@@ -207,9 +215,13 @@
                 v-for="(img, i) in images.mlp"
                 :key="i"
                 :text="img.title"
-                :img-alt="img.alt"
-                :img-src="img.url"
-              ></b-carousel-slide>
+              >
+                <template #img>
+                  <b-aspect aspect="4:3" class="bg-light">
+                    <b-img :alt="img.alt" :src="img.url" fluid-grow></b-img>
+                  </b-aspect>
+                </template>
+              </b-carousel-slide>
             </b-carousel>
           </section>
         </section>
@@ -278,7 +290,7 @@
             },
             {
               url: "images/cod4.jpg",
-              alt: "很多乱糟糟的程序代码和一些看起来像歌词的英文句子",
+              alt: "很多凌乱的程序代码和一些看起来像歌词的英文句子",
               title: "一个Befunge-93程序的源代码、原理和输出",
             },
             {
