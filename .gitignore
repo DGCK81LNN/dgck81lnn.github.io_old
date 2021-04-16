@@ -5,3 +5,4 @@ sandbox/
 newtest/
 .htaccess
 node_modules/
+res/
