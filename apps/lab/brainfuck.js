@@ -91,7 +91,8 @@ window.vm = new Vue({
     config: {
       eof: undefined, // {undefined: no_change, -1, 0}
       dataType: 1, // {1: Int8, 2: Int16, 4: Int32, 8: Int64, 99: BigInt}
-      _cells: 30000,
+      _cellsSelect: 30000,
+      _cellsInput: 30000,
       cells: 30000, // {(int), Infinity}
       allowNegativeMP: false,
     },
@@ -179,16 +180,16 @@ window.vm = new Vue({
       };
     },
 
-    ucellsChange(v) {
+    cellsInputChange(v) {
+      vm.config._cellsSelect = vm.config.cells = Number(v);
+    },
+    cellsSelectChange(v) {
       if (v === undefined) {
-        vm.config.cells = vm.config._cells;
+        vm.config._cellsSelect = vm.config._cellsInput;
         vm.$bvModal.show('custom-cells-dialog');
       }
       else
-        vm.config._cells = v;
-    },
-    cellsChange(v) {
-      vm.config.cells = v;
+        vm.config._cellsInput = vm.config.cells = v;
     },
 
     renderMemory() {

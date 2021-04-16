@@ -15,7 +15,7 @@
   <link rel="icon" href="/site_icon.png">
   <link rel="shortcut icon" href="/site_icon.png">
   <link rel="apple-touch-icon" href="/site_icon.png" sizes="160x160">
-  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.12/vue.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue.min.js"></script>
   <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.js"></script>
   <script src="/js/components.min.js"></script>
@@ -336,7 +336,7 @@
           </b-form-select>
         </b-form-group>
         <b-form-group label="单元格数量">
-          <b-form-select size=md v-model="config.cells" @change="ucellsChange">
+          <b-form-select size=md v-model="config._cellsSelect" @change="cellsSelectChange">
             <b-form-select-option :value="30000">30000</b-form-select-option>
             <b-form-select-option :value="5000">5000</b-form-select-option>
             <b-form-select-option :value="100">100</b-form-select-option>
@@ -366,8 +366,8 @@
       <b-form-input
       type=number
       size=md
-      v-model="config._cells"
-      @change="cellsChange"
+      v-model="config._cellsInput"
+      @change="cellsInputChange"
       :min=3
       :max=65535
       ></b-form-input>

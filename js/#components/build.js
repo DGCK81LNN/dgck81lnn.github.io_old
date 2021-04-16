@@ -15,6 +15,7 @@ ESBuild.build({
     entryPoints: ["apps/lab/brainfuck.js"],
     outfile: "apps/lab/brainfuck.min.js",
     bundle: true,
+    minify: true,
     target: "es2015",
     external: []
 });
