@@ -118,68 +118,6 @@ window.vm = new Vue({
   },
 
   methods: {
-    handleInput(raw, offset) {
-      vm.code = raw;
-      let frag = document.createDocumentFragment(),
-        line = document.createElement("div"),
-        token = null, text = null;
-      let i = 0, l = raw.length, depth = 0, error = false, newLine = true;
-      let caretNode = null, caretOffset = 1;
-      if (i === 0 && offset === 0)
-        caretNode = line, caretOffset = 0;
-      while (i < l) {
-        let char = raw[i++];
-        if (char === "\n") {
-          if (newLine) {
-            text = document.createElement("br"),
-              line.appendChild(text);
-          }
-          newLine = true;
-          frag.appendChild(line);
-          line = document.createElement("div");
-          if (i === offset)
-            caretNode = line, caretOffset = 0;
-        } else {
-          newLine = false;
-          token = document.createElement("span"), text = document.createTextNode(char);
-          token.classList.add("token");
-          if (char === "+")
-            token.classList.add("increment", "inserted");
-          else if (char === "-")
-            token.classList.add("decrement", "deleted");
-          else if (char === "<" || char === ">")
-            token.classList.add("pointer", "keyword");
-          else if (char === "." || char === ",")
-            token.classList.add("operator", "inserted");
-          else if (char === "[")
-            depth++, token.classList.add("branching", "important");
-          else if (char === "]") {
-            depth--, token.classList.add("branching", "important");
-            if (depth < 0)
-              depth = 0, error = true, token.classList.add("soullbf-error");
-          } else
-            token.classList.add("comment");
-          token.appendChild(text);
-          line.appendChild(token);
-          if (i === offset)
-            caretNode = text, caretOffset = 1;
-        }
-        //console.log({i, depth, newLine, caretNode, caretOffset});
-      }
-      if (depth > 0)
-        error = true,
-          token.classList.add("soullbf-error");
-      vm.syntaxError = error;
-      if (newLine)
-        line.appendChild(document.createElement("br"));
-      frag.appendChild(line);
-      return {
-        renderedNode: frag,
-        caretNode,
-        caretOffset
-      };
-    },
-
     cellsInputChange(v) {
       vm.config._cellsSelect = vm.config.cells = Number(v);
     },

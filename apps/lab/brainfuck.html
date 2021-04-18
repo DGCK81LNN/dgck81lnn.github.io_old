@@ -88,12 +88,12 @@
 
     .token.soullbf-error {
       background: #E1001A;
-      color: #f5f2f0;
+      color: #f5f2f0 !important;
       text-shadow: none;
     }
     .token.soullbf-breakpoint {
       background: #58000a;
-      color: #f5f2f0;
+      color: #f5f2f0 !important;
       text-shadow: none;
     }
     .token.soullbf-pointer {
@@ -128,7 +128,7 @@
   <!-- Temporary workaround for the deletion of SoulManualPrism causing problems -->
   <script>
     Vue.component("SoulManualPrism", {
-      template: '<pre class="soul-manual-prism"><code class="soul-manual-prism"><slot/></code></pre>'
+      template: '<pre class="soul-manual-prism"><code><slot/></code></pre>'
     })
   </script>
   <style>
@@ -237,8 +237,7 @@
         <section class="soullbf-main">
           <section class="soullbf-left">
             <soul-manual-prism
-            class="soullbf-wrapcode"
-            @click="codeClick"><span
+            class="soullbf-wrapcode"><span
             v-for="(instruction, i) in [...code]"
             :class="[
               'token',
@@ -252,6 +251,7 @@
               breakpoints.has(i) ? 'soullbf-breakpoint' : ''
             ]"
             :data-i="i"
+            @click="codeClick"
             v-text="instruction === '\n' ? ' \n' : instruction"
             ></span></soul-manual-prism>
           </section>
