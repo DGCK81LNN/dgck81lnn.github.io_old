@@ -72,10 +72,6 @@ p,
     clear: both
 }
 
-:focus {
-    outline: none;
-}
-
 .soul-shit-flex {
     display: flex;
     flex-wrap: wrap;
