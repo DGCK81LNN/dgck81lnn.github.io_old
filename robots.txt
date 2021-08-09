@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /sandbox/
+Disallow: /blog/diary/
+Disallow: /legacy/
