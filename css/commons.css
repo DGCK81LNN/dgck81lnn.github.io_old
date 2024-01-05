@@ -9,56 +9,40 @@
     --soul-color-border-3: #EBEEF5;
     --soul-color-border-4: #F2F6FC;
     --soul-font-family-sans-serif:
-        '思源黑体 CN',
-        '苹方-简',
-        '等线',
-        '微软雅黑',
-        'Microsoft YaHei UI',
-        'Droid Sans Fallback',
-        sans-serif;
+        'Source Han Sans SC', 'Source Han Sans CN', 'PingFang SC',
+        'Microsoft YaHei UI', 'Microsoft YaHei', 'DengXian', 'Noto Sans SC',
+        'Noto Sans CJK SC', 'Droid Sans Fallback', sans-serif;
     --soul-font-family-monospace:
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        Consolas,
-        "Liberation Mono",
-        "Courier New",
-        monospace;
+        'Sarasa Term SC', 'Sarasa Mono SC',
+        'Sarasa Term Slab SC', 'Sarasa Mono Slab SC',
+        'Sarasa Fixed SC', 'Sarasa Fixed Slab SC',
+        'Noto Sans Mono CJK SC',
+        'Roboto Mono', Menlo, Consolas, 'Liberation Mono', 'Fira Code',
+        'Courier New', monospace,
+        'Source Han Sans SC', 'Source Han Sans CN', 'PingFang SC',
+        'Microsoft YaHei UI', 'Microsoft YaHei', 'DengXian', 'Noto Sans SC',
+        'Noto Sans CJK SC', 'Droid Sans Fallback', sans-serif;
 }
 
 *[lang]:lang(zh),
 *[lang]:lang(cmn),
 body:lang(zh),
 body:lang(cmn) {
-    font-family: '思源黑体 CN',
-        '苹方-简',
-        '等线',
-        '微软雅黑',
-        'Microsoft YaHei UI',
-        'Droid Sans Fallback',
-        sans-serif,
-        "Apple Color Emoji",
-        "Segoe UI Emoji",
-        "Segoe UI Symbol",
-        "Noto Color Emoji";
+    font-family:
+        'Source Han Sans SC', 'Source Han Sans CN', 'PingFang SC',
+        'Microsoft YaHei UI', 'Microsoft YaHei', 'DengXian', 'Noto Sans SC',
+        'Noto Sans CJK SC', 'Droid Sans Fallback', sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol", "Noto Color Emoji";
 }
- 
+
 *[lang]:not(:lang(zh)):not(:lang(cmn)),
 body:not(:lang(zh)):not(:lang(cmn)) {
-    font-family: -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        system-ui,
-        Roboto,
-        "Helvetica Neue",
-        Arial,
-        "Noto Sans",
-        "Liberation Sans",
-        sans-serif,
-        "Apple Color Emoji",
-        "Segoe UI Emoji",
-        "Segoe UI Symbol",
-        "Noto Color Emoji";
+    font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto,
+        "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji",
+        "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 * {
