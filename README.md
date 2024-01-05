@@ -1,5 +1,3 @@
-2022-04-11：此仓库将存档，将来会将其中各程序的代码移至单独的仓库。
-
 # dgck81lnn.github.io
 
 灵魂小站 <https://dgck81lnn.github.io>
