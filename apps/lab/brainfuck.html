@@ -20,7 +20,7 @@
   <script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-vue/2.21.0/bootstrap-vue-icons.min.js"></script>
   <script src="/js/components.min.js"></script>
   <!--<script src="/js/lab_components.min.js"></script>-->
-  <title>brainfuck 在线调试器 - 灵魂小站</title>
+  <title>brainfuck 在线工具 - 灵魂小站</title>
   <style>
     .soullbf-toolbar-row {
       display: inline-block;
@@ -196,17 +196,41 @@
           variant=primary
           @click="run()"
           ><b-icon icon=caret-right aria-hidden=true></b-icon> 运行</b-button>
+          <b-dropdown
+          v-if="stat === 'pause'"
+          variant=info
+          split
+          @click="tick()"
+          >
+            <template #button-content>
+              <b-icon icon=chevron-double-right aria-hidden=true></b-icon> 逐步运行
+            </template>
+            <b-dropdown-form>
+              <b-form-group label="间隔 (毫秒)" label-for="tick-interval" @submit.stop.prevent>
+                <b-form-input
+                  id="tick-interval"
+                  size="sm"
+                  type="number"
+                  number
+                  min="0"
+                  step="10"
+                  v-model="tickSpeed"
+                  @change="tickSpeedChange"
+                ></b-form-input>
+              </b-form-group>
+            </b-dropdown-form>
+          </b-dropdown>
           <b-button
           v-if="stat === 'pause'"
           @click="step()"
           ><b-icon icon=arrow-right-short aria-hidden=true></b-icon> 运行一步</b-button>
           <b-button
           v-if="stat === 'run'"
-          variant=danger
+          variant=outline-danger
           @click="pause()"
           ><b-icon icon=pause aria-hidden=true></b-icon> 暂停</b-button>
           <b-button
-          v-else
+          v-if="stat !== 'run'"
           variant=danger
           @click="reset()"
           ><b-icon icon=trash aria-hidden=true></b-icon> 退出</b-button>
@@ -238,20 +262,20 @@
           <section class="soullbf-left">
             <soul-manual-prism
             class="soullbf-wrapcode"><span
-            v-for="(instruction, i) in [...code]"
-            :class="[
-              'token',
+              v-for="(instruction, i) in [...code]"
+              :class="[
+                'token',
               instruction === '>' || instruction === '<' ? 'pointer keyword'
               : instruction === '+' ? 'increment inserted'
               : instruction === '-' ? 'decrement deleted'
-              : instruction === '.' || instruction === ',' ? 'operator'
+                : instruction === '.' || instruction === ',' ? 'operator'
               : instruction === '[' || instruction === ']' ? 'branching important'
-              : 'comment',
-              i === codePointer ? 'soullbf-pointer' : '',
-              breakpoints.has(i) ? 'soullbf-breakpoint' : ''
-            ]"
-            :data-i="i"
-            @click="codeClick"
+                : 'comment',
+                i === codePointer ? 'soullbf-pointer' : '',
+                breakpoints.has(i) ? 'soullbf-breakpoint' : ''
+              ]"
+              :data-i="i"
+              @click="codeClick"
             v-text="instruction === '\n' ? ' \n' : instruction"
             ></span></soul-manual-prism>
           </section>
@@ -286,20 +310,6 @@
       { href: 'https://tio.run/#brainfuck', text: '在 TryItOnline 上运行 brainf' },
       { href: 'https://fatiherikli.github.io/brainfuck-visualizer', text: 'Fatih Erikli 制作的 brainf 可视化' }
     ]"></soul-footer>
-
-
-    <b-modal
-    title="设置逐步运行速度"
-    id="tick-speed-dialog"
-    header-close-label="关闭"
-    >
-      <b-form-input type=number
-      v-model="tickSpeed"
-      :min="10"
-      :step="50"
-      ></b-form-input type=number>
-      <p>间隔毫秒数，输入10以上的整数。</p>
-    </b-modal>
 
     <b-sidebar
     title="环境配置"
@@ -337,9 +347,14 @@
         </b-form-group>
         <b-form-group label="单元格数量">
           <b-form-select size=md v-model="config._cellsSelect" @change="cellsSelectChange">
-            <b-form-select-option :value="30000">30000</b-form-select-option>
-            <b-form-select-option :value="5000">5000</b-form-select-option>
-            <b-form-select-option :value="100">100</b-form-select-option>
+            <b-form-select-option
+            v-for="n in cellsPresets"
+            :value="n"
+            >{{n}}</b-form-select-option>
+            <b-form-select-option
+            v-if="config.cells !== Infinity && cellsPresets.indexOf(config.cells) === -1"
+            :value="config.cells"
+            >{{config.cells}}</b-form-select-option>
             <b-form-select-option :value="Infinity">无限</b-form-select-option>
             <b-form-select-option :value="undefined">自定义...</b-form-select-option>
           </b-form-select>
@@ -366,10 +381,14 @@
       <b-form-input
       type=number
       size=md
+      ref=cellsInput
       v-model="config._cellsInput"
-      @change="cellsInputChange"
+      number
+      @input="cellsInputChange"
+      required
       :min=3
       :max=65535
+      :state="cellsInputState && null"
       ></b-form-input>
       <p>输入3到65535之间的整数。</p>
     </b-modal>

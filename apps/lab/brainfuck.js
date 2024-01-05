@@ -81,23 +81,21 @@ window.vm = new Vue({
   el: "#app",
   data: {
     bigIntNotSupported: typeof BigInt !== "function",
-
-    codeInputScrollTop: 0,
+    cellsPresets: [30000, 5000, 100],
 
     code: "",
     codeHighlight: "",
-    syntaxError: false,
 
     config: {
       eof: undefined, // {undefined: no_change, -1, 0}
       dataType: 1, // {1: Int8, 2: Int16, 4: Int32, 8: Int64, 99: BigInt}
       _cellsSelect: 30000,
-      _cellsInput: 30000,
+      _cellsInput: undefined,
       cells: 30000, // {(int), Infinity}
       allowNegativeMP: false,
     },
 
-    tickSpeed: 300,
+    tickSpeed: 100,
 
     panel: "edit", //edit, run, compile
     stat: "ready", // ready, run, pause, end
@@ -112,22 +110,45 @@ window.vm = new Vue({
     waitingForInput: false,
     output: "",
 
-    leaveLoopDepth: 0,
-
     message: null
+  },
+
+  computed: {
+    cellsInputState() {
+      this.config._cellsInput; // make Vue update the state when _cellsInput changes
+      if (!this.$refs.cellsInput) return true;
+      return this.$refs.cellsInput.checkValidity() && true;
+    },
+    syntaxError() {
+      const code = this.code;
+      let level = 0;
+      for (let i = 0; i < code.length; i++) {
+        if (code[i] === "[") {
+          ++level;
+        } else if (code[i] === "]") {
+          if (--level < 0) return true;
+        }
+      }
+      return level > 0;
+    }
   },
 
   methods: {
     cellsInputChange(v) {
-      vm.config._cellsSelect = vm.config.cells = Number(v);
+      if (!vm.cellsInputState) return;
+      vm.config._cellsSelect = vm.config.cells = v;
     },
     cellsSelectChange(v) {
       if (v === undefined) {
-        vm.config._cellsSelect = vm.config._cellsInput;
+        if (vm.config.cells === Infinity) vm.config.cells = 30000;
+        vm.config._cellsSelect = vm.config._cellsInput = vm.config.cells;
         vm.$bvModal.show('custom-cells-dialog');
-      }
-      else
+      } else {
         vm.config._cellsInput = vm.config.cells = v;
+      }
+    },
+    tickSpeedChange(v) {
+      if (v < 4) vm.tickSpeed = 4;
     },
 
     renderMemory() {
@@ -145,11 +166,22 @@ window.vm = new Vue({
     },
 
     inputBufferKeypress($event) {
+      const modifiers = $event.shiftKey | $event.ctrlKey << 1 | $event.altKey << 2 | $event.metaKey << 3;
+      if (modifiers < 4 && $event.key === "Enter") {
+        $event.preventDefault();
+        return vm.inputBufferEnter();
+      }
+      if (modifiers === 2 && $event.key === "d") { // Ctrl-D
+        $event.preventDefault();
+        if (!vm.inputBuffer) return vm.inputBufferEnded();
+      }
+    },
+    inputBufferEnter() {
       vm.input = vm.inputBuffer + "\n", vm.inputPointer = 0, vm.output += vm.input, vm.inputBuffer = "";
     },
     inputBufferEnded() {
+      if (vm.inputBuffer) vm.inputBufferEnter();
       vm.inputBufferEOF = true;
-      vm.input = vm.inputBuffer, vm.inputPointer = 0, vm.output += vm.input + "^C" + "\n", vm.inputBuffer = "";
     },
 
     codeClick($event) {
@@ -181,15 +213,20 @@ window.vm = new Vue({
         switch (instruction) {
           case '>':
             vm.memory.right();
-            break; case '<':
+            break;
+          case '<':
             vm.memory.left();
-            break; case '+':
+            break;
+          case '+':
             vm.memory.increment();
-            break; case '-':
+            break;
+          case '-':
             vm.memory.decrement();
-            break; case '.':
+            break;
+          case '.':
             vm.output += String.fromCharCode(Number(vm.memory.getCurr()));
-            break; case ',':
+            break;
+          case ',':
             if (vm.inputPointer < vm.input.length)
               vm.waitingForInput = false, vm.memory.setCurr(vm.input.charCodeAt(vm.inputPointer++));
             else if (vm.staticInput || vm.inputBufferEOF)
@@ -198,7 +235,8 @@ window.vm = new Vue({
               vm.waitingForInput = true;
               return;
             }
-            break; case '[':
+            break;
+          case '[':
             let i3 = vm.code.substr(vm.codePointer), curr = vm.memory.getCurr();
             if (
               i3.match(/^\[([^><+-.,[\]]*)\-([^><+-.,[\]]*)\]/) && (vm.config.dataType !== 99 || curr > 0) ||
@@ -215,7 +253,8 @@ window.vm = new Vue({
                   depth--;
               }
             }
-            break; case ']':
+            break;
+          case ']':
             if (vm.memory.getCurr()) {
               let depth = 1;
               while (depth) {
@@ -226,7 +265,8 @@ window.vm = new Vue({
                   depth--;
               }
             }
-            break; default:
+            break;
+          default:
             cond = true;
             break;
         }
@@ -269,9 +309,18 @@ window.vm = new Vue({
     },
 
     init() {
+      vm.code = editorView.state.doc.toString();
+      if (vm.syntaxError) {
+        this.$bvToast.toast("存在未配对的方括号，请检查", {
+          title: "语法错误",
+          variant: "danger",
+          toaster: "b-toaster-top-center"
+        });
+        return;
+      }
+
       vm.panel = 'run';
       vm.stat = 'pause';
-      vm.code = editorView.state.doc.toString();
       vm.codePointer = 0;
       vm.inputPointer = 0;
       vm.output = "";
@@ -298,6 +347,18 @@ window.vm = new Vue({
       };
       f();
     },
+    tick() {
+      vm.stat = 'run';
+      let f = () => {
+        try {
+          vm.iStep();
+          vm.intHandle = setTimeout(f, vm.tickSpeed);
+        } catch (e) {
+          vm.iHandleError(e);
+        }
+      };
+      f();
+    },
     step() {
       vm.stat = 'pause';
       try {
@@ -312,9 +373,11 @@ window.vm = new Vue({
     },
     reset() {
       vm.stat = 'ready';
+      clearTimeout(vm.intHandle);
       vm.panel = 'edit';
       vm.codePointer = 0;
       vm.memory = null;
+      vm.message = null;
       if (!vm.staticInput)
         vm.input = "";
       vm.waitingForInput = false;
