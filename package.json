@@ -1,13 +1,17 @@
 {
-    "devDependencies": {
-        "@codemirror/basic-setup": "^0.18.0",
-        "@codemirror/legacy-modes": "^0.18.0",
-        "@codemirror/stream-parser": "^0.18.1",
-        "bootstrap": "^4.6.0",
-        "bootstrap-vue": "^2.21.2",
-        "esbuild": "^0.11.20",
-        "esbuild-vue": "^0.3.0",
-        "vue": "2.6.12",
-        "vue-resource": "^1.5.2"
-    }
+  "devDependencies": {
+    "@codemirror/basic-setup": "^0.18.0",
+    "@codemirror/legacy-modes": "^0.18.0",
+    "@codemirror/stream-parser": "^0.18.1",
+    "bootstrap": "^4.6.0",
+    "bootstrap-vue": "^2.21.2",
+    "esbuild": "^0.11.20",
+    "esbuild-vue": "^0.3.0",
+    "sass": "^1.69.6",
+    "vue": "2.6.12",
+    "vue-resource": "^1.5.2"
+  },
+  "scripts": {
+    "build": "node ./js/#build.js"
+  }
 }
