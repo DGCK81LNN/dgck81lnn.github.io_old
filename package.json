@@ -8,6 +8,6 @@
         "esbuild": "^0.11.20",
         "esbuild-vue": "^0.3.0",
         "vue": "2.6.12",
-        "vue-resource": "^1.5.2"
+        "vue-resource": "^1.5.3"
     }
 }
