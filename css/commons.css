@@ -45,7 +45,7 @@ body:not(:lang(zh)):not(:lang(cmn)) {
         "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-* {
+:root {
     caret-color: var(--soul-color-theme);
 }
 

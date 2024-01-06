@@ -96,6 +96,7 @@ window.vm = new Vue({
     },
 
     tickSpeed: 100,
+    tickTimes: 1,
 
     panel: "edit", //edit, run, compile
     stat: "ready", // ready, run, pause, end
@@ -150,6 +151,9 @@ window.vm = new Vue({
     tickSpeedChange(v) {
       if (v < 4) vm.tickSpeed = 4;
     },
+    tickTimesChange(v) {
+      if (v < 1) vm.tickTimes = 1;
+    },
 
     renderMemory() {
       let m = [...vm.memory.entries()], r = [], i = vm.config.cells === Infinity && vm.config.allowNegativeMP ? -Infinity : -1;
@@ -203,6 +207,20 @@ window.vm = new Vue({
         vm.init();
     },
 
+    scrollElementToCenter(container, element, w, h) {
+      if (container && container.$el) container = container.$el;
+      if (!container || !container.isConnected) return;
+      if (element && element.$el) element = element.$el;
+      if (!element || !element.isConnected) return;
+
+      const newScrollLeft = element.offsetLeft + (element.offsetWidth - container.offsetWidth) / 2;
+      container.scrollLeft = Math.min(Math.max(container.scrollLeft, newScrollLeft - w), newScrollLeft + w);
+      if (h) {
+        const newScrollTop = element.offsetTop + (element.offsetHeight - container.offsetHeight) / 2;
+        container.scrollTop = Math.min(Math.max(container.scrollTop, newScrollTop - h), newScrollTop + h);
+      }
+    },
+
     iStep() {
       let instruction = vm.code[vm.codePointer], cond = true;
       while (cond) {
@@ -227,12 +245,17 @@ window.vm = new Vue({
             vm.output += String.fromCharCode(Number(vm.memory.getCurr()));
             break;
           case ',':
+            let val = null
             if (vm.inputPointer < vm.input.length)
-              vm.waitingForInput = false, vm.memory.setCurr(vm.input.charCodeAt(vm.inputPointer++));
+              val = vm.input.charCodeAt(vm.inputPointer++);
             else if (vm.staticInput || vm.inputBufferEOF)
-              vm.memory.setCurr(vm.config.eof);
-            else {
+              val = vm.config.eof;
+            if (val !== null) {
+              vm.waitingForInput = false;
+              vm.memory.setCurr(val);
+            } else {
               vm.waitingForInput = true;
+              vm.$refs.inputBuffer.focus();
               return;
             }
             break;
@@ -278,13 +301,15 @@ window.vm = new Vue({
       }
       if (vm.breakpoints.has(vm.codePointer))
         throw "break";
+    },
+
+    iScroll() {
       vm.$nextTick(() => {
-        let mt = vm.$el.querySelector(".soullbf-memory-table"),
-          mp = mt.querySelector(".soullbf-pointer");
-        if (mt && mp)
-          mt.scrollLeft = mp.offsetLeft - mt.offsetWidth / 2;
-        if (instruction === '.')
-          vm.$el.querySelector(".soullbf-right").scrollTop = 2147483647;
+        vm.scrollElementToCenter(vm.$refs.mt, vm.$refs.mcells[vm.memory.pointer], 200)
+        vm.scrollElementToCenter(vm.$refs.codeBox, vm.$refs.codeChars[vm.codePointer], 200, 100);
+        const h = vm.staticInput ? 50 : 100;
+        vm.scrollElementToCenter(vm.$refs.inBox, vm.$refs.inPointer, 200, h);
+        vm.scrollElementToCenter(vm.$refs.outBox, vm.$refs.outPointer, 200, h);
       });
     },
 
@@ -331,6 +356,8 @@ window.vm = new Vue({
       vm.breakpoints = new Set();
       vm.inputBufferEOF = false;
       vm.message = null;
+
+      vm.iScroll();
     },
     run() {
       vm.stat = 'run';
@@ -344,6 +371,7 @@ window.vm = new Vue({
         } catch (e) {
           vm.iHandleError(e);
         }
+        vm.iScroll();
       };
       f();
     },
@@ -351,11 +379,12 @@ window.vm = new Vue({
       vm.stat = 'run';
       let f = () => {
         try {
-          vm.iStep();
+          for (let i = vm.tickTimes; i > 0; --i) vm.iStep();
           vm.intHandle = setTimeout(f, vm.tickSpeed);
         } catch (e) {
           vm.iHandleError(e);
         }
+        vm.iScroll();
       };
       f();
     },
@@ -366,6 +395,7 @@ window.vm = new Vue({
       } catch (e) {
         vm.iHandleError(e);
       }
+      vm.iScroll();
     },
     pause() {
       vm.stat = 'pause';
@@ -387,7 +417,7 @@ window.vm = new Vue({
   mounted() {
     this.$nextTick(() => {
       let slot = document.getElementById("editorSlot");
-      slot.parentNode.replaceChild(editorView.dom, slot);
+      slot.appendChild(editorView.dom);
     });
   }
 });

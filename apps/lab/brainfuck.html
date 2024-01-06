@@ -31,6 +31,9 @@
       padding: 0 0.5rem;
       margin: 1rem 0;
     }
+    .soullbf-memory-table table {
+      border-collapse: separate;
+    }
     .soullbf-memory-table td,
     .soullbf-memory-table th {
       height: 1.5em;
@@ -43,29 +46,35 @@
     .soullbf-memory-table .soullbf-pointer {
       background: #ffbebe;
     }
+    .soullbf-main {
+      display: flex;
+    }
     .soullbf-left,
     .soullbf-right {
       width: 50%;
       height: 350px;
-      overflow-y: auto;
-      box-sizing: border-box;
-      padding: 1rem 0.5rem;
+      padding: 0 0.5rem;
+      display: flex;
+      flex-direction: column;
     }
-    .soullbf-left {
-      float: left;
+    .soullbf-left>*,
+    .soullbf-right>* {
+      flex: 1;
+      margin-bottom: 1rem;
+    }
+    #editorSlot {
+      overflow: clip;
     }
     .cm-editor {
       height: 100%;
     }
-    .soullbf-right {
-      float: right;
+    .soullbf-inputbuffer-wrap {
+      flex: none;
     }
-    .soullbf-right>textarea {
-      height: 100%;
-    }
-    .soullbf-wrapcode code {
-      /*white-space: pre-wrap !important;*/
-      overflow-wrap: break-word;
+    .soullbf-wrapcode {
+      position: relative;
+      /*white-space: pre-wrap;
+      overflow-wrap: break-word;*/
     }
 
     textarea {
@@ -73,17 +82,10 @@
       resize: none !important;
     }
 
-    .b-sidebar {
-      min-width: 250px;
-    }
-    .b-sidebar {
-      min-width: 300px;
-    }
-    .b-sidebar__body {
-      padding: 20px;
-    }
-    .soullbf-drawer-config .b-sidebar__body {
-      overflow-y: auto;
+    .cm-editor,
+    .soullbf-wrapcode,
+    textarea {
+      font-variant-ligatures: no-contextual no-discretionary-ligatures;
     }
 
     .token.soullbf-error {
@@ -118,8 +120,10 @@
     }
 
     @media screen and (max-width: 700px) {
+      .soullbf-main {
+        display: block;
+      }
       .soullbf-left, .soullbf-right {
-        float: none;
         width: 100%;
       }
     }
@@ -137,7 +141,6 @@
       border-radius: 0.25rem;
       background-color: #fcfcfc;
       box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15) inset;
-      overflow-x: auto;
     }
     .token.comment { color: #b3b3b3; }
     .token.pointer { color: #82b727; }
@@ -159,30 +162,28 @@
       </b-breadcrumb>
 
       <div v-show="panel === 'edit'">
-        <section class="soullbf-toolbar">
+        <section class="soullbf-toolbar mb-3">
           <b-button
           variant=primary
           @click="init()"
-          :disabled="syntaxError"
           ><b-icon icon=caret-right aria-hidden=true></b-icon> 准备</b-button>
           <b-button
           variant=info
           v-b-toggle.config-drawer
           ><b-icon icon=gear aria-hidden=true></b-icon> 环境选项</b-button>
           <b-button
-          :disabled="syntaxError"
           v-b-popover.hover="'此功能即将到来...'"
           variant="outline-secondary"
           ><b-icon icon=cpu aria-hidden=true></b-icon> 编译</b-button>
         </section>
         <section class="soullbf-main">
           <section class="soullbf-left">
-            <div id="editorSlot" v-once></div>
+            <div id="editorSlot" class="border rounded" v-once></div>
           </section>
           <section class="soullbf-right">
             <b-form-textarea
             v-model="input"
-            placeholder="输入流。模拟从文本文件中读取输入。留空则启动命令行模式。"
+            placeholder="输入流。模拟从文本文件中读取输入。留空则启动交互模式。"
             :disabled="stat !== 'ready'"
             ></b-form-input>
           </section>
@@ -218,6 +219,16 @@
                   @change="tickSpeedChange"
                 ></b-form-input>
               </b-form-group>
+              <b-form-group label="每次运行步数" label-for="tick-times" @submit.stop.prevent>
+                <b-form-spinbutton
+                  id="tick-times"
+                  size="sm"
+                  min="1"
+                  max="100"
+                  step="1"
+                  v-model="tickTimes"
+                ></b-form-input>
+              </b-form-group>
             </b-dropdown-form>
           </b-dropdown>
           <b-button
@@ -235,7 +246,7 @@
           @click="reset()"
           ><b-icon icon=trash aria-hidden=true></b-icon> 退出</b-button>
         </section>
-        <section class="soullbf-memory-table" v-if="stat !== 'ready'">
+        <section class="soullbf-memory-table" v-if="stat !== 'ready'" ref=mt>
           <table>
             <tr>
               <th
@@ -250,6 +261,7 @@
               <td
               v-for="kvPair in renderMemory()"
               v-if="kvPair[1] !== undefined"
+              ref=mcells
               :key="kvPair[0]"
               :class="memory.pointer === kvPair[0] ? 'soullbf-pointer' : ''"
               v-text="kvPair[1]"
@@ -260,40 +272,66 @@
         <p>点击代码中带高亮的指令来添加断点。</p>
         <section class="soullbf-main">
           <section class="soullbf-left">
-            <soul-manual-prism
-            class="soullbf-wrapcode"><span
+            <soul-manual-prism class="soullbf-wrapcode" ref=codeBox
+              ><span
               v-for="(instruction, i) in [...code]"
+              ref=codeChars
               :class="[
                 'token',
-              instruction === '>' || instruction === '<' ? 'pointer keyword'
-              : instruction === '+' ? 'increment inserted'
-              : instruction === '-' ? 'decrement deleted'
+                instruction === '>' || instruction === '<' ? 'pointer'
+                : instruction === '+' ? 'increment'
+                : instruction === '-' ? 'decrement'
                 : instruction === '.' || instruction === ',' ? 'operator'
-              : instruction === '[' || instruction === ']' ? 'branching important'
+                : instruction === '[' || instruction === ']' ? 'branching'
                 : 'comment',
                 i === codePointer ? 'soullbf-pointer' : '',
                 breakpoints.has(i) ? 'soullbf-breakpoint' : ''
               ]"
               :data-i="i"
+              v-text="instruction"
               @click="codeClick"
-            v-text="instruction === '\n' ? ' \n' : instruction"
-            ></span></soul-manual-prism>
+              ></span
+            ></soul-manual-prism>
           </section>
           <section v-if="staticInput" class="soullbf-right">
-            <soul-manual-prism class="soullbf-wrapcode">{{input.slice(0, inputPointer)}}<span class="token soullbf-pointer">{{input[inputPointer] === '\n' ? ' \n': input[inputPointer] || ' '}}</span>{{input.slice(inputPointer + 1)}}</soul-manual-prism>
-            <soul-manual-prism class="soullbf-wrapcode">{{output}}<span class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
+            <soul-manual-prism class="soullbf-wrapcode" ref=inBox
+              >{{input.slice(0, inputPointer)
+              }}<span class="token soullbf-pointer" ref=inPointer
+                ><span v-if="!input[inputPointer] || input[inputPointer] === '\n'" class="user-select-none"
+                  >&nbsp;</span
+                >{{input[inputPointer] || ''
+              }}</span
+              >{{input.slice(inputPointer + 1)
+            }}</soul-manual-prism>
+            <soul-manual-prism class="soullbf-wrapcode" ref=outBox
+              >{{output
+              }}<span class="token soullbf-pointer user-select-none" ref=outPointer
+                >&nbsp;</span
+            ></soul-manual-prism>
           </section>
           <section v-else class="soullbf-right">
-            <soul-manual-prism class="soullbf-wrapcode">{{output}}<span v-if="waitingForInput" class="token comment">{{inputBuffer}}<span class="token soullbf-cursor">&nbsp;</span></span><span v-else class="token soullbf-pointer">&nbsp;</span></soul-manual-prism>
-            <div @keyup.enter="inputBufferKeypress">
-              <b-input-group v-if="waitingForInput">
+            <soul-manual-prism class="soullbf-wrapcode" ref=outBox
+              >{{output
+              }}<span class="token comment"
+                >{{inputBuffer
+              }}</span
+              ><span :class="['token', waitingForInput ? 'soullbf-cursor' : 'soullbf-pointer', 'user-select-none']" ref=outPointer
+                >&nbsp;</span
+            ></soul-manual-prism>
+            <div class="soullbf-inputbuffer-wrap" v-show="waitingForInput">
+              <b-input-group>
+                <b-form-input
+                v-model="inputBuffer"
+                ref=inputBuffer
+                @keydown="inputBufferKeypress"
+                ></b-form-input>
                 <template #append>
                   <b-button
                   slot="append"
+                  title="Ctrl+D"
                   @click="inputBufferEnded"
                   ><b-icon icon=file-earmark-check aria-hidden=true></b-icon> 全文结束</b-button>
                 </template>
-                <b-form-input v-model="inputBuffer"></b-form-input>
               </b-input-group>
             </div>
           </section>
@@ -349,6 +387,7 @@
           <b-form-select size=md v-model="config._cellsSelect" @change="cellsSelectChange">
             <b-form-select-option
             v-for="n in cellsPresets"
+            :key="n"
             :value="n"
             >{{n}}</b-form-select-option>
             <b-form-select-option
