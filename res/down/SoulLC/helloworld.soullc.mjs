@@ -1,7 +1,7 @@
 export async function main() {
     SoulLC.title("SoulLC Hello World");
     SoulLC.color(0, 2);
-    SoulLC.println("欢迎使用灵魂实验室命令行！");
+    SoulLC.println("欢迎使用灵魂实验室控制台！");
     SoulLC.color();
     SoulLC.println();
     SoulLC.println("使用方法：");
