@@ -7,27 +7,27 @@
 
 // DATE UTIL
 
-/**
- * 按指定位数格式化整数。
- * 
- * @param {number} num 要格式化的数字。
- * @param {(number|false)} [len=2] 目标位数。
- * @param {boolean} sign 是否显示正号。
- * @returns {string}
- */
-function zeroizeLNN(num, len=2, sign) {
-    num = Math.floor(num);
-    var str = Math.abs(num).toString();
-    if (len !== false) {
-        if (str.length > len)
-            str = str.substr(-len);
-        else
-            while (str.length < len) str = "0" + str;
-    }
-    if (sign) str = (num < 0 ? "-" : "+") + str;
-    return str;
-}
 {
+    /**
+     * 按指定位数格式化整数。
+     * 
+     * @param {number} num 要格式化的数字。
+     * @param {(number|false)} [len=2] 目标位数。
+     * @param {boolean} sign 是否显示正号。
+     * @returns {string}
+     */
+    let zeroizeLNN = (num, len=2, sign) => {
+        num = Math.trunc(num);
+        var str = Math.abs(num).toString();
+        if (len !== false) {
+            if (str.length > len)
+                str = str.slice(-len);
+            else
+                while (str.length < len) str = "0" + str;
+        }
+        if (sign || num < 0) str = (num < 0 || 1 / num < 0 ? "-" : "+") + str;
+        return str;
+    }
     let LNN_DATE_FORMAT = {
         'yyyy': t => zeroizeLNN(t.getFullYear(), 4),
         'yy': t => zeroizeLNN(t.getFullYear()),
@@ -52,12 +52,12 @@ function zeroizeLNN(num, len=2, sign) {
         's': t => t.getSeconds(),
         'ss': t => zeroizeLNN(t.getSeconds()),
         'l': t => t.getMilliseconds(),
-        'L': t => zeroizeLNN(t.getMilliseconds(), 3).substr(0, 1),
-        'LL': t => zeroizeLNN(t.getMilliseconds(), 3).substr(0, 2),
-        'LLL': t => zeroizeLNN(t.getMilliseconds(), 3).substr(0, 3),
-        'ZZ': t => zeroizeLNN(-Math.floor(t.getTimezoneOffset() / 60), false, true),
-        'ZZZ': t => zeroizeLNN(-Math.floor(t.getTimezoneOffset() / 60), 2, true),
-        'zz': t => zeroizeLNN(-t.getTimezoneOffset() % 60),
+        'L': t => zeroizeLNN(t.getMilliseconds(), 3).slice(0, 1),
+        'LL': t => zeroizeLNN(t.getMilliseconds(), 3).slice(0, 2),
+        'LLL': t => zeroizeLNN(t.getMilliseconds(), 3).slice(0, 3),
+        'ZZ': t => zeroizeLNN(Math.trunc(0 + -t.getTimezoneOffset() / 60), false, true), // 注意：区分正零、负零
+        'ZZZ': t => zeroizeLNN(Math.trunc(0 + -t.getTimezoneOffset() / 60), 2, true),
+        'zz': t => zeroizeLNN(Math.abs(t.getTimezoneOffset() % 60)),
     };
     /**
      * 格式化日期。
@@ -99,10 +99,10 @@ function zeroizeLNN(num, len=2, sign) {
      * @returns {string} 格式化后的日期。
      * 
      * @example
-     * // 返回一个类似"2020-12-05T20:19:35.233Z+0800"的字符串
-     * new Date().formatLNN("yyyy-MM-dd\\THH:mm:ss.LLLZZZzz");
+     * // 返回一个类似"2020-12-05T20:19:35.233Z+08:00"的字符串
+     * new Date().formatLNN("yyyy-MM-dd\\THH:mm:ss.LLLZZZ:zz");
      */
-    function formatLNN (fmt) {
+    let formatLNN = function (fmt) {
         var i = 0,
             char = "",
             lastChar = "",
@@ -125,6 +125,17 @@ function zeroizeLNN(num, len=2, sign) {
         return result;
     };
     Date.prototype.formatLNN = formatLNN;
+    this.formatTemporalDateTimeLNN = (object, fmt) => formatLNN.call({
+        getFullYear: () => object.year,
+        getMonth: () => object.month - 1,
+        getDate: () => object.day,
+        getDay: () => object.dayOfWeek % 7,
+        getHours: () => object.hour,
+        getMinutes: () => object.minute,
+        getSeconds: () => object.second,
+        getMilliseconds: () => object.millisecond,
+        getTimezoneOffset: () => -object.getTimeZone().getOffsetNanosecondsFor(object) / 60000000000
+    }, fmt);
 }
 
 // GETELEMENTS UTIL
@@ -146,7 +157,7 @@ this.$$$ = id => window[id] = document.getElementById(id);
  * 批量获取带id的元素。
  * 
  * @param  {...string} args 每个元素的id。
- * @returns {Array.<?HTMLElement>} 每个元素。
+ * @returns {Array<?HTMLElement>} 每个元素。
  */
 this.$$ = (...args) => args.map($$$);
 
@@ -160,20 +171,20 @@ this.$$ = (...args) => args.map($$$);
      * @param {number} to 随机数的最大值加1。
      * @returns {number} 给定范围内的随机整数。
      */
-    var randIntLNN = (from, to) => Math.floor(Math.random() * (to - from)) + from;
+    let randIntLNN = (from, to) => Math.floor(Math.random() * (to - from)) + from;
     Math.randIntLNN = randIntLNN;
     /**
      * 获得数组中的随机元素。
      * 
-     * @this {Array.} Array的实例。
+     * @this {Array} Array的实例。
      * @returns {*} 随机选取的元素。
      */
-    var randItemLNN = () =>this[randBetweenLNN(0, this.length)];
+    let randItemLNN = () => this[randBetweenLNN(0, this.length)];
     Object.defineProperty(Array.prototype, "randItemLNN", {
         value: randItemLNN,
         enumerable: false
     });
-    function randSortLNN () {
+    let randSortLNN = () => {
         var arr = [],
             i = 0;
         for (; i < this.length; i++)
